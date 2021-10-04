@@ -20,6 +20,10 @@ import datetime
 import numpy as np
 import dtwin.flux as f
 import math
+from aas import model
+import uuid as id
+from aas.adapter.xml import write_aas_xml_file
+from aas.adapter import aasx
 
 import simpy
 import matplotlib.animation as animation
@@ -44,8 +48,22 @@ class dtFactory(object):
         self.sensors = []
         self.parts = []
         self.groups = []
-        self.name = 'Default factory name'
+        self.name = 'Default_factory_name'
+        self.uuid = str(id.uuid4())
+
+        #ass
+        identifier = model.Identifier('https://sindit.org/factory/'+self.uuid, model.IdentifierType.IRI)
+        self.asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
+                                identification=identifier,  # set identifier
+                                id_short = self.name
+                                )
+        identifier = model.Identifier('https://sindit.org/factory_AAS/'+self.uuid, model.IdentifierType.IRI)
+        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
+                                            asset=model.AASReference.from_referable(self.asset)  # generate a Reference object to the Asset (using its identifier)
+                                            )
         
+
+
         #plotting 
         self.picked = False
         self.visiblesensors = []
@@ -393,6 +411,25 @@ class dtFactory(object):
             with open(file_path_or_uri, 'w+') as _file:
                 json.dump(jsondata, _file, indent=4)
             ret_val=True    
+        elif serial_type == "aasx":
+            # see https://git.rwth-aachen.de/acplt/pyi40aas/-/blob/master/aas/examples/tutorial_aasx.py
+            object_store = model.DictObjectStore([self.aas, self.asset])
+            file_store = aasx.DictSupplementaryFileContainer()
+            with aasx.AASXWriter(file_path_or_uri) as writer:
+                writer.write_aas(aas_id=self.aas.identification,
+                                object_store=object_store,
+                                file_store=file_store,
+                                submodel_split_parts=False)  # for compatibility with AASX Package Explorer
+
+
+
+        elif serial_type == "xml":
+            data: model.DictObjectStore[model.Identifiable] = model.DictObjectStore()
+            data.add(self.aas)
+            data.add(self.asset)
+            with open(file_path_or_uri, 'wb') as f:
+                write_aas_xml_file(file=f, data=data)
+
         elif serial_type == "neo4j":  
             if 'need_auth' in kwargs:   
                 if kwargs.get("need_auth").lower() == 'false':

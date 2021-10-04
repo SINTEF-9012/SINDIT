@@ -10,6 +10,8 @@ import matplotlib.artist as ma
 import dtwin.dttypes as dtTypes
 import dtwin.dtpart as dtPart
 import simpy
+from aas import model
+import uuid as id
 
 class dtQueue(object):
     def __init__(self, frm=None, to=None, 
@@ -33,6 +35,17 @@ class dtQueue(object):
         self.capacity = capacity        
         self.description = description
         self.parts = list()
+        self.uuid = str(id.uuid4())
+        
+        # ass
+        identifier = model.Identifier('https://sindit.org/'+self.type.name+'/'+self.uuid, model.IdentifierType.IRI)
+        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
+                                identification=identifier  # set identifier
+                                )
+        identifier = model.Identifier('https://sindit.org/'+self.type.name+'_AAS/'+self.uuid, model.IdentifierType.IRI)
+        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
+                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
+                                            )
         
         # visualization
         self.position_on_dash = position_on_dash

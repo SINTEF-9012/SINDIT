@@ -2,3 +2,5 @@
 .vscode/settings.json
 docker/
 .idea/
+*.aasx
+*.xml

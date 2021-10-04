@@ -9,6 +9,8 @@ Sensor class
 import matplotlib.pyplot as plt
 import dtwin.flux as f
 import dtwin.dttypes as dtTypes
+from aas import model
+import uuid as id
 
 class dtSensor(object):
     def __init__(self, name=None, 
@@ -23,6 +25,18 @@ class dtSensor(object):
         self.SI = ''
         self.position = position
         self.timeseries = timeseries
+        self.uuid = str(id.uuid4())
+        
+        # ass
+        identifier = model.Identifier('https://sindit.org/'+self.type+'/'+self.uuid, model.IdentifierType.IRI)
+        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
+                                identification=identifier  # set identifier
+                                )
+        identifier = model.Identifier('https://sindit.org/'+self.type+'_AAS/'+self.uuid, model.IdentifierType.IRI)
+        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
+                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
+                                            )
+
         if json_data:
             self.deserialize(json_data)
 

@@ -15,6 +15,8 @@ import datetime
 import json
 import dtwin.dtpart as dtPart
 import environment.settings as stngs
+from aas import model
+import uuid as id
 
 RUN_KAFKA_PRODUCER = True
 PRINT_DEBUG_INFO = False
@@ -39,7 +41,18 @@ class dtMachine(object):
         self.description = description
         self.group = group
         self.type = type
+        self.uuid = str(id.uuid4())
         
+        # ass
+        identifier = model.Identifier('https://sindit.org/'+self.type.name+'/'+self.uuid, model.IdentifierType.IRI)
+        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
+                                identification=identifier  # set identifier
+                                )
+        identifier = model.Identifier('https://sindit.org/'+self.type.name+'_AAS/'+self.uuid, model.IdentifierType.IRI)
+        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
+                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
+                                            )
+
         # visualization
         self.position_on_dash=position_on_dash
         self.shape_on_dash = shape_on_dash

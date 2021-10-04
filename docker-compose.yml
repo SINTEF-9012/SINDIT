@@ -95,22 +95,22 @@ services:
     environment:
       - NEO4J_AUTH=none
   
-  sindit:
-    build: .
-    hostname: sindit
-    environment:
-      ENVIRONMENT_FILE: "docker_deployment.env"
-    ports:
-      - 8050:8050
-      - 8000:8000
-    depends_on:
-      kafka:
-        condition: service_healthy
-      neo4jparts:
-        condition: service_healthy
-      influxdb:
-        condition: service_healthy
-      neo4jfactory:
-        condition: service_healthy
+  # sindit:
+    # build: .
+    # hostname: sindit
+    # environment:
+      # ENVIRONMENT_FILE: "docker_deployment.env"
+    # ports:
+      # - 8050:8050
+      # - 8000:8000
+    # depends_on:
+      # kafka:
+        # condition: service_healthy
+      # neo4jparts:
+        # condition: service_healthy
+      # influxdb:
+        # condition: service_healthy
+      # neo4jfactory:
+        # condition: service_healthy
       
     

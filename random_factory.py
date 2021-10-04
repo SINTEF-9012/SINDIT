@@ -61,6 +61,7 @@ class dtRandom(dtFactory):
         # discrete event simulation
         self.env = env
         self.sim_hours = 40
+        dtFactory.__init__(self, graph=graph,file_path=file_path, env = env)
             
     # define the machines, processes, sensors, and queues
     def create_factory_graph(self):
@@ -138,7 +139,9 @@ if __name__ == '__main__':
     random_fac.serialize(serial_type="neo4j", file_path_or_uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASS,need_auth=NEED_AUTH)
 
     # store as json file
-    random_fac.serialize(serial_type="json", file_path_or_uri="random_factory.json")
+    random_fac.serialize(serial_type="aasx", file_path_or_uri="random_factory.aasx")
+
+
 
     # Discrete event sumulation     
     random_fac.sim_hours = 20 
