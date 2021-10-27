@@ -12,12 +12,16 @@ import dtwin.dttypes as dtTypes
 from aas import model
 import uuid as id
 
+from saas.ass_factory import AASFactory
+
+
 class dtSensor(object):
     def __init__(self, name=None, 
-                 type=None, 
+                 type=None,
+
                  position=False, 
                  timeseries=[], 
-                 description='',
+                 description=None,
                  json_data = None):
         self.name = name
         self.description = description
@@ -26,16 +30,13 @@ class dtSensor(object):
         self.position = position
         self.timeseries = timeseries
         self.uuid = str(id.uuid4())
-        
+
         # ass
-        identifier = model.Identifier('https://sindit.org/'+self.type+'/'+self.uuid, model.IdentifierType.IRI)
-        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
-                                identification=identifier  # set identifier
-                                )
-        identifier = model.Identifier('https://sindit.org/'+self.type+'_AAS/'+self.uuid, model.IdentifierType.IRI)
-        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
-                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
-                                            )
+        if self.name is None or self.name.isspace():
+            self.name = "SINDIT_Default_Sensor_Name"
+        if self.description is None or self.description.isspace():
+            self.description = "SINDIT Sensor"
+        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
 
         if json_data:
             self.deserialize(json_data)

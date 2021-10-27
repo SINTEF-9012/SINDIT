@@ -13,11 +13,14 @@ import simpy
 from aas import model
 import uuid as id
 
+from saas.ass_factory import AASFactory
+
+
 class dtQueue(object):
     def __init__(self, frm=None, to=None, 
                  capacity=1000, 
-                 name = '', 
-                 description='', 
+                 name = None,
+                 description=None,
                  env = simpy.Environment(), 
                  group='NONE',
                  json_data=None,
@@ -38,14 +41,12 @@ class dtQueue(object):
         self.uuid = str(id.uuid4())
         
         # ass
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'/'+self.uuid, model.IdentifierType.IRI)
-        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
-                                identification=identifier  # set identifier
-                                )
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'_AAS/'+self.uuid, model.IdentifierType.IRI)
-        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
-                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
-                                            )
+        # ass
+        if self.name is None or self.name.isspace():
+            self.name = "SINDIT_Default_Queue_Name"
+        if self.description is None or self.description.isspace():
+            self.description = "SINDIT queue"
+        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
         
         # visualization
         self.position_on_dash = position_on_dash

@@ -29,15 +29,22 @@ import simpy
 import matplotlib.animation as animation
     
 #Graph stuff
+import saas.ass_factory
+from saas.ass_factory import AASFactory
+
+
 class dtFactory(object):
     """
     Base class for digital  twin factories.
     
     """
-    def __init__(self, 
+    def __init__(self,
+                 name=None,
+                 description=None,
                  graph=nx.DiGraph(), 
                  file_path="", 
                  env = simpy.Environment()):
+
         self.graph = graph
         
         #@todo: graph and machines, sensors, and queues have redundant information 
@@ -48,19 +55,15 @@ class dtFactory(object):
         self.sensors = []
         self.parts = []
         self.groups = []
-        self.name = 'Default_factory_name'
-        self.uuid = str(id.uuid4())
+        self.name = name
+        self.description = description
 
         #ass
-        identifier = model.Identifier('https://sindit.org/factory/'+self.uuid, model.IdentifierType.IRI)
-        self.asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
-                                identification=identifier,  # set identifier
-                                id_short = self.name
-                                )
-        identifier = model.Identifier('https://sindit.org/factory_AAS/'+self.uuid, model.IdentifierType.IRI)
-        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
-                                            asset=model.AASReference.from_referable(self.asset)  # generate a Reference object to the Asset (using its identifier)
-                                            )
+        if self.name is None or self.name.isspace():
+            self.name = "SINDIT_Default_Factory_Name"
+        if self.description is None or self.description.isspace():
+            self.description = "SINDIT factory"
+        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
         
 
 
@@ -413,22 +416,22 @@ class dtFactory(object):
             ret_val=True    
         elif serial_type == "aasx":
             # see https://git.rwth-aachen.de/acplt/pyi40aas/-/blob/master/aas/examples/tutorial_aasx.py
-            object_store = model.DictObjectStore([self.aas, self.asset])
+            #object_store = model.DictObjectStore([self.aas, self.asset])
             file_store = aasx.DictSupplementaryFileContainer()
             with aasx.AASXWriter(file_path_or_uri) as writer:
                 writer.write_aas(aas_id=self.aas.identification,
-                                object_store=object_store,
+                                object_store= AASFactory.instance().assetStore,
                                 file_store=file_store,
                                 submodel_split_parts=False)  # for compatibility with AASX Package Explorer
 
 
 
-        elif serial_type == "xml":
-            data: model.DictObjectStore[model.Identifiable] = model.DictObjectStore()
-            data.add(self.aas)
-            data.add(self.asset)
+        elif serial_type == "aas":
+            #data: model.DictObjectStore[model.Identifiable] = model.DictObjectStore()
+            #data.add(self.aas)
+            #data.add(self.asset)
             with open(file_path_or_uri, 'wb') as f:
-                write_aas_xml_file(file=f, data=data)
+                write_aas_xml_file(file=f, data=AASFactory.instance().assetStore)
 
         elif serial_type == "neo4j":  
             if 'need_auth' in kwargs:   
@@ -501,7 +504,7 @@ class dtFactory(object):
                 tx.create(py2neo.Relationship(b, "DELIVERS_TO", m2, type='OUTLET'))
                                           
             tx.commit()
-            print('Serialized to neo4j successfully: ')
+            print('Serialized to neo4j successfully')
             ret_val=True
            
         else:

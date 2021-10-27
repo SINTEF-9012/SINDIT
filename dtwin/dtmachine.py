@@ -18,13 +18,15 @@ import environment.settings as stngs
 from aas import model
 import uuid as id
 
+from saas.ass_factory import AASFactory
+
 RUN_KAFKA_PRODUCER = True
 PRINT_DEBUG_INFO = False
 class dtMachine(object):
     
-    def __init__(self, name=None, 
+    def __init__(self, name=None,
                  sensors=list(), 
-                 description='', 
+                 description=None,
                  group='NONE', 
                  type=dtTypes.dtTypes.MACHINE, 
                  env = simpy.Environment(),
@@ -44,14 +46,11 @@ class dtMachine(object):
         self.uuid = str(id.uuid4())
         
         # ass
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'/'+self.uuid, model.IdentifierType.IRI)
-        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
-                                identification=identifier  # set identifier
-                                )
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'_AAS/'+self.uuid, model.IdentifierType.IRI)
-        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
-                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
-                                            )
+        if self.name is None or self.name.isspace():
+            self.name = "SINDIT_Default_Machine_Name"
+        if self.description is None or self.description.isspace():
+            self.description = "SINDIT machine"
+        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
 
         # visualization
         self.position_on_dash=position_on_dash

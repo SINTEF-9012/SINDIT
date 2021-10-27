@@ -10,10 +10,13 @@ import py2neo
 import uuid as id
 from aas import model
 
+from saas.ass_factory import AASFactory
+
+
 class dtPart(object):
     def __init__(self, name=None, 
                  type=None, 
-                 description='na',
+                 description=None,
                  position=False,
                  json_data=None,
                  py2neo_graph=None,
@@ -30,14 +33,11 @@ class dtPart(object):
         self.json_data = json_data
 
         # ass
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'/'+self.uuid, model.IdentifierType.IRI)
-        asset = model.Asset(kind=model.AssetKind.INSTANCE,  # define that the Asset is of kind instance
-                                identification=identifier  # set identifier
-                                )
-        identifier = model.Identifier('https://sindit.org/'+self.type.name+'_AAS/'+self.uuid, model.IdentifierType.IRI)
-        self.aas = model.AssetAdministrationShell(identification=identifier,  # set identifier
-                                            asset=model.AASReference.from_referable(asset)  # generate a Reference object to the Asset (using its identifier)
-                                            )
+        if self.name is None or self.name.isspace():
+            self.name = "SINDIT_Default_Part_Name"
+        if self.description is None or self.description.isspace():
+            self.description = "SINDIT part"
+        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
 
         if json_data:
             self.deserialize(json_data)

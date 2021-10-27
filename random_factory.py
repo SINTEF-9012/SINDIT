@@ -141,6 +141,8 @@ if __name__ == '__main__':
     # store as json file
     random_fac.serialize(serial_type="aasx", file_path_or_uri="random_factory.aasx")
 
+    random_fac.serialize(serial_type="aas", file_path_or_uri="random_factory.aas")
+
 
 
     # Discrete event sumulation     
