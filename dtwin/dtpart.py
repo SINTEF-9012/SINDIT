@@ -11,6 +11,7 @@ import uuid as id
 from aas import model
 
 from saas.ass_factory import AASFactory
+from saas.semantic_factory import SemanticFactory
 
 
 class dtPart(object):
@@ -37,7 +38,21 @@ class dtPart(object):
             self.name = "SINDIT_Default_Part_Name"
         if self.description is None or self.description.isspace():
             self.description = "SINDIT part"
-        self.aas = AASFactory.instance().create_aas(name=self.name, description=self.description)
+
+        nameplate = AASFactory.instance().create_Nameplate(name=self.name + "_Nameplate",
+                                                           manufacturerName="SINDIT_Default_Manufacturer_Name",
+                                                           manufacturerProductDesignation=str(self.type) if self.type is not None else self.description,
+                                                           serialNumber=self.uuid)
+        dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name + "_ConceptDictionary",
+                                                                    concepts={SemanticFactory.instance().getNameplate(),
+                                                                              SemanticFactory.instance().getManufacturerName(),
+                                                                              SemanticFactory.instance().getManufacturerProductDesignation(),
+                                                                              SemanticFactory.instance().getSerialNumber()})
+
+        self.aas = AASFactory.instance().create_aas(name=self.name,
+                                                    description=self.description,
+                                                    submodels={nameplate},
+                                                    concept_dictionary={dictionary})
 
         if json_data:
             self.deserialize(json_data)

@@ -23,3 +23,7 @@ class dtTypes(Enum):
     VIBRATION=10
     BUFFER=11
     UNKNOWN=12
+
+    def __str__(self):
+        return str(self.name)
+
