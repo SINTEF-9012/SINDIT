@@ -38,8 +38,8 @@ class AASFactory:
         else:
             AASFactory.__instance = self
             namespace = "https://sindit.no/#"
-            provider = DictObjectStore()
-            self.iriGenerator = NamespaceIRIGenerator(namespace=namespace, provider=provider)
+            self.provider = DictObjectStore()
+            self.iriGenerator = NamespaceIRIGenerator(namespace=namespace, provider=self.provider)
             self.assetStore = DictObjectStore()
 
     def create_asset(self,
@@ -184,6 +184,11 @@ class AASFactory:
         self.assetStore.add(nameplate)
 
         return nameplate
+
+    def flush(self):
+        self.assetStore.clear()
+        self.provider.clear()
+
 
 
 

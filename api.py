@@ -11,6 +11,7 @@ import json
 import py2neo
 import configparser
 import pandas as pd
+import uvicorn
 
 from dtwin.dtfactory import dtFactory
 import dtwin.dtpart as dtPart
@@ -126,7 +127,7 @@ def get_part_cytoscape_from_neo4j(part_uuid:str):
 @app.post("/push_json_factory_and_parts_to_neo4j/{json_file}")
 def push_json_factory_and_parts_to_neo4j(json_file:str):
     print(json_file)
-    fac = dtFactory()  
+    fac = dtFactory(flushAAS=True)
     fac.deserialize(serial_type="json", file_path_or_uri=json_file)
     fac.serialize(serial_type="neo4j", 
                     file_path_or_uri=FAC_NEO4J_URI, 
@@ -142,7 +143,7 @@ def push_json_factory_and_parts_to_neo4j(json_file:str):
 
 @app.get("/get_factory_cytoscape_from_neo4j")
 def get_factory_cytoscape_from_neo4j():
-    fac = dtFactory()  
+    fac = dtFactory(flushAAS=True)
     fac.deserialize(serial_type="neo4j", 
                     file_path_or_uri=FAC_NEO4J_URI, 
                     user=FAC_NEO4J_USER,
@@ -153,7 +154,7 @@ def get_factory_cytoscape_from_neo4j():
 
 @app.post("/get_factory_cytoscape/{factory}")
 def get_factory_cytoscape(factory:str):
-    fac = dtFactory()
+    fac = dtFactory(flushAAS=True)
     json_data = ''
     if os.path.isfile(factory):
         # seems to be a file we try to open
@@ -234,7 +235,7 @@ def get_sensor_info(sensor_name:str):
 
 @app.post("/get_sim_prediction/{factory}")
 def get_sim_prediction(factory:str):
-    fac = dtFactory()
+    fac = dtFactory(flushAAS=True)
     json_data = ''
     if os.path.isfile(factory):
         # seems to be a file we try to open
@@ -250,7 +251,7 @@ def get_sim_prediction(factory:str):
 
 @app.get("/get_sim_prediction_from_neo4j/{sim_time}")
 def get_sim_prediction_from_neo4j(sim_time:int):
-    fac_sim = dtFactory()  
+    fac_sim = dtFactory(flushAAS=True)
     fac_sim.deserialize(serial_type="neo4j", 
                     file_path_or_uri=FAC_NEO4J_URI,
                     user=FAC_NEO4J_USER,
@@ -266,7 +267,7 @@ def get_sim_prediction_from_neo4j(sim_time:int):
 
 @app.get("/run_factory/{sim_time}/{num_entry_parts}")
 def run_factory(sim_time:int, num_entry_parts:int):
-    fac = dtFactory()  
+    fac = dtFactory(flushAAS=True)
     fac.deserialize(serial_type="neo4j", 
                     file_path_or_uri=FAC_NEO4J_URI,
                     user=FAC_NEO4J_USER,
@@ -312,3 +313,8 @@ def run_factory(sim_time:int, num_entry_parts:int):
     sim_results = fac.run()
        
     return sim_results
+
+
+# Launch App
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

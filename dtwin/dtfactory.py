@@ -40,6 +40,7 @@ class dtFactory(object):
     
     """
     def __init__(self,
+                 flushAAS:bool=False,
                  name=None,
                  description=None,
                  graph=nx.DiGraph(), 
@@ -64,6 +65,9 @@ class dtFactory(object):
             self.name = "SINDIT_Default_Factory_Name"
         if self.description is None or self.description.isspace():
             self.description = "SINDIT factory"
+
+        if flushAAS:
+            AASFactory.instance().flush()
 
         nameplate = AASFactory.instance().create_Nameplate(name=self.name+"_Nameplate",
                                                            manufacturerName="SINDIT_Default_Manufacturer_Name",
@@ -585,7 +589,7 @@ class dtFactory(object):
     # reads graph from JSON file
     def deserialize(self, serial_type="networkx-json", file_path_or_uri="factory_graph.json", plot = False, **kwargs):
         #clean start
-        self.__init__()
+        self.__init__(flushAAS=True)
         if serial_type == "networkx-json":
             '''Function to deserialize a NetworkX DiGraph from a JSON file.'''
             call_graph = None

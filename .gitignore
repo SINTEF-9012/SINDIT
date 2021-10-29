@@ -4,3 +4,4 @@ docker/
 .idea/
 *.aasx
 *.xml
+*.aas

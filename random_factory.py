@@ -44,6 +44,10 @@ class dtGroups(Enum):
 
 class dtRandom(dtFactory):
     def __init__(self, graph=nx.DiGraph(), file_path="", env = simpy.Environment()):
+
+        super().__init__(self, graph=graph, file_path=file_path, env=env)
+
+
         self.graph = graph
         self.machines = []
         self.queues = []
@@ -61,7 +65,7 @@ class dtRandom(dtFactory):
         # discrete event simulation
         self.env = env
         self.sim_hours = 40
-        dtFactory.__init__(self, graph=graph,file_path=file_path, env = env)
+
             
     # define the machines, processes, sensors, and queues
     def create_factory_graph(self):
