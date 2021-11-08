@@ -8,7 +8,7 @@
 
 ### System:
 
-1. Docker
+1. Docker compose
 
 If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package)
 
