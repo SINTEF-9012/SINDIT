@@ -6,8 +6,8 @@ Author: Maryna Waszak <maryna.waszak@sintef.no>
 
 import dash
 import dash_cytoscape as cyto
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 import requests
@@ -75,11 +75,11 @@ def _draw_table_node_infos(data):
     rows = []    
     if data:
         print(data['data']['id']+': '+str(data['position']['x'])+'/'+str(data['position']['y']))              
-        if data['data']['type']=='BUFFER':
+        if data['data']['type']=='BUFFER' or data['data']['type']=='CONTAINER':
             rows.append(html.Tr([html.Td(data['data']['type'], style=header_style), html.Td(data['data']['id'])]))
             rows.append(html.Tr([html.Td('Description:'), html.Td(data['data']['label'])]))
-            parts = requests.get(API_URI+'/get_parts_for_buffer/'+data['data']['id']).json()
-            rows.append(html.Tr([html.Td('Parts:'), html.Td(len(parts))]))
+            amount = requests.get(API_URI+'/get_amount_on_queue/'+data['data']['id']).json()
+            rows.append(html.Tr([html.Td('Amount:'), html.Td(amount)]))
         elif data['classes'] == 'SENSOR':
             global sensor_ID
             sensor_ID = data['data']['id']
@@ -181,8 +181,6 @@ def _draw_parts_graph(parts_cygraph,cystyle):
 
 def _draw_switch():
     return dbc.Form([
-        dbc.FormGroup([
-            # dbc.Label("Toggle a bunch"),
             dbc.Checklist(
                 options=[
                     {"label": "Show edges", "value": 1},
@@ -191,8 +189,7 @@ def _draw_switch():
                 value=[1],
                 id="switches-input",
                 switch=True,
-            ),
-        ])
+            ),      
     ])
 
 def _draw_time_series_graph():
@@ -258,8 +255,7 @@ app.layout = html.Div([
                         dbc.Col(html.Img(src=SINTEF_LOGO, height="32px")),
                         # dbc.Col(dbc.NavbarBrand("SINDIT", className="ml-2")),
                     ],
-                    align="center",
-                    no_gutters=True,
+                    align="center"
                 ),
                 href="https://www.sintef.no"
             ),
@@ -275,7 +271,7 @@ app.layout = html.Div([
                 dbc.Col([
                     _draw_graph(cygraph, cystyle),
                     html.Div(children=[dcc.Input(id='input-on-submit', type='number', value=40), 'Simulation duration']),
-                    html.Div(children=[dcc.Input(id='parts-on-submit', type='number', value=10), 'Add parts on source']),
+                    html.Div(children=[dcc.Input(id='parts-on-submit', type='number', value=10), 'Add amount on source']),
                     html.Button('Simulate', id='submit-val', n_clicks=0),
                     html.Button('Reset', id='reset-val', n_clicks=0),
                     html.Div(id='run_event_sim_button',children='Enter a simulation duration'),
@@ -408,19 +404,25 @@ def displayTapPartNodeData(data):
               State('input-on-submit', 'value'),
               State('parts-on-submit', 'value'),
               prevent_initial_call=True)
-def run_event_sim(reset, submit, value_duration, value_parts): 
+def run_event_sim(reset, submit, value_duration, num_entry_amount): 
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'reset-val' in changed_id:
         print('Reset was triggered')
-        file_path = '*.json'
+        file_path = '../*.json'
         request = API_URI+'/push_json_factory_and_parts_to_neo4j/'+file_path
         requests.post(request)
         return 'Reset is done, you can start simulation again.'
     else:      
-        print('Descrete event simulation was triggered for ', value_duration, ' seconds and ', value_parts, ' parts')
-        sim_request = API_URI+'/run_factory/'+str(value_duration)+'/'+str(value_parts)
-        sim_results = requests.get(sim_request).json()   
-        return ' {} parts'.format(sim_results[0]['num_of_parts'])   
+        print('Descrete event simulation was triggered for ', value_duration, ' seconds and ', num_entry_amount, ' added amount/parts')
+        sim_request = API_URI+'/run_factory/'+str(value_duration)+'/'+str(num_entry_amount)
+        sim_results = requests.get(sim_request) 
+        try:
+            sim_results_json =  sim_results.json() 
+            result_string = ' {} parts'.format(sim_results_json[0]['amount'])   
+        except: 
+            result_string = json.dumps(sim_results)
+
+        return result_string
     
              
 

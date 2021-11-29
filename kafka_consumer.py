@@ -44,7 +44,7 @@ def get_sensor_type_from_name(name):
     else:
         return dtTypes.dtTypes.UNKNOWM.name
         
-def serialize(part):
+def serialize_part(part):
     if NEED_AUTH.lower() == 'true':
         g = py2neo.Graph(NEO4J_URI, 
                      user=NEO4J_USER, 
@@ -57,6 +57,11 @@ def serialize(part):
     
     b = nodes.match(dtTypes.dtTypes.BUFFER.name, name=part['buffer_ID']).first() 
     p = nodes.match(part['type'], uuid=part['uuid']).first() 
+
+    b.update(amount=part['amount'])          
+    g.push(b) 
+    print("%s amount: %s"% (amount['sensor_ID'], amount['amount']))
+
     tx = g.begin()
     
     if isinstance(p, py2neo.Node) and sensor_type=='IN':        
@@ -70,6 +75,23 @@ def serialize(part):
                         
     tx.commit()
 
+def serialize_value(amount):
+    if NEED_AUTH.lower() == 'true':
+        g = py2neo.Graph(NEO4J_URI, 
+                     user=NEO4J_USER, 
+                     password=NEO4J_PASS)
+    else:
+        g = py2neo.Graph(NEO4J_URI)
+  
+    nodes = py2neo.matching.NodeMatcher(g)        
+    
+    b = nodes.match(dtTypes.dtTypes.CONTAINER.name, name=amount['buffer_ID']).first() 
+    b.update(amount=amount['amount'])
+            
+    g.push(b) 
+
+    print("%s amount: %s"% (amount['sensor_ID'], amount['amount']))
+                        
 
 # part = {
 #           "machine_ID": 'P1',
@@ -80,24 +102,40 @@ def serialize(part):
 #           "uuid": 'fbd204a7-318e-4dd3-86e0-e6d524fc3f98'
 #         }   
 # serialize(part)
-          
+
 for msg in consumer:
-    part = {
+    if msg.value['queue_type'] == 'BUFFER':
+        part = {
+            "machine_ID": msg.value['machine_id'],
+            "buffer_ID": msg.value['buffer_id'],
+            "sensor_ID": msg.value['sensor_id'],
+            "time_ms": msg.value['timestamp_ms'],
+            "sim_time": msg.value['sim_time_h'],
+            "name": msg.value['part_name'],
+            "amount": msg.value['amount'],
+            "uuid": msg.value['part_uuid'],
+            "type": msg.value['part_type'],
+            "description": msg.value['part_description'],
+            }
+        print("machine=%s %s, sensor=%s buffer=%s part: %s" % (get_machine_type_from_name(part['machine_ID']), part['machine_ID'], part['sensor_ID'], part['buffer_ID'], part['uuid']))
+        tags = {'machine': part['machine_ID'], 'sensor': part['sensor_ID']}
+        c.store_any_measurement('RFID', tags, 1, part['time_ms'])
+        
+        serialize_part(part)
+    elif msg.value['queue_type'] == 'CONTAINER':
+        amount = {
           "machine_ID": msg.value['machine_id'],
           "buffer_ID": msg.value['buffer_id'],
           "sensor_ID": msg.value['sensor_id'],
           "time_ms": msg.value['timestamp_ms'],
           "sim_time": msg.value['sim_time_h'],
-          "name": msg.value['part_name'],
-          "uuid": msg.value['part_uuid'],
-          "type": msg.value['part_type'],
-          "description": msg.value['part_description'],
+          "amount": msg.value['amount'],
         }
-    print("machine=%s %s, sensor=%s buffer=%s part: %s" % (get_machine_type_from_name(part['machine_ID']), part['machine_ID'], part['sensor_ID'], part['buffer_ID'], part['uuid']))
-    tags = {'machine': part['machine_ID'], 'sensor': part['sensor_ID']}
-    c.store_any_measurement('RFID', tags, 1, part['time_ms'])
-    
-    serialize(part)
+        print("machine=%s %s, sensor=%s buffer=%s amount: %s" % (get_machine_type_from_name(amount['machine_ID']), amount['machine_ID'], amount['sensor_ID'], amount['buffer_ID'], amount['amount']))
+        tags = {'machine': amount['machine_ID'], 'sensor': amount['sensor_ID']}
+        c.store_any_measurement('AMOUNT', tags, amount['amount'], amount['time_ms'])
+        
+        serialize_value(amount)
     
 
     

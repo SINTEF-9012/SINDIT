@@ -101,7 +101,7 @@ class dtFactory(object):
         
         #new environment
         if is_real_time:
-            self.env = simpy.RealtimeEnvironment(initial_time=0, factor=10, strict=False)
+            self.env = simpy.RealtimeEnvironment(initial_time=0, factor=5, strict=False)
         else:
             self.env = simpy.Environment()
             
@@ -128,7 +128,7 @@ class dtFactory(object):
                 processes.append(self.env.process(machine.run(in_queues,out_queues,use_kafka_and_neo4j)))
         
         print('----------------------------------')
-        print('SIMULATION OF {0} HOURS STARTED'.format(total_time))
+        print('SIMULATION OF {0} TIME STARTED'.format(total_time))
         print('----------------------------------')
         
         if total_time>0:
@@ -140,16 +140,16 @@ class dtFactory(object):
             machine=self.get_machine_by_name(node.name) 
             if machine.type == dtTypes.dtTypes.EXIT:
                 for edge in self.graph.in_edges(node, data=True):
-                    parts_produced = len(self.get_queue_by_name(edge[2]['name']).parts)
-                    print('There are {0} parts on EXIT {1} after {2} hours'.format(
-                            parts_produced,edge[2]['name'],self.env.now))
-                    sim_results.append({'name': edge[2]['name'], 'num_of_parts': parts_produced}) 
+                    amount_produced = self.get_queue_by_name(edge[2]['name']).amount
+                    print('There is {0} amount on EXIT {1} after {2} hours'.format(
+                            amount_produced,edge[2]['name'],self.env.now))
+                    sim_results.append({'name': edge[2]['name'], 'amount': amount_produced}) 
                     
             if machine.type == dtTypes.dtTypes.SOURCE:
                 for edge in self.graph.out_edges(node, data=True):
-                    parts_left = len(self.get_queue_by_name(edge[2]['name']).parts)
-                    print('There are {0} parts on SOURCE {1} after {2} hours'.format(
-                            parts_left,edge[2]['name'],self.env.now))
+                    amount_left = self.get_queue_by_name(edge[2]['name']).amount
+                    print('There is {0} amount on SOURCE {1} after {2} hours'.format(
+                            amount_left,edge[2]['name'],self.env.now))
                     
         print('----------------------------------')
         print('SIMULATION COMPLETED')        
@@ -158,8 +158,9 @@ class dtFactory(object):
         # write back the parts
         self.parts = []
         for q in self.queues:
-            for p in q.store.items:
-                self.parts.append(p)
+            if q.type == dtTypes.dtTypes.BUFFER:
+                for p in q.store.items:
+                    self.parts.append(p)
             
         return sim_results
     
@@ -419,6 +420,8 @@ class dtFactory(object):
                                 group=machine.group,
                                 num_parts_in=machine.num_parts_in,
                                 num_parts_out=machine.num_parts_out,
+                                amount_in=machine.amount_in,
+                                amount_out=machine.amount_out,
                                 processing_time=machine.processing_time,
                                 position_on_dash=machine.position_on_dash,
                                 size_on_dash=machine.size_on_dash,
@@ -439,6 +442,7 @@ class dtFactory(object):
                                 description=buffer.description, 
                                 group=buffer.group,
                                 capacity=buffer.capacity,
+                                amount=buffer.amount,
                                 position_on_dash=buffer.position_on_dash,
                                 size_on_dash=buffer.size_on_dash,
                                 shape_on_dash=buffer.shape_on_dash,
@@ -567,6 +571,7 @@ class dtFactory(object):
             machine_nodes = py2neo.matching.NodeMatcher(g).match("MACHINE")
             process_nodes = py2neo.matching.NodeMatcher(g).match("PROCESS") 
             buffer_nodes = py2neo.matching.NodeMatcher(g).match("BUFFER")
+            container_nodes = py2neo.matching.NodeMatcher(g).match("CONTAINER")
             source_nodes = py2neo.matching.NodeMatcher(g).match("SOURCE") 
             exit_nodes = py2neo.matching.NodeMatcher(g).match("EXIT") 
             processed_part_nodes = py2neo.matching.NodeMatcher(g).match("PROCESSED_PART")
@@ -609,6 +614,8 @@ class dtFactory(object):
                                                                  description = m['description'],
                                                                  num_parts_in=m['num_parts_in'],
                                                                  num_parts_out=m['num_parts_out'],
+                                                                 amount_in=m['amount_in'],
+                                                                 amount_out=m['amount_out'],
                                                                  processing_time=m['processing_time'],
                                                                  position_on_dash=m['position_on_dash'],
                                                                  size_on_dash=m['size_on_dash'],
@@ -616,20 +623,24 @@ class dtFactory(object):
                                                                  color_on_dash=m['color_on_dash']))                                                
                                                 
                 
-            for b in buffer_nodes:
-                b_inlet =  py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='INLET').first()             
-                b_outlet = py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='OUTLET').first()
-                if isinstance(b_inlet, py2neo.Relationship) and isinstance(b_outlet, py2neo.Relationship):                    
-                    self.queues.append(dtQueue.dtQueue(self.get_machine_by_name(b_inlet.nodes[0]['name']), 
-                                                       self.get_machine_by_name(b_outlet.nodes[1]['name']),
-                                                       capacity=b['capacity'],
-                                                       name=b['name'], 
-                                                       description=b['description'],
-                                                       group=b['group'],
-                                                       position_on_dash=b['position_on_dash'],
-                                                       size_on_dash=b['size_on_dash'],
-                                                       shape_on_dash=b['shape_on_dash'],
-                                                       color_on_dash=b['color_on_dash']))
+            for nodes_set in [buffer_nodes, container_nodes]:
+                for b in nodes_set:
+                    b_inlet =  py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='INLET').first()             
+                    b_outlet = py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='OUTLET').first()
+                    if isinstance(b_inlet, py2neo.Relationship) and isinstance(b_outlet, py2neo.Relationship):  
+                        dtype = dtTypes.dtTypes[list(b.labels)[0]]                  
+                        self.queues.append(dtQueue.dtQueue(self.get_machine_by_name(b_inlet.nodes[0]['name']), 
+                                                        self.get_machine_by_name(b_outlet.nodes[1]['name']),
+                                                        capacity=b['capacity'],
+                                                        amount=b['amount'],
+                                                        name=b['name'], 
+                                                        description=b['description'],
+                                                        group=b['group'],
+                                                        qtype=dtype,
+                                                        position_on_dash=b['position_on_dash'],
+                                                        size_on_dash=b['size_on_dash'],
+                                                        shape_on_dash=b['shape_on_dash'],
+                                                        color_on_dash=b['color_on_dash']))
                 
             
             for e in sensor_edges:  
@@ -752,7 +763,7 @@ class dtFactory(object):
             else:
                 buffer_color_code = "red"
             n["data"]["id"] = queue.name
-            n["data"]["weight"] = len(queue.parts)
+            n["data"]["weight"] = queue.amount
             n["data"]["color"] = buffer_color_code
             n["data"]["label"] = queue.description
             n["data"]["type"] = queue.type.name
@@ -867,12 +878,15 @@ class dtFactory(object):
                                 type=m.type,
                                 num_parts_in=m.num_parts_in,
                                 num_parts_out=m.num_parts_out,
-                                processing_time=m.num_parts_out,
+                                amount_in=m.amount_in,
+                                amount_out=m.amount_out,
+                                processing_time=m.processing_time,
                                 position_on_dash=m.position_on_dash)
         
         for q in self.queues:
             self.graph.add_edge(q.frm, q.to, 
-                                capacity=q.capacity, 
+                                capacity=q.capacity,
+                                amount=q.amount, 
                                 description=q.description, 
                                 name=q.name, 
                                 group=q.group,

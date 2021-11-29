@@ -11,10 +11,7 @@ History:
 from influxdb import InfluxDBClient
 import configparser
 import pandas as pd
-import time
 import environment.settings as stngs
-import os
-
 
 class DTPrototypeInfluxDbClient:
     def __init__(self, path_to_config='sindit.cfg'):
