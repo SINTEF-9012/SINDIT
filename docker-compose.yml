@@ -5,6 +5,7 @@ services:
     image: influxdb:1.8
     hostname: influxdb
     restart: unless-stopped
+    mem_limit: 5G
     ports:
       - '8086:8086'
     volumes:
@@ -21,6 +22,7 @@ services:
   zoo:
     image: zookeeper:3.4.9
     restart: unless-stopped
+    mem_limit: 5G
     hostname: zoo
     ports:
       - 2181:2181
@@ -35,6 +37,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:5.5.1
     hostname: kafka
+    mem_limit: 5G
     restart: unless-stopped
     ports:
       - 9092:9092
@@ -62,6 +65,7 @@ services:
   neo4jfactory:
     image: neo4j:3.5
     hostname: neo4jfactory
+    mem_limit: 5G
     restart: unless-stopped
     ports:
       - 7474:7474
@@ -80,6 +84,7 @@ services:
   neo4jparts:
     image: neo4j:3.5
     hostname: neo4jparts
+    mem_limit: 5G
     restart: unless-stopped
     ports:
       - 7475:7474
@@ -98,6 +103,7 @@ services:
   sindit:
     build: .
     hostname: sindit
+    mem_limit: 5G
     environment:
       ENVIRONMENT_FILE: "docker_deployment.env"
     ports:

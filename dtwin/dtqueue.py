@@ -35,10 +35,7 @@ class dtQueue(object):
         self.capacity = capacity        
         self.description = description
         self.parts = list()
-        if self.type == dtTypes.dtTypes.BUFFER:
-            self.amount = len(self.parts)
-        elif self.type == dtTypes.dtTypes.CONTAINER:
-            self.amount = amount
+        self.amount = amount
         
         # visualization
         self.position_on_dash = position_on_dash

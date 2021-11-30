@@ -17,7 +17,7 @@ import dtwin.dtpart as dtPart
 import environment.settings as stngs
 
 RUN_KAFKA_PRODUCER = True
-PRINT_DEBUG_INFO = True
+PRINT_DEBUG_INFO = False
 class dtMachine(object):
     
     def __init__(self, name=None, 
@@ -155,7 +155,7 @@ class dtMachine(object):
                 part_from_buffer = yield q_in.store.get()
                 
                 q_in.parts = q_in.store.items # @todo: need to figure out how to yield in dtqueue
-                q_in.amount = len(q_in.parts)
+                q_in.amount = len(q_in.store.items)
                 q_in.monitor.append([self.env.now, q_in.amount])
                 #fuse all parts   
                 if new_part == None:
@@ -167,7 +167,7 @@ class dtMachine(object):
                 
                 new_part.fuse_parts(part=part_from_buffer, use_neo4j=use_kafka_and_neo4j)
                 self._print_debug(self.type.name + ' {0} consumed {1} parts from {2} at time {3} {4} parts left'.format(
-                    self.name, self.num_parts_in, q_in.name, self.env.now, len(q_in.parts)))
+                    self.name, self.num_parts_in, q_in.name, self.env.now, q_in.amount))
 
                 if RUN_KAFKA_PRODUCER and use_kafka_and_neo4j:
                     data_json_IN = json.dumps({ 'buffer_id': q_in.name,

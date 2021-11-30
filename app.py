@@ -124,8 +124,8 @@ def _draw_table():
     
     # we know that P10.1 is the last process in the production before the exit node
     #@todo: look for the specific process before the exit buffers
-    last_arr_time = requests.get(API_URI+'/get_last_prod_arrival_time_from_influxDB/'+'P10.1').json()    
-    avg_arr_time = requests.get(API_URI+'/get_avg_arrival_freq_from_influxDB/'+'P10.1').json()
+    last_arr_time = requests.get(API_URI+'/get_last_prod_arrival_time_from_influxDB/'+'M5').json()    
+    avg_arr_time = requests.get(API_URI+'/get_avg_arrival_freq_from_influxDB/'+'M5').json()
     rows.append(html.Tr([html.Td("PARTS ARRIVAL [hh:mm]", style=header_style), html.Td()]))
     avg_arr_time_str = 'not available'
     last_arr_time_str = 'not available'
@@ -271,7 +271,6 @@ app.layout = html.Div([
                 dbc.Col([
                     _draw_graph(cygraph, cystyle),
                     html.Div(children=[dcc.Input(id='input-on-submit', type='number', value=40), 'Simulation duration']),
-                    html.Div(children=[dcc.Input(id='parts-on-submit', type='number', value=10), 'Add amount on source']),
                     html.Button('Simulate', id='submit-val', n_clicks=0),
                     html.Button('Reset', id='reset-val', n_clicks=0),
                     html.Div(id='run_event_sim_button',children='Enter a simulation duration'),
@@ -402,18 +401,18 @@ def displayTapPartNodeData(data):
               Input('reset-val', 'n_clicks'),
               Input('submit-val', 'n_clicks'),    
               State('input-on-submit', 'value'),
-              State('parts-on-submit', 'value'),
               prevent_initial_call=True)
-def run_event_sim(reset, submit, value_duration, num_entry_amount): 
+def run_event_sim(reset, submit, value_duration): 
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'reset-val' in changed_id:
         print('Reset was triggered')
-        file_path = '../*.json'
+        file_path = 'chocolate_factory.json'
         request = API_URI+'/push_json_factory_and_parts_to_neo4j/'+file_path
         requests.post(request)
         return 'Reset is done, you can start simulation again.'
     else:      
-        print('Descrete event simulation was triggered for ', value_duration, ' seconds and ', num_entry_amount, ' added amount/parts')
+        print('Descrete event simulation was triggered')
+        num_entry_amount = 0
         sim_request = API_URI+'/run_factory/'+str(value_duration)+'/'+str(num_entry_amount)
         sim_results = requests.get(sim_request) 
         try:

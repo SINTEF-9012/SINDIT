@@ -127,7 +127,61 @@ class dtChocFac(dtFactory):
 
         ret_val = self.populate_networkx_graph()  
         return True
+
+def run_factory(sim_time:int, num_entry_amount:int):
+    fac = dtFactory()  
+    fac.deserialize(serial_type="neo4j", 
+                    file_path_or_uri=NEO4J_URI,
+                    user=NEO4J_USER,
+                    password=NEO4J_PASS,
+                    need_auth=NEED_AUTH)
     
+    fac.sim_hours = sim_time 
+
+    # setting up the inventory:
+    if PARTS_NEED_AUTH.lower() == 'true':
+        part_g = py2neo.Graph(PARTS_NEO4J_URI, 
+                     user=PARTS_NEO4J_USER, 
+                     password=PARTS_NEO4J_PASS)
+    else:
+        part_g = py2neo.Graph(PARTS_NEO4J_URI)
+    
+    # set reference to graph since this gets lost
+    for part in fac.parts:
+        part.py2neo_graph = part_g
+        # make sure part is there
+        part.createNeo4j()
+    
+    for machine in fac.machines:
+        machine.py2neo_graph = part_g
+    
+    # we put some more parts on the entry queue
+    # find all queues with SOURCES and distribute parts on them more or less equally
+    source_queues = fac.get_source_queues()
+    source_buffers = list(filter(lambda x: x.type == dtTypes.dtTypes.BUFFER, source_queues))
+    source_containers = list(filter(lambda x: x.type == dtTypes.dtTypes.CONTAINER, source_queues))
+
+    blen=len(source_buffers)
+    if blen > 0:
+        num_entry_parts = num_entry_amount
+        num_of_existing_parts = len(fac.parts)    
+        for idx in range(num_entry_parts):
+            part = dtPart.dtPart('Pa'+str(idx+num_of_existing_parts), type=dtTypes.dtTypes.SINGLE_PART, py2neo_graph=part_g)
+            part.createNeo4j()
+            fac.parts.append(part)
+            sb=source_buffers[idx%blen]
+            fac.get_queue_by_name(sb.name).parts.append(part)                                      
+
+    for q in source_containers:
+        q.amount += num_entry_amount
+
+    # after we add ingredfients on queue let's write this back to neo4j
+    fac.serialize(serial_type="neo4j", file_path_or_uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASS,need_auth=NEED_AUTH)
+
+    # Discrete event sumulation     
+    sim_results = fac.run()
+       
+    return sim_results    
 if __name__ == '__main__':
 
 
@@ -140,10 +194,8 @@ if __name__ == '__main__':
     choc_fac.serialize(serial_type="json", file_path_or_uri="chocolate_factory.json")
 
     # Discrete event sumulation     
-    #choc_fac.sim_hours = 40 
-    #sim_results = choc_fac.run(use_kafka_and_neo4j = True, is_real_time = False)
-    
-    #print(sim_results)
+    #run_factory(sim_time=40, num_entry_amount=0)
+
     #fac = dtFactory()  
     #fac.deserialize(serial_type="neo4j", file_path_or_uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASS,need_auth=NEED_AUTH)
     #cytograph = fac.cytoscape_json_data() 

@@ -23,7 +23,8 @@ import math
 
 import simpy
 import matplotlib.animation as animation
-    
+
+PRINT_DEBUG_INFO = False
 #Graph stuff
 class dtFactory(object):
     """
@@ -66,7 +67,11 @@ class dtFactory(object):
         # discrete event simulation
         self.env = env
         self.sim_hours = 10
-    
+
+    def _print_debug(self, print_str=''):
+        if PRINT_DEBUG_INFO:
+            print(print_str)
+
     def set_simulation_environment(self):
         for m in self.machines:
             m.env=self.env            
@@ -121,7 +126,7 @@ class dtFactory(object):
             for edge_out in self.graph.out_edges(machine, data=True):
                 out_queues.append(self.get_queue_by_name(edge_out[2]['name']))
                 
-            print('{0} {1} has {2} in queues and {3} out queues'.format(
+            self._print_debug('{0} {1} has {2} in queues and {3} out queues'.format(
                    machine.type.name, machine.name, len(in_queues), len(out_queues)))  
             
             if machine.type == dtTypes.dtTypes.PROCESS or machine.type == dtTypes.dtTypes.MACHINE:
@@ -628,7 +633,8 @@ class dtFactory(object):
                     b_inlet =  py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='INLET').first()             
                     b_outlet = py2neo.matching.RelationshipMatch(g, nodes = {b,b},r_type="DELIVERS_TO").where(type='OUTLET').first()
                     if isinstance(b_inlet, py2neo.Relationship) and isinstance(b_outlet, py2neo.Relationship):  
-                        dtype = dtTypes.dtTypes[list(b.labels)[0]]                  
+                        dtype = dtTypes.dtTypes[list(b.labels)[0]]    
+                        self._print_debug(dtype.name + ' {0}: amount: {1}'.format(b['name'],b['amount']))              
                         self.queues.append(dtQueue.dtQueue(self.get_machine_by_name(b_inlet.nodes[0]['name']), 
                                                         self.get_machine_by_name(b_outlet.nodes[1]['name']),
                                                         capacity=b['capacity'],

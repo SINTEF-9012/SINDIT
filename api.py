@@ -134,9 +134,11 @@ def push_json_factory_and_parts_to_neo4j(json_file:str):
                     password=FAC_NEO4J_PASS,
                     need_auth=FAC_NEED_AUTH)
     fac.set_parts_uri(uri=PARTS_NEO4J_URI)
-    fac.parts[0].py2neo_graph.delete_all()
-    for p in fac.parts:   
-        p.createNeo4j()
+    if len(fac.parts) > 0:
+        fac.parts[0].py2neo_graph.delete_all()
+        for p in fac.parts:   
+            p.createNeo4j()
+            
     cytograph = fac.cytoscape_json_data()
     return cytograph
 
@@ -303,8 +305,8 @@ def run_factory(sim_time:int, num_entry_amount:int):
         # make sure part is there
         part.createNeo4j()
     
-    for queue in fac.queues:
-        queue.py2neo_graph = part_g
+    for machine in fac.machines:
+        machine.py2neo_graph = part_g
     
     # we put some more parts on the entry queue
     # find all queues with SOURCES and distribute parts on them more or less equally
