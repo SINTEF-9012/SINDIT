@@ -26,12 +26,12 @@ If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl
 	docker compose up
 	```
 	
-4. The example dash board can be reached on [http://localhost:8050/](http://localhost:8050/)
+4. The example dash board of a chocolate factory can be reached on [http://localhost:8050/](http://localhost:8050/)
 
 
-![dash](assets/factory_dash.PNG)
+![dash](assets/fac_dashboard.JPG)
 
-To start the simulation to see the parts (pink boxes) moving through the factory graph enter the simulation duration and number of additional parts to be added to the entry buffer and press 'Simulate'. With 'Reset' the original state of the factory graph can be restored.
+To start the simulation enter the simulation duration and press 'Simulate'. With 'Reset' the original state of the factory graph can be restored.
 
 
 ## References
