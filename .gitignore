@@ -1,4 +1,4 @@
 *.pyc
-.vscode/settings.json
+.vscode/*
 docker/
 .idea/
