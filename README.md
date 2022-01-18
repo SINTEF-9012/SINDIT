@@ -4,6 +4,20 @@
 
 ![description](assets/description_sindit.PNG)
 
+### Chocolate Production Process
+
+Here, we have several steps before the chocolate bars can be moulded and finally wrapped. The process starts with conching ground sugar with melted cocoa butter. Through tempering of the chocolate it obtains the sheen and crisp properties that we all know from chocolate bars.
+
+<img src="assets/fac_pics.png" alt="Picture1" style="zoom:20%;" />
+
+
+
+### Modelling the Chocolate Factory
+
+This is a simplified digital model of the chocolate factory. M1-M5 are machines with sensors S1-S5. Between the machines the ingredients are stored in queues Q1-Q9. At the last queue Q9 the packaged chocolate bars are modelled as pink squares P1-P3.
+
+<img src="assets/fac_schema.png" alt="Picture2" style="zoom:20%;" />
+
 ## **Requirements**
 
 ### System:
@@ -26,7 +40,7 @@ If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl
 	docker compose up
 	```
 	
-4. The example dash board of a chocolate factory can be reached on [http://localhost:8050/](http://localhost:8050/)
+4. The example dash board of a chocolate factory can be reached at [http://localhost:8050/](http://localhost:8050/)
 
 
 ![dash](assets/fac_dashboard.JPG)
