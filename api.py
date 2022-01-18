@@ -135,9 +135,11 @@ def push_json_factory_and_parts_to_neo4j(json_file:str):
                     password=FAC_NEO4J_PASS,
                     need_auth=FAC_NEED_AUTH)
     fac.set_parts_uri(uri=PARTS_NEO4J_URI)
-    fac.parts[0].py2neo_graph.delete_all()
-    for p in fac.parts:   
-        p.createNeo4j()
+    if len(fac.parts) > 0:
+        fac.parts[0].py2neo_graph.delete_all()
+        for p in fac.parts:   
+            p.createNeo4j()
+            
     cytograph = fac.cytoscape_json_data()
     return cytograph
 
@@ -203,6 +205,20 @@ def get_parts_for_buffer(buffer_name:str):
            
     return parts
 
+@app.get("/get_amount_on_queue/{queue_name}")
+def get_amount_on_queue(queue_name:str):
+    if FAC_NEED_AUTH.lower() == 'true':
+        g = py2neo.Graph(FAC_NEO4J_URI, 
+                     user=FAC_NEO4J_USER, 
+                     password=FAC_NEO4J_PASS)
+
+    else:
+        g = py2neo.Graph(FAC_NEO4J_URI)
+    
+    queue_node = py2neo.matching.NodeMatcher(g).match(name=queue_name).first()
+    amount = queue_node['amount']
+    return amount
+
 @app.get("/get_factory_name")
 def get_factory_name():
     if FAC_NEED_AUTH.lower() == 'true':
@@ -265,8 +281,8 @@ def get_sim_prediction_from_neo4j(sim_time:int):
        
     return sim_results
 
-@app.get("/run_factory/{sim_time}/{num_entry_parts}")
-def run_factory(sim_time:int, num_entry_parts:int):
+@app.get("/run_factory/{sim_time}/{num_entry_amount}")
+def run_factory(sim_time:int, num_entry_amount:int):
     fac = dtFactory(flushAAS=True)
     fac.deserialize(serial_type="neo4j", 
                     file_path_or_uri=FAC_NEO4J_URI,
@@ -290,25 +306,36 @@ def run_factory(sim_time:int, num_entry_parts:int):
         # make sure part is there
         part.createNeo4j()
     
+    for machine in fac.machines:
+        machine.py2neo_graph = part_g
+    
     # we put some more parts on the entry queue
     # find all queues with SOURCES and distribute parts on them more or less equally
-    source_buffers = fac.get_source_queues()
+    source_queues = fac.get_source_queues()
+    source_buffers = list(filter(lambda x: x.type == dtTypes.dtTypes.BUFFER, source_queues))
+    source_containers = list(filter(lambda x: x.type == dtTypes.dtTypes.CONTAINER, source_queues))
+
     blen=len(source_buffers)
-    num_of_existing_parts = len(fac.parts)
-    for idx in range(num_entry_parts):
-        part = dtPart.dtPart('Pa'+str(idx+num_of_existing_parts), type=dtTypes.dtTypes.SINGLE_PART, py2neo_graph=part_g)
-        part.createNeo4j()
-        fac.parts.append(part)
-        sb=source_buffers[idx%blen]
-        fac.get_queue_by_name(sb.name).parts.append(part)                        
-    
-    # after we add parts on queue let's write this back to neo4j
+    if blen > 0:
+        num_entry_parts = num_entry_amount
+        num_of_existing_parts = len(fac.parts)    
+        for idx in range(num_entry_parts):
+            part = dtPart.dtPart('Pa'+str(idx+num_of_existing_parts), type=dtTypes.dtTypes.SINGLE_PART, py2neo_graph=part_g)
+            part.createNeo4j()
+            fac.parts.append(part)
+            sb=source_buffers[idx%blen]
+            fac.get_queue_by_name(sb.name).parts.append(part)                                      
+
+    for q in source_containers:
+        q.amount += num_entry_amount
+
+    # after we add ingredfients on queue let's write this back to neo4j
     fac.serialize(serial_type="neo4j", 
-                  file_path_or_uri=FAC_NEO4J_URI, 
-                  user=FAC_NEO4J_USER, 
-                  password=FAC_NEO4J_PASS,
-                  need_auth=FAC_NEED_AUTH)
-    
+                file_path_or_uri=FAC_NEO4J_URI, 
+                user=FAC_NEO4J_USER, 
+                password=FAC_NEO4J_PASS,
+                need_auth=FAC_NEED_AUTH)
+
     # Discrete event sumulation     
     sim_results = fac.run()
        

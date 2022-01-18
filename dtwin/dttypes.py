@@ -22,8 +22,9 @@ class dtTypes(Enum):
     TEMPERATURE=9
     VIBRATION=10
     BUFFER=11
-    UNKNOWN=12
+    CONTAINER=12
+    UNKNOWN=13
+
 
     def __str__(self):
         return str(self.name)
-

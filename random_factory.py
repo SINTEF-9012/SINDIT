@@ -80,9 +80,17 @@ class dtRandom(dtFactory):
         # create machines as objects:
         dt_machines = []
         
-        source_machine = dtMachine.dtMachine('S1', sensors=[], description='Goods producer', type=dtTypes.dtTypes.SOURCE,num_parts_in = 0,num_parts_out = 0,position_on_dash=(-200,70))
+        source_machine = dtMachine.dtMachine('S1', sensors=[], description='Goods producer', 
+                                            type=dtTypes.dtTypes.SOURCE,
+                                            num_parts_in = 0,num_parts_out = 0,
+                                            amount_out = 0,amount_in = 0,
+                                            position_on_dash=(-200,70))
         dt_machines.append(source_machine)
-        exit_machine = dtMachine.dtMachine('E1', sensors=[], description='Product exit', type=dtTypes.dtTypes.EXIT,num_parts_out = 0,num_parts_in = 0,position_on_dash=(-30,160))
+        exit_machine = dtMachine.dtMachine('E1', sensors=[], description='Product exit', 
+                                            type=dtTypes.dtTypes.EXIT,
+                                            num_parts_out = 0,num_parts_in = 0,
+                                            amount_out = 0,amount_in = 0,
+                                            position_on_dash=(-30,160))
         dt_machines.append(exit_machine)
         
         dt_machines.append(dtMachine.dtMachine('P1', sensors=[], description='Goods distribution', type=dtTypes.dtTypes.PROCESS,position_on_dash=(-140,70)))
@@ -137,21 +145,21 @@ class dtRandom(dtFactory):
 if __name__ == '__main__':
 
 
-    random_fac = dtRandom()  
+    random_fac = dtRandom() 
+    #random_fac = dtFactory() 
 
     # store in neo4j
     random_fac.serialize(serial_type="neo4j", file_path_or_uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASS,need_auth=NEED_AUTH)
+    #random_fac.deserialize(serial_type="neo4j", file_path_or_uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASS,need_auth=NEED_AUTH)
 
-    # store as json file
+    # store as aasx file
     random_fac.serialize(serial_type="aasx", file_path_or_uri="random_factory.aasx")
-
     random_fac.serialize(serial_type="aas", file_path_or_uri="random_factory.aas")
-
 
 
     # Discrete event sumulation     
     random_fac.sim_hours = 20 
-    #sim_results = random_fac.run(use_kafka_and_neo4j = True, is_real_time = False)
+    sim_results = random_fac.run(use_kafka_and_neo4j = True, is_real_time = False)
     
-    #print(sim_results)
+    print(sim_results)
 

@@ -20,11 +20,13 @@ from saas.semantic_factory import SemanticFactory
 class dtQueue(object):
     def __init__(self, frm=None, to=None, 
                  capacity=1000, 
-                 name = None,
-                 description=None,
+                 amount = 0,
+                 name = '', 
+                 description='', 
                  env = simpy.Environment(), 
                  group='NONE',
                  json_data=None,
+                 qtype = dtTypes.dtTypes.BUFFER,
                  position_on_dash=list((0,0)),
                  shape_on_dash = 'round-rectangle',
                  color_on_dash = "#efcc61",
@@ -33,7 +35,7 @@ class dtQueue(object):
         self.name = name
         self.frm = frm
         self.to = to
-        self.type = dtTypes.dtTypes.BUFFER
+        self.type = qtype
         self.group = group
         self.sensors = []
         self.capacity = capacity        
@@ -41,7 +43,6 @@ class dtQueue(object):
         self.parts = list()
         self.uuid = str(id.uuid4())
         
-        # ass
         # ass
         if self.name is None or self.name.isspace():
             self.name = "SINDIT_Default_Queue_Name"
@@ -61,6 +62,7 @@ class dtQueue(object):
                                                     description=self.description,
                                                     submodels={nameplate},
                                                     concept_dictionary={dictionary})
+        self.amount = amount
         
         # visualization
         self.position_on_dash = position_on_dash
@@ -79,10 +81,14 @@ class dtQueue(object):
         
         # discrete event simulation
         self.env = env
-        self.store = simpy.Store(env, capacity = self.capacity)
-        self.store.items = list(self.parts) #we need a copy here as python works with mutable references
-        self.monitor = [[0,len(self.parts)]] 
-                   
+        if self.type == dtTypes.dtTypes.BUFFER:
+            self.store = simpy.Store(env, capacity = self.capacity)
+            self.store.items = list(self.parts) #we need a copy here as python works with mutable references
+            self.monitor = [[0,len(self.parts)]] 
+        elif self.type == dtTypes.dtTypes.CONTAINER:
+            self.store = simpy.Container(env, capacity = self.capacity, init=self.amount)
+            self.monitor = [[0,self.amount]] 
+                  
         
     def deserialize(self, json_data):
         self.name = json_data["name"]
@@ -91,7 +97,9 @@ class dtQueue(object):
         self.description = json_data["description"]
         self.sensors = json_data["sensors"]
         self.group = json_data["group"]
+        self.type = dtTypes.dtTypes[json_data["type"]]
         self.capacity=json_data["capacity"]
+        self.amount=json_data["amount"]
         self.parts=json_data["parts"] #this is a list with uuids that need to be transformed in dtParts
         self.position_on_dash=json_data["position_on_dash"]
         self.shape_on_dash=json_data["shape_on_dash"]
@@ -105,8 +113,12 @@ class dtQueue(object):
         return f"Queue(frm={self.frm}, to={self.to})"
     
     def create_store(self):
-        self.store = simpy.Store(self.env, capacity = self.capacity)
-        self.store.items = list(self.parts) #we need a copy here as python works with mutable references
+        if self.type == dtTypes.dtTypes.BUFFER:
+            self.store = simpy.Store(self.env, capacity = self.capacity)
+            self.store.items = list(self.parts) #we need a copy here as python works with mutable references
+        elif self.type == dtTypes.dtTypes.CONTAINER:
+            self.store = simpy.Container(self.env, capacity = self.capacity, init=self.amount)
+        
         
     def draw_explarr(self, expl, explarr, txt, visiblesensors, visiblesensortext):
         ma.setp(expl, visible=False)
@@ -134,12 +146,14 @@ class dtQueue(object):
                     'frm': [],
                     'to': [],
                     'group': [],
+                    'type': [],
                     'capacity': [],
                     'parts': [],
                     'position_on_dash': [],
                     'shape_on_dash': [],
                     'color_on_dash': [],
-                    'size_on_dash': []
+                    'size_on_dash': [],
+                    'amount':[]
                     }
                  
         json_data["name"] = self.name
@@ -147,6 +161,7 @@ class dtQueue(object):
         json_data["frm"] = self.frm.name
         json_data["to"] = self.to.name
         json_data["group"] = self.group
+        json_data["type"] = self.type.name
         json_data["capacity"] = self.capacity
         json_data["sensors"] = self.sensors
         json_data["position_on_dash"] = self.position_on_dash
@@ -154,7 +169,9 @@ class dtQueue(object):
         json_data["color_on_dash"]=self.color_on_dash
         json_data["size_on_dash"]=self.size_on_dash
         json_data["parts"] = []
-        for p in self.store.items:
-            json_data["parts"].append(p.uuid)
+        json_data["amount"] = self.amount
+        if self.type == dtTypes.dtTypes.BUFFER: 
+            for p in self.store.items:
+                json_data["parts"].append(p.uuid)
         
         return json_data

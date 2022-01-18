@@ -2,9 +2,9 @@
 # don't forget to set the env PYTHONPATH
 # export PYTHONPATH=$PWD
 # here we fill the factory graph into the DB
-python ./random_factory.py &
+python ./chocolate_factory.py &
 # start kafka consumer
-python ./dtwin/kafka_consumer.py &
+python ./kafka_consumer.py &
 # start the rest API
 # kill $(pgrep -P $pid) # to kill uvicorn cleanly
 uvicorn api:app --host 0.0.0.0 --port 8000 &

@@ -130,6 +130,16 @@
 			"border-width": 1			
         }
     },
+	    {
+        "selector": ".CONTAINER",
+        "style": {
+			"label": "data(weight)",
+			"border-color": "data(color)",
+            "color": "data(color)",
+			"border-style": "solid",
+			"border-width": 1			
+        }
+    },
     {
         "selector": ".SENSOR",
         "style": {
