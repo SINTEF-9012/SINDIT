@@ -17,3 +17,4 @@ dash_bootstrap_components
 fastapi
 python-dotenv
 uvicorn
+pyi40aas
