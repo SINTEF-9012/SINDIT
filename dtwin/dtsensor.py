@@ -69,7 +69,7 @@ class dtSensor(object):
 
     def get_data(self):
         print('// Loading Sensor Data from DB')
-        c = f.DTPrototypeInfluxDbClient('dt-prototype.cfg')
+        c = f.DTPrototypeInfluxDbClient()
         df = c.get_any_measurement_as_dataframe(self.type, \
                                                 {'sensor': self.name})
         x = df.timestamp
