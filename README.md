@@ -1,6 +1,21 @@
 # SINDIT - SINTEF Digital Twin
 
 ## Description
+This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
+
+[Watch the presentation here](https://www.youtube.com/watch?v=ExHNP6527d8&list=PLmMTZhDUcVmuFcJG9tbxR6AAWcOl2Jej3&index=29&t=2s)
+
+*Cite the work:*
+
+```
+@inproceedings{waszak2022ICSA,
+  title={Let the Asset Decide: Digital Twins with Knowledge Graphs},
+  authors={Maryna Waszak, An Ngoc Lam, Volker Hoffmann, Brian Elvesæter, Maria Flavia Mogos, and Dumitru Roman},
+  booktitle={IEEE 19th International Conference on Software Architecture Companion (ICSA-C)},
+  year={2022}
+}
+```
+
 
 ![description](assets/description_sindit.PNG)
 
