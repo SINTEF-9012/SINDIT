@@ -89,6 +89,8 @@ def _draw_table_node_infos(data):
         else:
             rows.append(html.Tr([html.Td(data['data']['type'], style=header_style), html.Td(data['data']['id'])]))
             rows.append(html.Tr([html.Td('Description:'), html.Td(data['data']['label'])]))
+            rows.append(html.Tr([html.Td('Amount in:'), html.Td(data['data']['in'])]))
+            rows.append(html.Tr([html.Td('Amount out:'), html.Td(data['data']['out'])]))
             
     
     table_body = [html.Tbody(rows)]
@@ -406,7 +408,7 @@ def run_event_sim(reset, submit, value_duration):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'reset-val' in changed_id:
         print('Reset was triggered')
-        file_path = 'chocolate_factory.json'
+        file_path = 'gilje_factory.json'
         request = API_URI+'/push_json_factory_and_parts_to_neo4j/'+file_path
         requests.post(request)
         return 'Reset is done, you can start simulation again.'

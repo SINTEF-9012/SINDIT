@@ -48,20 +48,21 @@ class dtQueue(object):
             self.name = "SINDIT_Default_Queue_Name"
         if self.description is None or self.description.isspace():
             self.description = "SINDIT queue"
-        nameplate = AASFactory.instance().create_Nameplate(name=self.name + "_Nameplate",
-                                                           manufacturerName="SINDIT_Default_Manufacturer_Name",
-                                                           manufacturerProductDesignation=self.description,
-                                                           serialNumber=self.uuid)
-        dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name + "_ConceptDictionary",
-                                                                    concepts={SemanticFactory.instance().getNameplate(),
-                                                                              SemanticFactory.instance().getManufacturerName(),
-                                                                              SemanticFactory.instance().getManufacturerProductDesignation(),
-                                                                              SemanticFactory.instance().getSerialNumber()})
 
-        self.aas = AASFactory.instance().create_aas(name=self.name,
-                                                    description=self.description,
-                                                    submodels={nameplate},
-                                                    concept_dictionary={dictionary})
+        # nameplate = AASFactory.instance().create_Nameplate(name=self.name + "_Nameplate",
+        #                                                    manufacturerName="SINDIT_Default_Manufacturer_Name",
+        #                                                    manufacturerProductDesignation=self.description,
+        #                                                    serialNumber=self.uuid)
+        # dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name + "_ConceptDictionary",
+        #                                                             concepts={SemanticFactory.instance().getNameplate(),
+        #                                                                       SemanticFactory.instance().getManufacturerName(),
+        #                                                                       SemanticFactory.instance().getManufacturerProductDesignation(),
+        #                                                                       SemanticFactory.instance().getSerialNumber()})
+
+        # self.aas = AASFactory.instance().create_aas(name=self.name,
+        #                                             description=self.description,
+        #                                             submodels={nameplate},
+        #                                             concept_dictionary={dictionary})
         self.amount = amount
         
         # visualization

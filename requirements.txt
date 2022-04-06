@@ -18,3 +18,6 @@ fastapi
 python-dotenv
 uvicorn
 pyi40aas
+colormap
+scipy
+easydev

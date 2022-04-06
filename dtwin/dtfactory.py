@@ -70,17 +70,17 @@ class dtFactory(object):
         if flushAAS:
             AASFactory.instance().flush()
 
-        nameplate = AASFactory.instance().create_Nameplate(name=self.name+"_Nameplate",
-                                                           manufacturerName="SINDIT_Default_Manufacturer_Name",
-                                                           manufacturerProductDesignation=self.description)
-        dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name+"_ConceptDictionary",
-                                                                    concepts={SemanticFactory.instance().getNameplate(),
-                                                                              SemanticFactory.instance().getManufacturerName(),
-                                                                              SemanticFactory.instance().getManufacturerProductDesignation()})
-        self.aas = AASFactory.instance().create_aas(name=self.name,
-                                                    description=self.description,
-                                                    submodels={nameplate},
-                                                    concept_dictionary={dictionary})
+        # nameplate = AASFactory.instance().create_Nameplate(name=self.name+"_Nameplate",
+        #                                                    manufacturerName="SINDIT_Default_Manufacturer_Name",
+        #                                                    manufacturerProductDesignation=self.description)
+        # dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name+"_ConceptDictionary",
+        #                                                             concepts={SemanticFactory.instance().getNameplate(),
+        #                                                                       SemanticFactory.instance().getManufacturerName(),
+        #                                                                       SemanticFactory.instance().getManufacturerProductDesignation()})
+        # self.aas = AASFactory.instance().create_aas(name=self.name,
+        #                                             description=self.description,
+        #                                             submodels={nameplate},
+        #                                             concept_dictionary={dictionary})
 
         #plotting 
         self.picked = False
@@ -268,7 +268,7 @@ class dtFactory(object):
                 return m
             
         # if no machine found return empty dtMachine
-        return dtMachine.dtMachine()
+        return []
     
     def get_queue_by_name(self, name=''):
         for q in self.queues:
@@ -771,6 +771,8 @@ class dtFactory(object):
             n["data"]["id"] = machine.name
             n["data"]["label"] = machine.description
             n["data"]["type"] = machine.type.name
+            n["data"]["in"] = machine.num_parts_in
+            n["data"]["out"] = machine.num_parts_out
             if machine.group != 'NONE' and USE_GROUPS:
                 n["data"]["parent"] = machine.group
             n["group"] = 'nodes'
@@ -1035,7 +1037,17 @@ class dtFactory(object):
         self.populate_networkx_graph()
         
         return True
-    
+    def store_from_file_to_influx(self, machine_ids, times):
+        c = f.DTPrototypeInfluxDbClient('sindit.cfg')
+        time_ms_array = np.zeros(len(times))
+        for index in times.index:  
+            time_ms_array[index] = int(times[index].timestamp()*1000)
+        machine_unique_ids = np.unique(machine_ids)
+        for id in machine_unique_ids:
+            selected_ids = machine_ids.index[machine_ids == id].tolist()
+            tags = {'machine': 'M'+str(id), 'sensor': 'S'+str(id)}
+            c.store_any_measurement('RFID', tags, [1]*len(selected_ids), time_ms_array[selected_ids])
+
     def generate_factory_data(self, duration_h=3):
         c = f.DTPrototypeInfluxDbClient('sindit.cfg')
         

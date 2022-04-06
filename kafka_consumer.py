@@ -60,7 +60,7 @@ def serialize_part(part):
 
     b.update(amount=part['amount'])          
     g.push(b) 
-    print("%s amount: %s"% (amount['sensor_ID'], amount['amount']))
+    print("%s amount: %s"% (part['sensor_ID'], part['amount']))
 
     tx = g.begin()
     

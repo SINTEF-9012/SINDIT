@@ -2,7 +2,7 @@
 # don't forget to set the env PYTHONPATH
 # export PYTHONPATH=$PWD
 # here we fill the factory graph into the DB
-python ./chocolate_factory.py &
+python ./gilje_factory.py &
 # start kafka consumer
 python ./kafka_consumer.py &
 # start the rest API

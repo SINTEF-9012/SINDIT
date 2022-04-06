@@ -19,7 +19,6 @@ from saas.semantic_factory import SemanticFactory
 class dtSensor(object):
     def __init__(self, name=None, 
                  type=None,
-
                  position=False, 
                  timeseries=[], 
                  description=None,
