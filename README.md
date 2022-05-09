@@ -10,7 +10,7 @@ This work has bee presented at the [ICSA22 conference](https://icsa-conferences.
 ```
 @inproceedings{waszak2022ICSA,
   title={Let the Asset Decide: Digital Twins with Knowledge Graphs},
-  authors={Maryna Waszak, An Ngoc Lam, Volker Hoffmann, Brian Elvesæter, Maria Flavia Mogos, and Dumitru Roman},
+  author={Waszak, Maryna and Lam, An Ngoc and Hoffmann, Volker and Elvesæter, Brian and Mogos, Maria Flavia and Roman, Dumitru},
   booktitle={IEEE 19th International Conference on Software Architecture Companion (ICSA-C)},
   year={2022}
 }
