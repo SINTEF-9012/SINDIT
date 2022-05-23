@@ -445,37 +445,37 @@
     "sensors": [
         {
             "name": "S1_1",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "temperature",
             "SI": ""
         },
         {
             "name": "S1_2",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "temperature",
             "SI": ""
         },
         {
             "name": "S2_1",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "temperature",
             "SI": ""
         },
         {
             "name": "S3_1",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "temperature",
             "SI": ""
         },
         {
             "name": "S4_1",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "temperature",
             "SI": ""
         },
         {
             "name": "S5_1",
-            "description": "",
+            "description": "SINDIT Sensor",
             "type": "vibration",
             "SI": ""
         }

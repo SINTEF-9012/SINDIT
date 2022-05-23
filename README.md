@@ -45,16 +45,16 @@ If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl
 
 2. Build the Docker containers
 
-	```sh
-	docker compose build
-	```
+   ```sh
+   docker compose build
+   ```
 
 3. Start up the Docker containers
 
     ```sh
 	docker compose up
 	```
-	
+
 4. The example dash board of a chocolate factory can be reached at [http://localhost:8050/](http://localhost:8050/)
 
 
@@ -62,6 +62,33 @@ If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl
 
 To start the simulation enter the simulation duration and press 'Simulate'. With 'Reset' the original state of the factory graph can be restored.
 
+### Local development
+
+1. Start the databases and required services via docker-compose:
+
+    ```sh
+    docker-compose up influxdb zoo kafka neo4jfactory neo4jparts
+   ```
+
+2. Load the factory graph into the Neo4j database:
+
+   ```sh
+    python ./chocolate_factory.py
+   ```
+
+3. Start the kafka consumer
+
+   ```sh
+    python ./kafka_consumer.py
+   ```
+
+4. Start the REST API
+
+   ```sh
+    uvicorn api:app --host 0.0.0.0 --port 8000
+   ```
+   
+5. Directly start app.py within your IDE / debugger
 
 ## References
 
