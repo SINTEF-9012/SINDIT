@@ -21,7 +21,7 @@ class dtSensor(object):
                  type=None,
 
                  position=False, 
-                 timeseries=[], 
+                 timeseries=[], # TODO: remove?
                  description=None,
                  json_data = None):
         self.name = name

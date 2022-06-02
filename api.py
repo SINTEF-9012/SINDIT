@@ -116,8 +116,8 @@ def get_part_cytoscape_from_neo4j(part_uuid:str):
             'data': {'source': [],'target': []},
             'classes': []
               }
-        n["data"]["source"] = e.nodes[0]['uuid']
-        n["data"]["target"] = e.nodes[1]['uuid']          
+        n["data"]["source"] = e.__nodes[0]['uuid']
+        n["data"]["target"] = e.__nodes[1]['uuid']
         n["group"] = 'edges'
         n["classes"] = 'part_part_edge'
         jsondata.append(n)
@@ -182,7 +182,7 @@ def get_exit_parts():
     parts = []
     for node in exit_nodes:
         outlet = py2neo.matching.RelationshipMatch(g, nodes = {node,node},r_type="DELIVERS_TO").where(type='OUTLET').first()
-        exit_buffer = outlet.nodes[0]
+        exit_buffer = outlet.__nodes[0]
         for rel in g.match((exit_buffer,), r_type="HAS_PART"):
             parts.append(rel.end_node["uuid"])
            
