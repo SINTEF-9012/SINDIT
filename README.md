@@ -67,7 +67,7 @@ To start the simulation enter the simulation duration and press 'Simulate'. With
 1. Start the databases and required services via docker-compose:
 
     ```sh
-    docker-compose up influxdb zoo kafka neo4jfactory neo4jparts
+    docker-compose up influx_db_timeseries influxdb zoo kafka neo4jfactory neo4jparts
    ```
 
 2. Load the factory graph into the Neo4j database:
