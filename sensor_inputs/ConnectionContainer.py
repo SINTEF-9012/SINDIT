@@ -1,8 +1,12 @@
+from typing import List
+
 from sensor_inputs.SensorConnection import SensorConnection
+from sensor_inputs.SensorInput import SensorInput
 from sensor_inputs.mqtt.MqttSensorConnection import MqttSensorConnection
 from sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
 from sensor_inputs.opcua.OpcuaSensorConnection import OpcuaSensorConnection
 from sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
+from timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
 
 OPCUA_INPUTS = [
     {
@@ -127,11 +131,26 @@ class ConnectionContainer:
                 )
             )
 
-    def get_all_inputs(self):
+    def get_all_inputs(self) -> List[SensorInput]:
         """
         :return: All sensor inputs (both MQTT and OPCUA)
         """
-        return self.get_opcua_inputs().extend(self.get_mqtt_inputs())
+        inputs = self.get_mqtt_inputs()
+        inputs.extend(self.get_opcua_inputs())
+        return inputs
+
+    def register_persistence_handlers(self):
+        """
+        Registers a persistence handler for every available sensor input.
+        The handlers will then write every incoming reading to the timeseries DB
+        :return:
+        """
+        handler = TimeseriesPersistenceService.instance().write_measurement
+
+        sensor_input: SensorInput
+        for sensor_input in self.get_all_inputs():
+            sensor_input.register_handler(
+                handler_method=handler)
 
     def get_opcua_inputs(self):
         inputs = []

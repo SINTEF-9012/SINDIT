@@ -494,9 +494,12 @@ con_container.initialize_connections()
 
 con_container.start_connections()
 
-ts_service = TimeseriesPersistenceService()
+ts_service = TimeseriesPersistenceService.instance()
 
-ts_service.test_influx_connection()
+# ts_service.test_influx_connection()
+
+con_container.register_persistence_handlers()
+
 print("Sensors initialized")
 
 # Launch App
