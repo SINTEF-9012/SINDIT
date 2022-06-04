@@ -143,6 +143,10 @@ class OpcuaSensorConnection(SensorConnection):
                 print("OPCUA connection timeout."
                       f"Host: {self.host}, port: {self.port}. Trying to reconnect in {RECONNECT_DURATION} s ...")
                 time.sleep(RECONNECT_DURATION)
+            except OSError:
+                print("OPCUA connection: OSError. "
+                      f"Host: {self.host}, port: {self.port}. Trying to reconnect in {RECONNECT_DURATION} s ...")
+                time.sleep(RECONNECT_DURATION)
 
     def __start_connection(self):
         """
