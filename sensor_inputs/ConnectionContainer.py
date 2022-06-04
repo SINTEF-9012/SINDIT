@@ -10,13 +10,41 @@ OPCUA_INPUTS = [
         "port": 4840,
         "sampling_rate": 1000,  # ms
         "inputs": [
-            'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Actual_Position"',
-            'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Target_Position"',
-            'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Actual_Position"',
-            'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Target_Position"',
-            'ns=3;s="gtyp_HBW"."di_PosBelt_Horizontal"',
-            'ns=3;s="gtyp_HBW"."di_PosBelt_Vertical"',
-            'ns=3;s="gtyp_HBW"."di_Offset_Pos_Rack_Vertical"'
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Actual_Position"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/Horizontal_Axis/di_Actual_Position'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Target_Position"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/Horizontal_Axis/di_Target_Position'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Actual_Position"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/Vertical_Axis/di_Actual_Position'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Target_Position"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/Vertical_Axis/di_Target_Position'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Horizontal"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/di_PosBelt_Horizontal'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Vertical"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/di_PosBelt_Vertical'
+            },
+            {
+                "node_id": 'ns=3;s="gtyp_HBW"."di_Offset_Pos_Rack_Vertical"',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'HBW/di_Offset_Pos_Rack_Vertical'
+            }
         ]
     },
 ]
@@ -28,11 +56,15 @@ MQTT_INPUTS = [
         "inputs": [
             {
                 "topic": 'i/bme680',
-                "json_keyword": 't'
+                "json_keyword": 't',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'BME680/temperature'
             },
             {
                 "topic": 'i/bme680',
-                "json_keyword": 'rt'
+                "json_keyword": 'rt',
+                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+                       'BME680/temperature_raw'
             },
         ]
     },
@@ -66,7 +98,9 @@ class ConnectionContainer:
 
         # MQTT
         for connection in MQTT_INPUTS:
-            mqtt_inputs = [MqttSensorInput(topic=input_def["topic"], json_keyword=input_def["json_keyword"])
+            mqtt_inputs = [MqttSensorInput(id_uri=input_def["id_uri"],
+                                           topic=input_def["topic"],
+                                           json_keyword=input_def["json_keyword"])
                            for input_def in connection["inputs"]]
 
             self.mqtt_connections.append(
@@ -79,8 +113,9 @@ class ConnectionContainer:
 
         # OPC UA
         for connection in OPCUA_INPUTS:
-            opcua_inputs = [OpcuaSensorInput(node_id=node_id)
-                            for node_id in connection["inputs"]]
+            opcua_inputs = [OpcuaSensorInput(id_uri=input_def["id_uri"],
+                                             node_id=input_def["node_id"])
+                            for input_def in connection["inputs"]]
 
             self.opcua_connections.append(
                 OpcuaSensorConnection(

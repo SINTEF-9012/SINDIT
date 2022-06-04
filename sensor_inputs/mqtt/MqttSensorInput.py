@@ -7,12 +7,12 @@ from sensor_inputs.SensorInput import SensorInput
 class MqttSensorInput(SensorInput):
 
     def __init__(self,
-                 topic,
-                 json_keyword,
+                 id_uri: str,
+                 topic: str,
+                 json_keyword: str,
                  timestamp_json_keyword='ts'
                  ):
-        # TODO: change ID name to global identifier / URI?
-        super(MqttSensorInput, self).__init__(id_name=f"MQTT-{topic}-{json_keyword}")
+        super(MqttSensorInput, self).__init__(id_uri=id_uri)
         self.json_keyword = json_keyword
         self.timestamp_json_keyword = timestamp_json_keyword
         self.topic = topic

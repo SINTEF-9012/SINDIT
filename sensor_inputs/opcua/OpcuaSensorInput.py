@@ -5,10 +5,10 @@ from sensor_inputs.SensorInput import SensorInput
 class OpcuaSensorInput(SensorInput):
 
     def __init__(self,
-                 node_id,
+                 id_uri: str,
+                 node_id: str,
                  ):
-        # TODO: change ID name to global identifier / URI?
-        super(OpcuaSensorInput, self).__init__(id_name=f"OPC-UA-{node_id}")
+        super(OpcuaSensorInput, self).__init__(id_uri=id_uri)
         self.node_id = node_id
 
     def handle_raw_reading(self, val, data):
