@@ -20,6 +20,7 @@ import environment.settings as stngs
 import random
 
 from sensor_inputs.ConnectionContainer import ConnectionContainer
+from timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
 
 API_URI = stngs.FAST_API_URI
 sensor_ID = None
@@ -492,6 +493,11 @@ con_container: ConnectionContainer = ConnectionContainer.instance()
 con_container.initialize_connections()
 
 con_container.start_connections()
+
+ts_service = TimeseriesPersistenceService()
+
+ts_service.test_influx_connection()
+print("Sensors initialized")
 
 # Launch App
 app.run_server(host='0.0.0.0', debug=False, port=8050)
