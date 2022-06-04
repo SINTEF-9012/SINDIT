@@ -704,12 +704,12 @@ class dtFactory(object):
 
 
             for e in sensor_edges:
-                sensor_for_this_machine = self.get_sensor_by_name(e.__nodes[1]['name'])
-                self.get_machine_by_name(e.__nodes[0]['name']).sensors.append(sensor_for_this_machine)
+                sensor_for_this_machine = self.get_sensor_by_name(e.nodes[1]['name'])
+                self.get_machine_by_name(e.nodes[0]['name']).sensors.append(sensor_for_this_machine)
 
             for p in part_edges:
-                queue_with_part = self.get_queue_by_name(p.__nodes[0]['name'])
-                part_for_this_queue = self.get_part_by_uuid(p.__nodes[1]['uuid'])
+                queue_with_part = self.get_queue_by_name(p.nodes[0]['name'])
+                part_for_this_queue = self.get_part_by_uuid(p.nodes[1]['uuid'])
                 queue_with_part.parts.append(part_for_this_queue)
 
             self.populate_networkx_graph()
