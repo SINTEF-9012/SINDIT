@@ -49,8 +49,21 @@ class TimeseriesPersistenceService(object):
 
     def write_measurement(self,
                           id_uri: str,
-                          reading_time: datetime,
-                          value):
+                          value,
+                          reading_time: datetime = None
+                          ):
+        """
+        Writes the given value to the standard bucket into the measurement according to the id_uri into a field
+        called 'reading'.
+        When no reading time is given, the current database time is being used.
+        :param id_uri:
+        :param value:
+        :param reading_time:
+        :return:
+        """
+
         record = Point(measurement_name=id_uri)\
             .field(field='reading', value=value)
+        if reading_time is not None:
+            record.time(reading_time)
         self.__write_api.write(bucket=self.bucket, record=record)
