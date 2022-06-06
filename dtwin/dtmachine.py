@@ -65,10 +65,10 @@ class dtMachine(object):
                                                                               SemanticFactory.instance().getManufacturerProductDesignation(),
                                                                               SemanticFactory.instance().getSerialNumber()})
 
-        self.aas = AASFactory.instance().create_aas(name=self.name,
-                                                    description=self.description,
-                                                    submodels={nameplate},
-                                                    concept_dictionary={dictionary})
+        # self.aas = AASFactory.instance().create_aas(name=self.name,
+        #                                             description=self.description,
+        #                                             submodels={nameplate},
+        #                                             concept_dictionary={dictionary})
 
         # visualization
         self.position_on_dash=position_on_dash

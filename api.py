@@ -151,7 +151,7 @@ def get_factory_cytoscape_from_neo4j():
                     user=FAC_NEO4J_USER,
                     password=FAC_NEO4J_PASS,
                     need_auth=FAC_NEED_AUTH)
-    cytograph = fac.cytoscape_json_data() 
+    cytograph = fac.cytoscape_json_data()
     return cytograph
 
 @app.post("/get_factory_cytoscape/{factory}")

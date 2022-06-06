@@ -49,10 +49,10 @@ class dtPart(object):
                                                                               SemanticFactory.instance().getManufacturerProductDesignation(),
                                                                               SemanticFactory.instance().getSerialNumber()})
 
-        self.aas = AASFactory.instance().create_aas(name=self.name,
-                                                    description=self.description,
-                                                    submodels={nameplate},
-                                                    concept_dictionary={dictionary})
+        # self.aas = AASFactory.instance().create_aas(name=self.name,
+        #                                             description=self.description,
+        #                                             submodels={nameplate},
+        #                                             concept_dictionary={dictionary})
 
         if json_data:
             self.deserialize(json_data)

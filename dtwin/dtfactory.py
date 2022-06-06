@@ -67,20 +67,20 @@ class dtFactory(object):
         if self.description is None or self.description.isspace():
             self.description = "SINDIT factory"
 
-        if flushAAS:
-            AASFactory.instance().flush()
-
-        nameplate = AASFactory.instance().create_Nameplate(name=self.name+"_Nameplate",
-                                                           manufacturerName="SINDIT_Default_Manufacturer_Name",
-                                                           manufacturerProductDesignation=self.description)
-        dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name+"_ConceptDictionary",
-                                                                    concepts={SemanticFactory.instance().getNameplate(),
-                                                                              SemanticFactory.instance().getManufacturerName(),
-                                                                              SemanticFactory.instance().getManufacturerProductDesignation()})
-        self.aas = AASFactory.instance().create_aas(name=self.name,
-                                                    description=self.description,
-                                                    submodels={nameplate},
-                                                    concept_dictionary={dictionary})
+        # if flushAAS:
+        #     AASFactory.instance().flush()
+        #
+        # nameplate = AASFactory.instance().create_Nameplate(name=self.name+"_Nameplate",
+        #                                                    manufacturerName="SINDIT_Default_Manufacturer_Name",
+        #                                                    manufacturerProductDesignation=self.description)
+        # dictionary = AASFactory.instance().create_ConceptDictionary(name=self.name+"_ConceptDictionary",
+        #                                                             concepts={SemanticFactory.instance().getNameplate(),
+        #                                                                       SemanticFactory.instance().getManufacturerName(),
+        #                                                                       SemanticFactory.instance().getManufacturerProductDesignation()})
+        # self.aas = AASFactory.instance().create_aas(name=self.name,
+        #                                             description=self.description,
+        #                                             submodels={nameplate},
+        #                                             concept_dictionary={dictionary})
 
         #plotting 
         self.picked = False

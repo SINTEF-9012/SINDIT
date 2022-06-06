@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import random
 import re
+from datetime import datetime
 
+import interchange.math
 from aas.model import *
 from aas.util.identification import *
 
@@ -169,7 +172,8 @@ class AASFactory:
                          ) -> NameplateSubmodel:
 
         id_short = Util.convert_name_to_id_short(name)
-        identification = self.iriGenerator.generate_id(proposal=id_short)
+        proposal = id_short + str(datetime.now())
+        identification = self.iriGenerator.generate_id(proposal=proposal)
 
         nameplate = NameplateSubmodel(identification=identification,
                                       manufacturerName=manufacturerName,
