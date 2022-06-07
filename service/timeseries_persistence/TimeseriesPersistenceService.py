@@ -4,7 +4,7 @@ from influxdb_client import InfluxDBClient, Point
 import pandas as pd
 
 from config import global_config as cfg
-from exceptions.IdNotFoundException import IdNotFoundException
+from service.exceptions.IdNotFoundException import IdNotFoundException
 
 READING_FIELD_NAME = 'reading'
 

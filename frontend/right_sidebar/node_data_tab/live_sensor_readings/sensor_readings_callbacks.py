@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output, State
 from config import global_config as cfg
 from frontend.app import app
 from frontend.right_sidebar.node_data_tab.live_sensor_readings import sensor_readings_layout
-from timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
+from service.timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
 
 sensor_ID = None
 

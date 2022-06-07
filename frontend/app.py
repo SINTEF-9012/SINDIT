@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 
 """
 Plotly dash app instance.
-Separated from frontend.py to avoid circular dependencies with callback files importing the "app" instance. 
+Separated from presentation.py to avoid circular dependencies with callback files importing the "app" instance. 
 """
 
 # Build App

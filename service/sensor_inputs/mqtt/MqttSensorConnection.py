@@ -2,9 +2,9 @@ from typing import List
 
 import paho.mqtt.client as mqtt
 
-from sensor_inputs.SensorConnection import SensorConnection
-from sensor_inputs.SensorInput import SensorInput
-from sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
+from service.sensor_inputs.SensorConnection import SensorConnection
+from service.sensor_inputs.SensorInput import SensorInput
+from service.sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
 
 
 class MqttSensorConnection(SensorConnection):

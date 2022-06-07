@@ -1,11 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar  8 11:51:59 2021
 
-@author: marynaw
-"""
-
-import fastapi
 import os.path
 import json
 import py2neo
@@ -14,6 +7,7 @@ import pandas as pd
 import uvicorn
 from config import global_config as cfg
 
+from service.api.api import app
 from dtwin.dtfactory import dtFactory
 import dtwin.dtpart as dtPart
 import dtwin.dttypes as dtTypes
@@ -21,7 +15,6 @@ import dtwin.dttypes as dtTypes
 import environment.environment as env
 from config import global_config as cfg
 
-app = fastapi.FastAPI()
 
 # Read Config
 config = configparser.ConfigParser()

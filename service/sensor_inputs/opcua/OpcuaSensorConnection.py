@@ -5,9 +5,9 @@ from typing import List
 import asyncua.sync
 import asyncio.exceptions
 
-from sensor_inputs.SensorConnection import SensorConnection
-from sensor_inputs.SensorInput import SensorInput
-from sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
+from service.sensor_inputs.SensorConnection import SensorConnection
+from service.sensor_inputs.SensorInput import SensorInput
+from service.sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
 
 RECONNECT_DURATION = 10  # time to wait before trying to reconnect (in s)
 CONNECTION_CHECK_INTERVAL = 10  # time to wait between checking the connection

@@ -2,7 +2,7 @@ import abc
 
 from typing import List
 
-from sensor_inputs.SensorInput import SensorInput
+from service.sensor_inputs.SensorInput import SensorInput
 
 
 class SensorConnection(abc.ABC):

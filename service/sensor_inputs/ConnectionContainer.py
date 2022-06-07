@@ -1,12 +1,12 @@
 from typing import List
 
-from sensor_inputs.SensorConnection import SensorConnection
-from sensor_inputs.SensorInput import SensorInput
-from sensor_inputs.mqtt.MqttSensorConnection import MqttSensorConnection
-from sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
-from sensor_inputs.opcua.OpcuaSensorConnection import OpcuaSensorConnection
-from sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
-from timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
+from service.sensor_inputs.SensorConnection import SensorConnection
+from service.sensor_inputs.SensorInput import SensorInput
+from service.sensor_inputs.mqtt.MqttSensorConnection import MqttSensorConnection
+from service.sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
+from service.sensor_inputs.opcua.OpcuaSensorConnection import OpcuaSensorConnection
+from service.sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
+from service.timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
 
 OPCUA_INPUTS = [
     {

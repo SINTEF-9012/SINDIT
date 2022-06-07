@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sensor_inputs.SensorInput import SensorInput
+from service.sensor_inputs.SensorInput import SensorInput
 
 class OpcuaSensorInput(SensorInput):
 

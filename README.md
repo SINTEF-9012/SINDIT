@@ -78,15 +78,13 @@ To start the simulation enter the simulation duration and press 'Simulate'. With
     python ./chocolate_factory.py
    ```
 
-3. Start the REST API
+3. **Application layer** including the sensor connectors and REST API
 
-   ```sh
-    uvicorn api:app --host 0.0.0.0 --port 8000
-   ```
+   Directly start service.py within your IDE / debugger
    
 4. **Presentation layer: Plotly Dash**
 
-   Directly start frontend.py within your IDE / debugger
+   Directly start presentation.py within your IDE / debugger
 
 ## References
 
