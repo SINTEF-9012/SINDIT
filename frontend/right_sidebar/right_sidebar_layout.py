@@ -10,10 +10,9 @@ def get_layout():
     """
     return dbc.Col(
         children=[
-            dcc.Tabs(id='tabs-infos', value='tab-nodes', children=[
-                dcc.Tab(label='Node information', value='tab-nodes'),
-                # dcc.Tab(label='Parts history', value='tab-parts'),
-                dcc.Tab(label='Sensors time-series', value='tab-sensors') # TODO: make tab for node data instead
+            dcc.Tabs(id='tabs-infos', value='tab-node-information', children=[
+                dcc.Tab(label='Node information', value='tab-node-information'),
+                dcc.Tab(label='Node data', value='tab-node-data')
             ]),
             html.Div(id='tabs-content')
         ],

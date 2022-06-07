@@ -93,9 +93,3 @@ def _draw_parts_graph(parts_cygraph, cystyle):
 
 
 
-def _draw_time_series_graph():
-    graph = html.Div(children=[
-        html.Td('Real-time data from sensors'),
-        dcc.Graph(id='live-update-timeseries'),
-    ])
-    return graph

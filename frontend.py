@@ -7,7 +7,7 @@ from timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersis
 # Import callback files (indirectly used through annotation)
 
 # noinspection PyUnresolvedReferences
-from frontend.right_sidebar.sensor_readings_tab import sensor_readings_callbacks
+from frontend.right_sidebar.node_data_tab.live_sensor_readings import sensor_readings_callbacks
 # noinspection PyUnresolvedReferences
 from frontend.right_sidebar import navigation_callbacks
 # noinspection PyUnresolvedReferences
