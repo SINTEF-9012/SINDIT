@@ -14,7 +14,7 @@ import kafka
 import datetime
 import json
 import dtwin.dtpart as dtPart
-import environment.settings as stngs
+import environment.environment as stngs
 from aas import model
 import uuid as id
 

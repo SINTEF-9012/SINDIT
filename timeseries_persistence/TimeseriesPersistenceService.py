@@ -1,9 +1,9 @@
-import time
 from datetime import datetime
-
-from influxdb_client.client.write_api import  SYNCHRONOUS
+from influxdb_client.client.write_api import SYNCHRONOUS
 from influxdb_client import InfluxDBClient, Point
-import global_config as cfg
+
+from config import global_config as cfg
+
 
 class TimeseriesPersistenceService(object):
     """
@@ -26,7 +26,7 @@ class TimeseriesPersistenceService(object):
         self.bucket = cfg.config['influx2']['default_bucket']
 
         # Directly use the config file through the influx API
-        self.__client: InfluxDBClient = InfluxDBClient.from_config_file(config_file='sindit.cfg')
+        self.__client: InfluxDBClient = InfluxDBClient.from_config_file(config_file=cfg.PATH_TO_CONFIG)
 
         # Synchronous mode to allow live data processing from the database
         # Consider batch mode if having performance issues
@@ -39,7 +39,7 @@ class TimeseriesPersistenceService(object):
 
         print("influx test written")
 
-        ## using Table structure
+        # using Table structure
         tables = self.__query_api.query(f'from(bucket:"{self.bucket}") |> range(start: -10m)')
 
         for table in tables:
@@ -62,7 +62,7 @@ class TimeseriesPersistenceService(object):
         :return:
         """
 
-        record = Point(measurement_name=id_uri)\
+        record = Point(measurement_name=id_uri) \
             .field(field='reading', value=value)
         if reading_time is not None:
             record.time(reading_time)

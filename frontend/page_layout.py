@@ -2,11 +2,11 @@ from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
 
-import global_config as cfg
-from frontend.navbar import navbar
-from frontend.right_sidebar import right_sidebar
-from frontend.left_sidebar import left_sidebar
-from frontend.main_column import main_column
+from config import global_config as cfg
+from frontend.navbar import navbar_layout
+from frontend.right_sidebar import right_sidebar_layout
+from frontend.left_sidebar import left_sidebar_layout
+from frontend.main_column import main_column_layout
 
 
 def get_layout():
@@ -17,23 +17,25 @@ def get_layout():
     return html.Div(
         children=[
             # Navbar:
-            navbar.get_layout(),
+            navbar_layout.get_layout(),
             # Body:
             dbc.Card(
                 dbc.CardBody([
                     dbc.Row(
                         children=[
                             # Left sidebar (stats):
-                            left_sidebar.get_layout(),
+                            left_sidebar_layout.get_layout(),
                             # Main column (graph):
-                            main_column.get_layout(),
+                            main_column_layout.get_layout(),
                             # Right sidebar (context details):
-                            right_sidebar.get_layout(),
+                            right_sidebar_layout.get_layout(),
 
                             # Interval pseudo component for periodic refreshes:
                             dcc.Interval(
                                 id='interval-component',
-                                interval=cfg.config['frontend']['refresh_interval'],
+                                interval=cfg.get_int(cfg.ConfigGroups.FRONTEND, 'refresh_interval'),
+                                # interval=cfg.config['frontend']['refresh_interval'],
+                                # interval=5000,
                                 n_intervals=0)
                         ],
                         align='start'

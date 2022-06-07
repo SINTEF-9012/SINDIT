@@ -17,37 +17,37 @@ OPCUA_INPUTS = [
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Actual_Position"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/Horizontal_Axis/di_Actual_Position'
+                          'HBW/Horizontal_Axis/di_Actual_Position'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Target_Position"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/Horizontal_Axis/di_Target_Position'
+                          'HBW/Horizontal_Axis/di_Target_Position'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Actual_Position"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/Vertical_Axis/di_Actual_Position'
+                          'HBW/Vertical_Axis/di_Actual_Position'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Target_Position"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/Vertical_Axis/di_Target_Position'
+                          'HBW/Vertical_Axis/di_Target_Position'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Horizontal"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/di_PosBelt_Horizontal'
+                          'HBW/di_PosBelt_Horizontal'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Vertical"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/di_PosBelt_Vertical'
+                          'HBW/di_PosBelt_Vertical'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_Offset_Pos_Rack_Vertical"',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'HBW/di_Offset_Pos_Rack_Vertical'
+                          'HBW/di_Offset_Pos_Rack_Vertical'
             }
         ]
     },
@@ -62,13 +62,13 @@ MQTT_INPUTS = [
                 "topic": 'i/bme680',
                 "json_keyword": 't',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'BME680/temperature'
+                          'BME680/temperature'
             },
             {
                 "topic": 'i/bme680',
                 "json_keyword": 'rt',
                 "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                       'BME680/temperature_raw'
+                          'BME680/temperature_raw'
             },
         ]
     },
@@ -98,7 +98,6 @@ class ConnectionContainer:
     def initialize_connections(self):
 
         # TODO: get available URIs etc. from the KG-DT instead of statically defined
-        pass
 
         # MQTT
         for connection in MQTT_INPUTS:

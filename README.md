@@ -64,11 +64,13 @@ To start the simulation enter the simulation duration and press 'Simulate'. With
 
 ### Local development
 
-1. Start the databases and required services via docker-compose:
+1. **Data layer: Databases** 
 
-    ```sh
-    docker-compose up influx_db influxdb zoo kafka neo4jfactory neo4jparts
-   ```
+   Start the databases and required services via docker-compose:
+
+       ```sh
+       docker-compose up influx_db influxdb zoo kafka neo4jfactory neo4jparts
+      ```
 
 2. Load the factory graph into the Neo4j database:
 
@@ -88,7 +90,9 @@ To start the simulation enter the simulation duration and press 'Simulate'. With
     uvicorn api:app --host 0.0.0.0 --port 8000
    ```
    
-5. Directly start app.py within your IDE / debugger
+5. **Presentation layer: Plotly Dash**
+
+   Directly start frontend.py within your IDE / debugger
 
 ## References
 

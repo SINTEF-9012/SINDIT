@@ -12,29 +12,31 @@ import py2neo
 import configparser
 import pandas as pd
 import uvicorn
+from config import global_config as cfg
 
 from dtwin.dtfactory import dtFactory
 import dtwin.dtpart as dtPart
 import dtwin.dttypes as dtTypes
 import dtwin.flux as flux
-import environment.settings as stngs
+import environment.environment as env
+from config import global_config as cfg
 
 app = fastapi.FastAPI()
 
 # Read Config
 config = configparser.ConfigParser()
-config.read(stngs.BASE_DIR+'/sindit.cfg')
-FAC_NEO4J_URI = stngs.NEO4J_FACTORY
+config.read(cfg.PATH_TO_CONFIG)
+FAC_NEO4J_URI = env.NEO4J_FACTORY
 FAC_NEO4J_USER = config['factory-neo4j']['user']
 FAC_NEO4J_PASS = config['factory-neo4j']['pass']
 FAC_NEED_AUTH = config['factory-neo4j']['need_auth']
 
-PARTS_NEO4J_URI = stngs.NEO4J_PARTS
+PARTS_NEO4J_URI = env.NEO4J_PARTS
 PARTS_NEO4J_USER = config['parts-neo4j']['user']
 PARTS_NEO4J_PASS = config['parts-neo4j']['pass']
 PARTS_NEED_AUTH = config['parts-neo4j']['need_auth']
 
-c = flux.DTPrototypeInfluxDbClient(stngs.BASE_DIR+'/sindit.cfg')
+c = flux.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
 
 @app.get("/get_avg_arrival_freq_from_influxDB/{machine_name}")
 def get_avg_arrival_freq_from_influxDB(machine_name:str):

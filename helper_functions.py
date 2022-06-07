@@ -7,10 +7,11 @@ import json
 import datetime
 import pandas as pd
 import numpy as np
-import environment.settings as stngs
+import environment.environment as stngs
 import random
 
-API_URI = stngs.FAST_API_URI
+from frontend import api_client
+
 
 def _generate_sensor_data(duration_h=3):
     date_rng = pd.date_range(start=pd.Timestamp(datetime.datetime.now() - datetime.timedelta(hours=duration_h)),
@@ -31,17 +32,6 @@ def _generate_sensor_data(duration_h=3):
                                          'timestamp': pd.to_datetime(time_ms_array, unit='ms')})
 
     return json.loads(sensor_readings.to_json(orient="records"))
-
-
-def _load_json(st):
-    if 'http' in st:
-        return requests.get(st).json()
-    else:
-        if st[0] == '/': st = st[1:]
-        # print(st)
-        with open(st, 'rb') as f:
-            x = json.load(f)
-        return x
 
 
 def _draw_table_part_infos(data):
@@ -65,7 +55,7 @@ def _draw_table_node_infos(data):
         if data['data']['type'] == 'BUFFER' or data['data']['type'] == 'CONTAINER':
             rows.append(html.Tr([html.Td(data['data']['type'], style=header_style), html.Td(data['data']['id'])]))
             rows.append(html.Tr([html.Td('Description:'), html.Td(data['data']['label'])]))
-            amount = requests.get(API_URI + '/get_amount_on_queue/' + data['data']['id']).json()
+            amount = api_client.get('/get_amount_on_queue/' + data['data']['id'])
             rows.append(html.Tr([html.Td('Amount:'), html.Td(amount)]))
         elif data['classes'] == 'SENSOR':
             global sensor_ID
@@ -101,18 +91,6 @@ def _draw_parts_graph(parts_cygraph, cystyle):
     ])
 
 
-def _draw_switch():
-    return dbc.Form([
-        dbc.Checklist(
-            options=[
-                {"label": "Show edges", "value": 1},
-                {"label": "Show parts", "value": 2}
-            ],
-            value=[1],
-            id="switches-input",
-            switch=True,
-        ),
-    ])
 
 
 def _draw_time_series_graph():

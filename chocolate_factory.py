@@ -18,12 +18,13 @@ from dtwin.dtfactory import dtFactory
 import simpy
 import configparser
 import py2neo
-import environment.settings as stngs
+import environment.environment as stngs
 from enum import Enum, unique
+from config import global_config as cfg
 
 # Read Config
 config = configparser.ConfigParser()
-config.read(stngs.BASE_DIR+'/sindit.cfg')
+config.read(cfg.PATH_TO_CONFIG)
 NEO4J_URI = stngs.NEO4J_FACTORY
 NEO4J_USER = config['factory-neo4j']['user']
 NEO4J_PASS = config['factory-neo4j']['pass']

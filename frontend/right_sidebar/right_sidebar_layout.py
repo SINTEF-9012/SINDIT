@@ -17,6 +17,6 @@ def get_layout():
             ]),
             html.Div(id='tabs-content')
         ],
-        width=2
+        width=3
     )
 

@@ -1,11 +1,10 @@
-from app import app
+from frontend.app import app
 from dash import html
 from dash.dependencies import Input, Output
 import helper_functions
-from frontend import frontend_helpers
+from frontend.styles import CustomStyles
 
-
-print("Initializing navigation callback")
+print("Initializing navigation callbacks...")
 
 @app.callback(Output('tabs-content', 'children'),
               Input('tabs-infos', 'value'))
@@ -19,7 +18,7 @@ def change_navigation_tab(tab):
     if tab == 'tab-sensors':
         return html.Div([
             helper_functions._draw_time_series_graph(),
-            html.Pre(id='cytoscape-tapNodeData', style=frontend_helpers.styles['pre'])
+            html.Pre(id='cytoscape-tapNodeData', style=CustomStyles.PRE.value)
         ])
     elif tab == 'tab-parts':
         return html.Div([
@@ -28,5 +27,5 @@ def change_navigation_tab(tab):
         ])
     elif tab == 'tab-nodes':
         return html.Div([
-            html.Pre(id='cytoscape-tapNodeData', style=frontend_helpers.styles['pre'])
+            html.Pre(id='cytoscape-tapNodeData', style=CustomStyles.PRE.value)
         ])

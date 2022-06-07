@@ -1,25 +1,26 @@
-import helper_functions
-from app import app
+from frontend.app import app
 from dash.dependencies import Input, Output
 
+from frontend import resources_manager
+from frontend.left_sidebar.visibility_settings.visibility_settings_enum import GraphVisibilityOptions
+
+CY_STYLE_STATIC = resources_manager.load_json('cy-style.json')
+
+print("Initializing visibility settings callbacks...")
 
 @app.callback(Output('cytoscape-graph', 'stylesheet'),
-              Input('switches-input', 'value'))
+              Input('visibility-switches-input', 'value'))
 def update_output(value):
     """
     Toggles the visibility of element types in the main graph
     :param value:
     :return:
     """
-    cystyle = helper_functions._load_json(app.get_asset_url('cy-style.json'))
 
-    opacity_edges = 0
-    opacity_parts = 0
-    if 1 in value:
-        opacity_edges = 1
-    if 2 in value:
-        opacity_parts = 1
-    new_styles = [
+    opacity_edges = 1 if GraphVisibilityOptions.EDGES.value in value else 0
+    opacity_parts = 1 if GraphVisibilityOptions.PARTS.value in value else 0
+
+    additional_styles = [
         {
             'selector': 'edge',
             'style': {
@@ -45,5 +46,5 @@ def update_output(value):
             }
         }
     ]
-    print(value)
-    return cystyle + new_styles
+
+    return CY_STYLE_STATIC + additional_styles

@@ -18,4 +18,3 @@ class OpcuaSensorInput(SensorInput):
     def handle_reading_if_belonging(self, node_id: str, reading_time: datetime, value: float):
         if node_id == self.node_id:
             self.handle_reading(reading_time=reading_time, reading_value=value)
-

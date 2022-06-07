@@ -1,15 +1,13 @@
-from app import app
-
 from dash.dependencies import Input, Output, State
-import requests
 import plotly
-import environment.settings as stngs
-import helper_functions
 
-API_URI = stngs.FAST_API_URI
+from frontend.app import app
+import helper_functions
+from frontend import api_client
+
 sensor_ID = None
 
-print("Initializing sensor callback")
+print("Initializing sensor callbacks...")
 
 @app.callback(Output('live-update-timeseries', 'figure'),
               Input('interval-component', 'n_intervals'),
@@ -23,7 +21,7 @@ def update_live_sensors(n, data):
 
     print('update_live_sensors: sensor_ID ' + str(sensor_ID))
     if sensor_ID != None:
-        sensor_info = requests.get(API_URI + '/get_sensor_info/' + str(sensor_ID)).json()
+        sensor_info = api_client.get('/get_sensor_info/' + str(sensor_ID))
 
         r = helper_functions._generate_sensor_data(duration_h=3)
 

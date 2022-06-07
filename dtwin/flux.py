@@ -11,15 +11,16 @@ History:
 from influxdb import InfluxDBClient
 import configparser
 import pandas as pd
-import environment.settings as stngs
+import environment.environment as env
+from config import global_config as cfg
 
 class DTPrototypeInfluxDbClient:
-    def __init__(self, path_to_config='sindit.cfg'):
+    def __init__(self, path_to_config=cfg.PATH_TO_CONFIG):
         config = configparser.ConfigParser()
         config.read(path_to_config)
 
-        self.host = stngs.INFLUXDB_URI
-        self.port_number = stngs.INFLUXDB_PORT
+        self.host = env.INFLUXDB_URI
+        self.port_number = env.INFLUXDB_PORT
         self.username = config['influxdb']['influx_user'] or 'root'
         self.password = config['influxdb']['influx_pass'] or 'root'
         self.db_name = config['influxdb']['db_name']

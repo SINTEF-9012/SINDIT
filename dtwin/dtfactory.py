@@ -24,7 +24,7 @@ from aas import model
 import uuid as id
 from aas.adapter.xml import write_aas_xml_file
 from aas.adapter import aasx
-
+from config import global_config as cfg
 import simpy
 import matplotlib.animation as animation
 
@@ -1037,7 +1037,7 @@ class dtFactory(object):
         return True
 
     def generate_factory_data(self, duration_h=3):
-        c = f.DTPrototypeInfluxDbClient('sindit.cfg')
+        c = f.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
 
         date_rng = pd.date_range(start=pd.Timestamp(datetime.datetime.now()-datetime.timedelta(hours=duration_h)), end=pd.Timestamp(datetime.datetime.now()), freq='1T')
 

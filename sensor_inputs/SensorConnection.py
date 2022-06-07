@@ -1,4 +1,3 @@
-import paho.mqtt.client as mqtt
 import abc
 
 from typing import List
@@ -24,5 +23,3 @@ class SensorConnection(abc.ABC):
     @abc.abstractmethod
     def start_connection(self):
         pass
-
-

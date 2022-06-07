@@ -11,12 +11,14 @@ import json
 import py2neo
 import configparser
 import dtwin.dttypes as dtTypes
-import environment.settings as stngs
+import environment.environment as stngs
 import os
+
+from config import global_config as cfg
 
 # Read Config
 config = configparser.ConfigParser()
-path_to_config = os.path.join(stngs.BASE_DIR+'/sindit.cfg')
+path_to_config = os.path.join(cfg.PATH_TO_CONFIG)
 config.read(path_to_config)
 NEO4J_URI = stngs.NEO4J_FACTORY
 NEO4J_USER = config['factory-neo4j']['user']
