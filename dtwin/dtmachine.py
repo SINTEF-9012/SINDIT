@@ -179,7 +179,7 @@ class dtMachine(object):
                 self._print_debug(self.type.name + ' {0} tries to get {1} parts from queue {2} that has {3} parts stored at time {4}'.format(
                     self.name, self.num_parts_in, q_in.name, q_in.amount, self.env.now))
                 
-                part_from_buffer = yield q_in.store.get()
+                part_from_buffer = yield q_in.store.get_json()
                 
                 q_in.parts = q_in.store.items # @todo: need to figure out how to yield in dtqueue
                 q_in.amount = len(q_in.store.items)
@@ -214,7 +214,7 @@ class dtMachine(object):
                 self._print_debug(self.type.name + ' {0} tries to get {1} amount from queue {2} that has {3} amount stored at time {4}'.format(
                     self.name, self.amount_in, q_in.name, q_in.store.level, self.env.now))
                 
-                yield q_in.store.get(self.amount_in)
+                yield q_in.store.get_json(self.amount_in)
                 q_in.amount = q_in.store.level
                 new_amount += self.amount_in
                                     

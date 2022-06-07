@@ -13,6 +13,7 @@ config.read(PATH_TO_CONFIG)
 
 class ConfigGroups(Enum):
     FRONTEND = "frontend"
+    API = "api"
 
 
 def get_str(group: ConfigGroups, key: str):

@@ -8,7 +8,7 @@ from frontend import resources_manager, api_client
 CY_STYLE_STATIC = resources_manager.load_json('cy-style.json')
 
 def get_layout():
-    cygraph = api_client.get('/get_factory_cytoscape_from_neo4j')
+    cygraph = api_client.get_json('/get_factory_cytoscape_from_neo4j')
     # TODO: new api and path in separate config
 
     return html.Div([

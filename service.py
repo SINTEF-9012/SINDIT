@@ -8,6 +8,8 @@ from service.timeseries_persistence.TimeseriesPersistenceService import Timeseri
 
 # noinspection PyUnresolvedReferences
 from service.api.endpoints import old_endpoints
+# noinspection PyUnresolvedReferences
+from service.api.endpoints import timeseries_endpoints
 
 """
 Main entry point for the application layer

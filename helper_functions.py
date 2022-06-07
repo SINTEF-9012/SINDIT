@@ -55,7 +55,7 @@ def _draw_table_node_infos(data):
         if data['data']['type'] == 'BUFFER' or data['data']['type'] == 'CONTAINER':
             rows.append(html.Tr([html.Td(data['data']['type'], style=header_style), html.Td(data['data']['id'])]))
             rows.append(html.Tr([html.Td('Description:'), html.Td(data['data']['label'])]))
-            amount = api_client.get('/get_amount_on_queue/' + data['data']['id'])
+            amount = api_client.get_json('/get_amount_on_queue/' + data['data']['id'])
             rows.append(html.Tr([html.Td('Amount:'), html.Td(amount)]))
         elif data['classes'] == 'SENSOR':
             global sensor_ID
