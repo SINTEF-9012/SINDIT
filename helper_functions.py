@@ -12,26 +12,7 @@ import random
 
 from frontend import api_client
 
-
-def _generate_sensor_data(duration_h=3):
-    date_rng = pd.date_range(start=pd.Timestamp(datetime.datetime.now() - datetime.timedelta(hours=duration_h)),
-                             end=pd.Timestamp(datetime.datetime.now()), freq='1T')
-
-    df = pd.DataFrame(date_rng, columns=['time_ms'])
-    df['data 0'] = np.random.randint(0, 50, size=(len(date_rng)))
-    df['data 1'] = np.random.randint(0, 100, size=(len(date_rng)))
-
-    time_ms_array = np.zeros(len(date_rng))
-    for index, row in df.iterrows():
-        time_ms_array[index] = int(row['time_ms'].timestamp() * 1000)
-
-    df['data 2'] = np.sin(time_ms_array) * 70
-    df['data 3'] = np.random.randint(0, 100, size=(len(date_rng))) + np.sin(time_ms_array) * 5
-
-    sensor_readings = pd.DataFrame(data={'value': df['data ' + str(random.randint(0, 3))].to_numpy().tolist(), \
-                                         'timestamp': pd.to_datetime(time_ms_array, unit='ms')})
-
-    return json.loads(sensor_readings.to_json(orient="records"))
+# TODO: refactor away
 
 
 def _draw_table_part_infos(data):
@@ -55,7 +36,7 @@ def _draw_table_node_infos(data):
         if data['data']['type'] == 'BUFFER' or data['data']['type'] == 'CONTAINER':
             rows.append(html.Tr([html.Td(data['data']['type'], style=header_style), html.Td(data['data']['id'])]))
             rows.append(html.Tr([html.Td('Description:'), html.Td(data['data']['label'])]))
-            amount = api_client.get_json('/get_amount_on_queue/' + data['data']['id'])
+            amount = api_client.get('/get_amount_on_queue/' + data['data']['id'])
             rows.append(html.Tr([html.Td('Amount:'), html.Td(amount)]))
         elif data['classes'] == 'SENSOR':
             global sensor_ID

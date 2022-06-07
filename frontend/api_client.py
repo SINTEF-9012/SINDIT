@@ -2,30 +2,28 @@ import requests
 import json
 import pandas as pd
 
-import environment.environment as stngs
+import environment.environment as env
 
-API_URI = stngs.FAST_API_URI
+API_URI = env.FAST_API_URI
 
-def get_json(relative_path: str):
+def get(relative_path: str):
     """
     Get request to the specified api endpoint
     :param relative_path:
-    :return:
+    :return: the response json as dict
     """
-    return requests.get(API_URI + relative_path).json()
+    resp_dict = requests.get(API_URI + relative_path).json()
 
-def get_as_dict(relative_path: str):
-    """
-    Get request to the specified api endpoint
-    :param relative_path:
-    :return:
-    """
-    return json.loads(get_json(relative_path))
+    if isinstance(resp_dict, str):
+        # Sometimes, the json is still represented as string instead of dict
+        resp_dict = json.loads(resp_dict)
+
+    return resp_dict
 
 def get_dataframe(relative_path: str):
     """
-    Get request to the specified api endpoint
+    Get request to the specified api endpoint. Deserializes to dataframe
     :param relative_path:
     :return:
     """
-    return pd.DataFrame.from_dict(get_as_dict(relative_path))
+    return pd.DataFrame.from_dict(get(relative_path))

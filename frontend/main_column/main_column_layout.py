@@ -12,7 +12,6 @@ def get_layout():
     return dbc.Col(
         children=[
             factory_graph_layout.get_layout(),
-
         ],
         width=7
     )
