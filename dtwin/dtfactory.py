@@ -18,7 +18,6 @@ import itertools
 import pandas as pd
 import datetime
 import numpy as np
-import dtwin.flux as f
 import math
 from aas import model
 import uuid as id
@@ -1037,7 +1036,7 @@ class dtFactory(object):
         return True
 
     def generate_factory_data(self, duration_h=3):
-        c = f.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
+        # c = flux_con.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
 
         date_rng = pd.date_range(start=pd.Timestamp(datetime.datetime.now()-datetime.timedelta(hours=duration_h)), end=pd.Timestamp(datetime.datetime.now()), freq='1T')
 
@@ -1056,7 +1055,7 @@ class dtFactory(object):
             for s in m.sensors:
                 tags = {'machine': m.name, 'sensor': s.name}
                 print("machine=%s, sensor=%s: " % (m.name, s.name))
-                c.store_any_measurement(str(s.type), tags, df['data '+ str(random.randint(0,3))].to_numpy().tolist(), time_ms_array)
+                # c.store_any_measurement(str(s.type), tags, df['data '+ str(random.randint(0,3))].to_numpy().tolist(), time_ms_array)
 
     def create_sim_graph(self):
 

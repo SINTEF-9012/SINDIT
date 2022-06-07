@@ -25,25 +25,6 @@ services:
       timeout: 30s
       retries: 5
 
-  influxdb:
-    image: influxdb:1.8
-    hostname: influxdb
-    container_name: influxdb
-    restart: unless-stopped
-    mem_limit: 1G
-    ports:
-      - '8086:8086'
-    volumes:
-      - ./docker/influxdb-storage:/var/lib/influxdb
-    environment:
-      - INFLUXDB_DB=SINDIT
-      - INFLUX_HOST=influxdb
-    healthcheck:
-      test: "curl -f http://localhost:8086/ping"
-      interval: 3s
-      timeout: 10s
-      retries: 5
-
   zoo:
     image: zookeeper:3.4.9
     restart: unless-stopped

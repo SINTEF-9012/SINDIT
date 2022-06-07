@@ -17,7 +17,7 @@ from config import global_config as cfg
 from dtwin.dtfactory import dtFactory
 import dtwin.dtpart as dtPart
 import dtwin.dttypes as dtTypes
-import dtwin.flux as flux
+# import dtwin.flux as flux
 import environment.environment as env
 from config import global_config as cfg
 
@@ -36,31 +36,31 @@ PARTS_NEO4J_USER = config['parts-neo4j']['user']
 PARTS_NEO4J_PASS = config['parts-neo4j']['pass']
 PARTS_NEED_AUTH = config['parts-neo4j']['need_auth']
 
-c = flux.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
+# c = flux.DTPrototypeInfluxDbClient(cfg.PATH_TO_CONFIG)
+#
+# @app.get("/get_avg_arrival_freq_from_influxDB/{machine_name}")
+# def get_avg_arrival_freq_from_influxDB(machine_name:str):
+#     df = c.get_any_measurement_as_dataframe(measurement_type='RFID', \
+#                                         tags={ 'machine': machine_name, \
+#                                                'sensor': machine_name+'_OUT' } )
+#
+#     avg_arr_frequency_ms = df['timestamp'].diff().mean()
+#
+#     return avg_arr_frequency_ms
 
-@app.get("/get_avg_arrival_freq_from_influxDB/{machine_name}")
-def get_avg_arrival_freq_from_influxDB(machine_name:str):
-    df = c.get_any_measurement_as_dataframe(measurement_type='RFID', \
-                                        tags={ 'machine': machine_name, \
-                                               'sensor': machine_name+'_OUT' } )
-                                             
-    avg_arr_frequency_ms = df['timestamp'].diff().mean()
-    
-    return avg_arr_frequency_ms
-
-@app.get("/get_last_prod_arrival_time_from_influxDB/{machine_name}")
-def get_last_prod_arrival_time_from_influxDB(machine_name:str):
-    df = c.get_any_measurement_as_dataframe(measurement_type='RFID', \
-                                        tags={ 'machine': machine_name, \
-                                               'sensor': machine_name+'_OUT' } )
-    # times are in UTC, we are converting to naive
-    date_time_last_arr = df['timestamp'].tail(1)
-    # we are converting to naive
-    date_time_last_arr = date_time_last_arr.apply(lambda x:x.tz_convert('Europe/Brussels'))
-    # and to string
-    date_time_last_arr = date_time_last_arr.dt.strftime('%H:%M').to_string(index=False)
-    
-    return date_time_last_arr
+# @app.get("/get_last_prod_arrival_time_from_influxDB/{machine_name}")
+# def get_last_prod_arrival_time_from_influxDB(machine_name:str):
+#     df = c.get_any_measurement_as_dataframe(measurement_type='RFID', \
+#                                         tags={ 'machine': machine_name, \
+#                                                'sensor': machine_name+'_OUT' } )
+#     # times are in UTC, we are converting to naive
+#     date_time_last_arr = df['timestamp'].tail(1)
+#     # we are converting to naive
+#     date_time_last_arr = date_time_last_arr.apply(lambda x:x.tz_convert('Europe/Brussels'))
+#     # and to string
+#     date_time_last_arr = date_time_last_arr.dt.strftime('%H:%M').to_string(index=False)
+#
+#     return date_time_last_arr
 
 @app.get("/get_part_cytoscape_from_neo4j/{part_uuid}")
 def get_part_cytoscape_from_neo4j(part_uuid:str):
