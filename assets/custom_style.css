@@ -1,0 +1,11 @@
+
+.custom-table {
+    border: thin lightgrey solid;
+    overflow-x: scroll;
+}
+
+.custom-table-header {
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+}

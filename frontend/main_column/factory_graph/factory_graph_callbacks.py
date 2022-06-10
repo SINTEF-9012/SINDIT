@@ -25,14 +25,3 @@ def displayTapPartNodeData(data):
             parts_cygraph = api_client.get('/get_part_cytoscape_from_neo4j/' + uuid)
 
     return parts_cygraph
-
-
-@app.callback(Output('cytoscape-tapNodeData', 'children'),
-              Input('cytoscape-graph', 'tapNode'),
-              State('tabs-infos', 'value'),
-              prevent_initial_call=True)
-def displayTapNodeData(data, tab_name):
-    if data['classes'] != 'SENSOR' and tab_name == 'tab-sensors':
-        return None
-
-    return helper_functions._draw_table_node_infos(data)

@@ -3,7 +3,6 @@ from dash.dependencies import Input, Output, State
 
 from frontend.app import app
 from frontend.right_sidebar.node_data_tab import node_data_layout
-from frontend.styles import CustomStyles
 
 print("Initializing navigation callbacks...")
 
@@ -20,7 +19,7 @@ def change_navigation_tab(tab, tap_node):
     # TODO: contents to own files..
     if tab == 'tab-node-information':
         return html.Div([
-            html.Pre(id='cytoscape-tapNodeData', style=CustomStyles.PRE.value)
+            # TODO: standard details about the selected node...
         ])
     elif tab == 'tab-node-data':
         return html.Div([

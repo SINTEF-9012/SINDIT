@@ -9,6 +9,7 @@ def get_layout():
     :return:
     """
     return dbc.Checklist(
+        # TODO: more specific edges and node types...
         options=[
             {"label": "Show edges", "value": GraphVisibilityOptions.EDGES.value},
             {"label": "Show parts", "value": GraphVisibilityOptions.PARTS.value}

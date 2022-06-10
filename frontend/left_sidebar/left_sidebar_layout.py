@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+from dash import html
 
 from frontend.left_sidebar.global_information import global_information_layout
 from frontend.left_sidebar.visibility_settings import visibility_settings_layout
@@ -12,6 +13,7 @@ def get_layout():
     return dbc.Col(
         children=[
             visibility_settings_layout.get_layout(),
+            html.Div(style={'height': '30px'}),
             global_information_layout.get_layout()
         ],
         width=2
