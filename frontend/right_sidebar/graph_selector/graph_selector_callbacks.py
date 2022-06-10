@@ -1,8 +1,5 @@
-from dash import html
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 
-import helper_functions
-from frontend import api_client
 from frontend.app import app
 from frontend.right_sidebar.graph_selector import graph_selector_layout, graph_selector_util
 

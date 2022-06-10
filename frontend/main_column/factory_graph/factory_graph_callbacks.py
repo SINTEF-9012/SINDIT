@@ -1,6 +1,5 @@
 from dash.dependencies import Input, Output, State
 
-import helper_functions
 from frontend import api_client
 from frontend.app import app
 
