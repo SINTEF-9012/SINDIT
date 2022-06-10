@@ -9,20 +9,6 @@ from frontend.right_sidebar.graph_selector import graph_selector_layout, graph_s
 print("Initializing graph selector callbacks...")
 
 
-# @app.callback(Output('selected-graph-element', 'children'),
-#               [Input('cytoscape-graph', 'tapNode'),
-#                Input('cytoscape-graph', 'tapEdge')],
-#               prevent_initial_call=True)
-# def displayTapNodeData(tap_node, tap_edge):
-#     """
-#     Called whenever a element in the graph is selected
-#     :param tap_node:
-#     :return:
-#     """
-#     print(tap_edge)
-#     if tap_node is not None:
-#         return graph_selector_layout.get_content(tap_node)
-
 @app.callback(Output('selected-graph-element-store', 'data'),
               [Input('cytoscape-graph', 'tapNode'),
                Input('cytoscape-graph', 'tapEdge')],

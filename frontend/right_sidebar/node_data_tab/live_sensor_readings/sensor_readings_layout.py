@@ -5,7 +5,7 @@ import plotly.subplots
 
 def get_layout():
     graph = html.Div(children=[
-        html.Td('Real-time sensor data:'),
+        html.Td('Current timeseries data, if connected:'),
         dcc.Graph(id='live-update-timeseries'),
     ])
     return graph

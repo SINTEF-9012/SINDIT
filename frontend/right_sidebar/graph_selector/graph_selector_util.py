@@ -22,7 +22,7 @@ class NodeEdge(Enum):
 class SelectedElementTypes(Enum):
     # Node Types
     MACHINE = 'MACHINE'
-    TIMESERIES_INPUT = 'TIMESERIES'
+    TIMESERIES_INPUT = 'SENSOR'  # TODO: change to "TIMESERIES"
     UNSPECIFIED_NODE_TYPE = 'UNSPECIFIED_NODE_TYPE'
     # Edge Types
     HAS_TIMESERIES = 'HAS_TIMESERIES'
@@ -70,7 +70,8 @@ def tap_node_to_store(tap_node):
 
     storage_dict = {
         'id_short': 'example_identifier_short',
-        'iri': 'www.example.com/identifier/example_identifier',  # TODO
+        'iri': 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+               'HBW/di_PosBelt_Horizontal',  # TODO
         'description': 'some description...',  # TODO
         'type': el_type,
         'node_edge': NodeEdge.NODE.value
