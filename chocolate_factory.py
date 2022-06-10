@@ -4,7 +4,7 @@ SINDIT demo: Chocolate factory
 author: Maryna Waszak <maryna.waszak@sintef.no>
 
 """
-import dtwin.flux as flux
+# import dtwin.flux as flux
 import dtwin.dtmachine as dtMachine
 import dtwin.dtqueue as dtQueue
 import dtwin.dtsensor as dtSensor
