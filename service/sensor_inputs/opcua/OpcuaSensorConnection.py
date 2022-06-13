@@ -77,7 +77,7 @@ class OpcuaSensorConnection(SensorConnection):
                     subscription.subscribe_data_change(self.__nodes)
 
                 print("OPCUA connection active: "
-                      f"Host: {self.host}, port: {self.port}.")
+                      f"Host: {self.host}, port: {self.port}. Subscribing to nodes...")
 
                 # Continuously test the connection. Otherwise, lost connections do not seem to lead to an exception
                 while True:

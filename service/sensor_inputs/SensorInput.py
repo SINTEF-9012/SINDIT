@@ -34,4 +34,4 @@ class SensorInput(abc.ABC):
         for handler in self._handlers:
             handler(self.id_uri, reading_value, reading_time)
         self._last_reading = reading_time, reading_value
-        print(f"Sensor {self.id_uri} updated: {self.get_most_current()}")
+        # print(f"Sensor {self.id_uri} updated: {self.get_most_current()}")
