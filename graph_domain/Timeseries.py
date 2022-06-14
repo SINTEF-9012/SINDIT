@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
+from py2neo.ogm import Property
 
 from graph_domain.BaseNode import BaseNode
 
@@ -15,6 +16,7 @@ class TimeseriesFlat(BaseNode):
     __primarylabel__ = LABEL
 
     # Properties:
+
 
 
 @dataclass

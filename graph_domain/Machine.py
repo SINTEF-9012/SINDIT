@@ -18,7 +18,7 @@ class MachineFlat(BaseNode):
     # Identifier for the node-type:
     __primarylabel__ = LABEL
 
-    # Properties:
+    # Additional properties:
 
 
 @dataclass
