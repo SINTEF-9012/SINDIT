@@ -4,22 +4,21 @@ from typing import List
 from dataclasses_json import dataclass_json
 from py2neo.ogm import Model, Property, RelatedTo
 
+from graph_domain.BaseNode import BaseNode
 from graph_domain.Timeseries import TimeseriesDeep
 
 LABEL = 'MACHINE'
 
 @dataclass
 @dataclass_json
-class MachineFlat(Model):
+class MachineFlat(BaseNode):
     """
     Flat machine node without relationships, only containing properties
     """
     # Identifier for the node-type:
     __primarylabel__ = LABEL
 
-    id_short: str = Property()
-    iri: str = Property()
-    description: str = Property()
+    # Properties:
 
 
 @dataclass

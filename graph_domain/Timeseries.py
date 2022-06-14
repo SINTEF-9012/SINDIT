@@ -1,22 +1,20 @@
 from dataclasses import dataclass
-
 from dataclasses_json import dataclass_json
-from py2neo.ogm import Model, Property
+
+from graph_domain.BaseNode import BaseNode
 
 LABEL = 'TIMESERIES'
 
 @dataclass
 @dataclass_json
-class TimeseriesFlat(Model):
+class TimeseriesFlat(BaseNode):
     """
     Flat timeseries node without relationships, only containing properties
     """
     # Identifier for the node-type:
     __primarylabel__ = LABEL
 
-    id_short: str = Property()
-    iri: str = Property()
-    description: str = Property()
+    # Properties:
 
 
 @dataclass
