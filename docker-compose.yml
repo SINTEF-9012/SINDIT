@@ -25,10 +25,31 @@ services:
       timeout: 30s
       retries: 5
 
+  neo4j_kg:
+    image: neo4j:4.4-community
+    hostname: neo4j_kg
+    container_name: neo4j_kg
+    mem_limit: 2G
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./docker/neo4j_kg/conf:/conf
+      - ./docker/neo4j_kg/logs:/logs
+      - ./docker/neo4j_kg/data:/data
+    healthcheck:
+      test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
+      interval: 10s
+      timeout: 2s
+      retries: 10
+    environment:
+      - NEO4J_AUTH=none
+
   zoo:
     image: zookeeper:3.4.9
     restart: unless-stopped
-    mem_limit: 2G
+    mem_limit: 1G
     hostname: zoo
     ports:
       - 2181:2181
@@ -43,7 +64,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:5.5.1
     hostname: kafka
-    mem_limit: 2G
+    mem_limit: 1G
     restart: unless-stopped
     ports:
       - 9092:9092
@@ -71,14 +92,15 @@ services:
   neo4jfactory:
     image: neo4j:3.5
     hostname: neo4jfactory
-    mem_limit: 2G
+    mem_limit: 1G
     restart: unless-stopped
     ports:
-      - 7474:7474
-      - 7687:7687
+      - 7476:7474
+      - 7689:7687
     volumes:
       - ./docker/neo4jfactory/conf:/conf
       - ./docker/neo4jfactory/logs:/logs
+      - ./docker/neo4jfactory/data:/data
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
       interval: 10s
@@ -90,7 +112,7 @@ services:
   neo4jparts:
     image: neo4j:3.5
     hostname: neo4jparts
-    mem_limit: 2G
+    mem_limit: 1G
     restart: unless-stopped
     ports:
       - 7475:7474
@@ -98,6 +120,7 @@ services:
     volumes:
       - ./docker/neo4j_parts/conf:/conf
       - ./docker/neo4j_parts/logs:/logs
+      - ./docker/neo4j_parts/data:/data
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
       interval: 10s

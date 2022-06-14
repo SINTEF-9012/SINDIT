@@ -14,6 +14,7 @@ config.read(PATH_TO_CONFIG)
 class ConfigGroups(Enum):
     FRONTEND = "frontend"
     API = "api"
+    GRAPH = "neo4j-knowledge-graph"
 
 
 def get_str(group: ConfigGroups, key: str):
