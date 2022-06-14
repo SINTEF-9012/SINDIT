@@ -14,11 +14,13 @@ from service.timeseries_persistence.TimeseriesPersistenceService import Timeseri
 from service.api.endpoints import old_endpoints
 # noinspection PyUnresolvedReferences
 from service.api.endpoints import timeseries_endpoints
+# noinspection PyUnresolvedReferences
+from service.api.endpoints import graph_endpoints
 
 """
 Main entry point for the application layer
 Handles the sensor-connections and provides a API
-
+Introducing services for querying the KG
 Separated from api.py to avoid circular dependencies with endpoint files importing the "app" instance. 
 """
 
@@ -50,15 +52,15 @@ if __name__ == "__main__":
     init_sensors()
 
     # neo4j tests:
-    m_dao: MachinesDao = MachinesDao.instance()
-    m_json = m_dao.get_machines_deep_json()
-    print(m_json)
-    m_deep = m_dao.get_machines_deep()
-    print(m_deep)
-    m_deep_json = json.dumps([m.to_json() for m in m_deep])
-    print(m_deep_json)
-    m_flat = m_dao.get_machines_flat()
-    print(m_flat)
+    # m_dao: MachinesDao = MachinesDao.instance()
+    # m_json = m_dao.get_machines_deep_json()
+    # print(m_json)
+    # m_deep = m_dao.get_machines_deep()
+    # print(m_deep)
+    # m_deep_json = json.dumps([m.to_json() for m in m_deep])
+    # print(m_deep_json)
+    # m_flat = m_dao.get_machines_flat()
+    # print(m_flat)
 
     # Run fast API
     # noinspection PyTypeChecker

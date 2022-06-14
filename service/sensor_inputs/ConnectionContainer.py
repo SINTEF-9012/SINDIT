@@ -14,41 +14,44 @@ OPCUA_INPUTS = [
         "port": 4840,
         "sampling_rate": 1000,  # ms
         "inputs": [
+            # HBW:
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Actual_Position"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/Horizontal_Axis/di_Actual_Position'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_horizontal'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Target_Position"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/Horizontal_Axis/di_Target_Position'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_horizontal'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Actual_Position"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/Vertical_Axis/di_Actual_Position'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_vertical'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Target_Position"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/Vertical_Axis/di_Target_Position'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_vertical'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Horizontal"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/di_PosBelt_Horizontal'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_horizontal'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Vertical"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/di_PosBelt_Vertical'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_vertical'
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_Offset_Pos_Rack_Vertical"',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'HBW/di_Offset_Pos_Rack_Vertical'
-            }
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/offset_pos_rack_vertical'
+            },
+            # VGR:
+            # {
+            #     "node_id": 'ns=3;s="gtyp_VGR"."Horizontal_Axis"."di_Actual_Position"',
+            #     "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/vgr_actual_pos_horizontal'
+            # },
+            # {
+            #     "node_id": 'ns=3;s="gtyp_VGR"."Horizontal_Axis"."di_Target_Position"',
+            #     "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/vgr_target_pos_horizontal'
+            # },
         ]
     },
 ]
@@ -61,14 +64,12 @@ MQTT_INPUTS = [
             {
                 "topic": 'i/bme680',
                 "json_keyword": 't',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'BME680/temperature'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature'
             },
             {
                 "topic": 'i/bme680',
                 "json_keyword": 'rt',
-                "id_uri": 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-                          'BME680/temperature_raw'
+                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature_raw'
             },
         ]
     },

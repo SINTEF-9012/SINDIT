@@ -1,5 +1,8 @@
 import json
 from enum import Enum
+
+from frontend.main_column.factory_graph.factory_graph_types import SelectedElementTypes, NodeEdge
+
 """
 Util functions to store and receive info about the selected graph element
 
@@ -13,21 +16,6 @@ Example structure of the storage:
     'node_edge': 'NODE'  # in NodeEdge.values
 }
 """
-
-class NodeEdge(Enum):
-    NODE = 'NODE'
-    EDGE = 'EDGE'
-    UNSPECIFIED = 'UNSPECIFIED'
-
-class SelectedElementTypes(Enum):
-    # Node Types
-    MACHINE = 'MACHINE'
-    TIMESERIES_INPUT = 'SENSOR'  # TODO: change to "TIMESERIES"
-    UNSPECIFIED_NODE_TYPE = 'UNSPECIFIED_NODE_TYPE'
-    # Edge Types
-    HAS_TIMESERIES = 'HAS_TIMESERIES'
-    UNSPECIFIED_EDGE_TYPE = 'UNSPECIFIED_EDGE_TYPE'
-
 
 def tap_edge_to_store(tap_edge):
     """
@@ -69,10 +57,11 @@ def tap_node_to_store(tap_node):
         el_type = SelectedElementTypes.UNSPECIFIED_NODE_TYPE.value
 
     storage_dict = {
-        'id_short': 'example_identifier_short',
-        'iri': 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
-               'HBW/di_PosBelt_Horizontal',  # TODO
-        'description': 'some description...',  # TODO
+        'id_short': tap_node['data']['id'],
+        'iri': tap_node['data']['iri'],
+        # 'iri': 'www.sintef.no/asset_identifiers/fischertechnik_learning_factory/sensor_inputs/'
+        #        'HBW/di_PosBelt_Horizontal',
+        'description': tap_node['data']['description'],
         'type': el_type,
         'node_edge': NodeEdge.NODE.value
     }
