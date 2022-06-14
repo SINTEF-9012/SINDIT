@@ -25,7 +25,7 @@ from config import global_config as cfg
 # Read Config
 config = configparser.ConfigParser()
 config.read(cfg.PATH_TO_CONFIG)
-NEO4J_URI = stngs.NEO4J_FACTORY
+NEO4J_URI = stngs.NEO4J_FACTORY_OLD
 NEO4J_USER = config['factory-neo4j']['user']
 NEO4J_PASS = config['factory-neo4j']['pass']
 NEED_AUTH = config['factory-neo4j']['need_auth']
