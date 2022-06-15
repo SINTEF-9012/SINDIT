@@ -20,6 +20,13 @@ class MachineFlat(BaseNode):
 
     # Additional properties:
 
+    def validate_metamodel_conformance(self):
+        """
+        Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
+        :return:
+        """
+        return super().validate_metamodel_conformance()
+
 
 @dataclass
 @dataclass_json
@@ -30,3 +37,11 @@ class MachineDeep(MachineFlat):
     __primarylabel__ = LABEL
 
     timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, "HAS_TIMESERIES")
+
+    def validate_metamodel_conformance(self):
+        """
+        Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
+        :return:
+        """
+        return super().validate_metamodel_conformance() and \
+            all(timeseries.validate_metamodel_conformance() for timeseries in self.timeseries)

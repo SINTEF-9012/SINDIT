@@ -1,7 +1,9 @@
 import json
 
 from graph_domain.Machine import MachineFlat, MachineDeep
+from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
 from service.knowledge_graph.KnowledgeGraphPersistenceService import KnowledgeGraphPersistenceService
+from service.knowledge_graph.knowledge_graph_metamodel_validator import validate_result_node_list
 
 
 class MachinesDao(object):
@@ -24,16 +26,23 @@ class MachinesDao(object):
 
         self.ps: KnowledgeGraphPersistenceService = KnowledgeGraphPersistenceService.instance()
 
+    @validate_result_node_list
     def get_machines_flat(self):
         """
         Queries all machine nodes. Does not follow any relationships
         :param self:
         :return:
+        :raises GraphNotConformantToMetamodelError: If Graph not conformant
         """
         machines_flat_matches = self.ps.repo.match(model=MachineFlat)
+        machines_flat = [m for m in machines_flat_matches]
 
-        return [m for m in machines_flat_matches]
+        if not all(machine.validate_metamodel_conformance() for machine in machines_flat):
+            raise GraphNotConformantToMetamodelError("Querying the KG did reveal unconsistencies with the metamodel")
 
+        return machines_flat
+
+    @validate_result_node_list
     def get_machines_deep(self):
         """
         Queries all machine nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
@@ -46,6 +55,7 @@ class MachinesDao(object):
         # by using the auto-generated json serializer
         return [MachineDeep.from_json(m.to_json()) for m in machines_deep_matches]
 
+    # validator used manually because result type is json instead of node-list
     def get_machines_deep_json(self):
         """
         Queries all machine nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
@@ -56,76 +66,7 @@ class MachinesDao(object):
         """
         machines_deep_matches = self.ps.repo.match(model=MachineDeep)
 
+        if not all(machine.validate_metamodel_conformance() for machine in machines_deep_matches):
+            raise GraphNotConformantToMetamodelError("Querying the KG did reveal inconsistencies with the metamodel")
+
         return json.dumps([m.to_json() for m in machines_deep_matches])
-
-    # def get_machines(self):
-    #
-    #     timeseries = self.__repo.match(model=Timeseries)
-    #
-    #     print(timeseries)
-    #
-    #     m1 = MachineFlat(id_short="test")
-    #     print(m1)
-    #
-    #     machines_flat = self.__repo.match(model=MachineFlat)
-    #
-    #     print(machines_flat)
-    #
-    #     #machines = py2neo.matching.NodeMatcher(self.__graph).match("MACHINE")
-    #     machines = self.__repo.match(model=MachineDeep)
-    #
-    #     print(machines)
-    #     print("END machines")
-
-    # def write_measurement(self,
-    #                       id_uri: str,
-    #                       value,
-    #                       reading_time: datetime = None
-    #                       ):
-    #     """
-    #     Writes the given value to the standard bucket into the measurement according to the id_uri into a field
-    #     called 'reading'.
-    #     When no reading time is given, the current database time is being used.
-    #     :param id_uri:
-    #     :param value:
-    #     :param reading_time:
-    #     :return:
-    #     """
-    #
-    #     record = Point(measurement_name=id_uri) \
-    #         .field(field=READING_FIELD_NAME, value=value)
-    #     if reading_time is not None:
-    #         record.time(reading_time)
-    #     self.__write_api.write(bucket=self.bucket, record=record)
-    #
-    # def read_period_to_dataframe(self,
-    #                              id_uri: str,
-    #                              begin_time: datetime,
-    #                              end_time: datetime
-    #                              ) -> pd.DataFrame:
-    #     """
-    #     Reads all measurements from the sensor with the given ID in the time period
-    #     :param id_uri:
-    #     :param begin_time:
-    #     :param end_time:
-    #     :return: Dataframe containing all measurements in that period
-    #     :raise IdNotFoundException: if the id_uri is not found
-    #     """
-    #     query = f'from(bucket: "{self.bucket}")\n' \
-    #             f'|> range(start: {begin_time.astimezone().isoformat()}, stop: {end_time.astimezone().isoformat()})\n' \
-    #             f'|> filter(fn: (r) => r["_measurement"] == "{id_uri}")' \
-    #             f'|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")\n' \
-    #             f'|> keep(columns: ["_time", "{READING_FIELD_NAME}"])'
-    #
-    #     try:
-    #         df = self.__query_api.query_data_frame(query=query)
-    #
-    #         # Dataframe cleanup
-    #         df.drop(columns=["result", "table"], axis=1, inplace=True)
-    #         df.rename(columns={"_time": "time", READING_FIELD_NAME: "value"}, inplace=True)
-    #
-    #         return df
-    #
-    #     except KeyError:
-    #         # id_uri not found
-    #         raise IdNotFoundException
