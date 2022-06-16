@@ -66,6 +66,7 @@ class MachinesDao(object):
         """
         machines_deep_matches = self.ps.repo.match(model=MachineDeep)
 
+        # Validate manually:
         if not all(machine.validate_metamodel_conformance() for machine in machines_deep_matches):
             raise GraphNotConformantToMetamodelError("Querying the KG did reveal inconsistencies with the metamodel")
 

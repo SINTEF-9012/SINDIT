@@ -3,8 +3,6 @@ import json
 import uvicorn
 
 from service.api.api import app
-from service.knowledge_graph.KnowledgeGraphPersistenceService import KnowledgeGraphPersistenceService
-from service.knowledge_graph.dao.MachinesDao import MachinesDao
 from service.sensor_inputs.ConnectionContainer import ConnectionContainer
 from service.timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
 
@@ -43,24 +41,11 @@ def init_sensors():
     print("Sensor inputs initialized")
 
 
-
-
 # #############################################################################
 # Launch services
 # #############################################################################
 if __name__ == "__main__":
     init_sensors()
-
-    # neo4j tests:
-    # m_dao: MachinesDao = MachinesDao.instance()
-    # m_json = m_dao.get_machines_deep_json()
-    # print(m_json)
-    # m_deep = m_dao.get_machines_deep()
-    # print(m_deep)
-    # m_deep_json = json.dumps([m.to_json() for m in m_deep])
-    # print(m_deep_json)
-    # m_flat = m_dao.get_machines_flat()
-    # print(m_flat)
 
     # Run fast API
     # noinspection PyTypeChecker

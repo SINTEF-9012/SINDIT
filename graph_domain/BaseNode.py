@@ -11,9 +11,14 @@ class BaseNode(Model):
     Base node type defining properties every node has
     """
 
+    # Core properties:
     id_short: str = Property()
     iri: str = Property()
     description: str = Property()
+
+    # Additional properties for visualization (may initially be empty)
+    visualization_positioning_x: float = Property(default=0.0)
+    visualization_positioning_y: float = Property(default=0.0)
 
     def validate_metamodel_conformance(self):
         """

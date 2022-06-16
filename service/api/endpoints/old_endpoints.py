@@ -150,7 +150,7 @@ def get_factory_cytoscape_from_neo4j():
     return cytograph
 
 @app.post("/get_factory_cytoscape/{factory}")
-def get_factory_cytoscape(factory:str):
+def get_factory_cytoscape(factory: str):
     fac = dtFactory(flushAAS=True)
     json_data = ''
     if os.path.isfile(factory):
