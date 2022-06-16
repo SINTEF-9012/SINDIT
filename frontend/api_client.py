@@ -27,3 +27,8 @@ def get_dataframe(relative_path: str):
     :return:
     """
     return pd.DataFrame.from_dict(get(relative_path))
+
+# TODO: **kwargs to for get...
+
+def patch(relative_path: str, **kwargs):
+    requests.patch(API_URI + relative_path, params=kwargs)

@@ -1,11 +1,5 @@
 from enum import Enum
 
-
-class NodeEdge(Enum):
-    NODE = 'NODE'
-    EDGE = 'EDGE'
-    UNSPECIFIED = 'UNSPECIFIED'
-
 class SelectedElementTypes(Enum):
     # Node Types
     MACHINE = 'MACHINE'
@@ -14,3 +8,5 @@ class SelectedElementTypes(Enum):
     # Edge Types
     HAS_TIMESERIES = 'HAS_TIMESERIES'
     UNSPECIFIED_EDGE_TYPE = 'UNSPECIFIED_EDGE_TYPE'
+    # Generic
+    UNSPECIFIED = 'UNSPECIFIED'

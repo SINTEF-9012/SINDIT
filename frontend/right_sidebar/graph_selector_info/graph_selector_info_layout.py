@@ -1,9 +1,7 @@
 import dash_bootstrap_components as dbc
-from dash import dcc
 from dash import html
 
-from frontend import api_client
-from frontend.right_sidebar.graph_selector import graph_selector_util
+from frontend.main_column.factory_graph.GraphSelectedElement import GraphSelectedElement
 
 
 def get_layout():
@@ -15,8 +13,6 @@ def get_layout():
     """
     return html.Div(
         children=[
-            # Storage for accessing the selected element
-            dcc.Store(id='selected-graph-element-store'),
             # Graphical output:
             html.Pre(
                 id='selected-graph-element-info',
@@ -29,10 +25,10 @@ def get_layout():
     )
 
 
-def get_info_content(selected_el):
+def get_info_content(selected_el_json):
     """
         Builds the info table for identifying the selected node (if any selected)
-        :param selected_el: the selected element (json)
+        :param selected_el_json: the selected element (json)
         :return:
         """
 
@@ -45,7 +41,7 @@ def get_info_content(selected_el):
 
     info_rows = []
 
-    if selected_el is None:
+    if selected_el_json is None:
         info_rows.append(
             html.Tr(
                 children=[
@@ -55,11 +51,13 @@ def get_info_content(selected_el):
             )
         )
     else:
+        selected_el: GraphSelectedElement = GraphSelectedElement.from_json(selected_el_json)
+
         info_rows.append(
             html.Tr(
                 children=[
                     html.Td(children=['IdShort:'], ),
-                    html.Td(graph_selector_util.get_id_short(selected_el))
+                    html.Td(selected_el.id_short)
                 ],
                 className='custom-table-row'
             )
@@ -69,7 +67,9 @@ def get_info_content(selected_el):
             html.Tr(
                 children=[
                     html.Td(children=['Node / Edge:'], ),
-                    html.Td(graph_selector_util.get_node_edge(selected_el).value)
+                    html.Td(
+                        'NODE' if selected_el.is_node else 'EDGE'
+                    )
                 ],
                 className='custom-table-row'
             )
@@ -79,7 +79,7 @@ def get_info_content(selected_el):
             html.Tr(
                 children=[
                     html.Td(children=['Type:'], ),
-                    html.Td(graph_selector_util.get_type(selected_el).value)
+                    html.Td(selected_el.type.value)
                 ],
                 className='custom-table-row'
             )

@@ -14,7 +14,7 @@ from frontend.main_column.factory_graph import factory_graph_callbacks
 # noinspection PyUnresolvedReferences
 from frontend.right_sidebar import right_sidebar_callbacks
 # noinspection PyUnresolvedReferences
-from frontend.right_sidebar.graph_selector import graph_selector_callbacks
+from frontend.right_sidebar.graph_selector_info import graph_selector_info_callbacks
 # noinspection PyUnresolvedReferences
 from frontend.right_sidebar.node_data_tab.live_sensor_readings import sensor_readings_callbacks
 

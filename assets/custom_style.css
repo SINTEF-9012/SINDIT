@@ -17,3 +17,17 @@
 .factory-graph {
 
 }
+
+.inline-alert {
+    height: 100%;
+    display: inline-block;
+    font-weight: 200;
+    line-height: 1.1;
+    color: #777;
+    background: transparent;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    padding: 0;
+}

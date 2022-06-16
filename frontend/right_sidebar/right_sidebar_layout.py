@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 
-from frontend.right_sidebar.graph_selector import graph_selector_layout
+from frontend.right_sidebar.graph_selector_info import graph_selector_info_layout
 
 
 def get_layout():
@@ -13,7 +13,7 @@ def get_layout():
     return dbc.Col(
         children=[
             # Selected node / edge:
-            graph_selector_layout.get_layout(),
+            graph_selector_info_layout.get_layout(),
 
             # Tabs:
             dcc.Tabs(id='tabs-infos', value='tab-node-information', children=[
