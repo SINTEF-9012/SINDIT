@@ -18,4 +18,9 @@ def get_figure():
     }
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
 
+    fig.update_layout(
+        # Used to disable automatic reset of the zoom etc. at every refresh:
+        uirevision="no_change"
+    )
+
     return fig
