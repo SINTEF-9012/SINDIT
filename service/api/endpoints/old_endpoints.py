@@ -3,9 +3,7 @@ import os.path
 import json
 import py2neo
 import configparser
-import pandas as pd
 import uvicorn
-from config import global_config as cfg
 
 from service.api.api import app
 from dtwin.dtfactory import dtFactory

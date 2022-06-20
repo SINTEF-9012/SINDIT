@@ -10,10 +10,7 @@ import dtwin.dtqueue as dtQueue
 import dtwin.dtsensor as dtSensor
 import dtwin.dttypes as dtTypes
 import dtwin.dtpart as dtPart
-import json
 import networkx as nx
-import datetime
-import dateutil.parser
 from dtwin.dtfactory import dtFactory
 import simpy
 import configparser

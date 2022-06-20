@@ -19,19 +19,14 @@ import pandas as pd
 import datetime
 import numpy as np
 import math
-from aas import model
-import uuid as id
 from aas.adapter.xml import write_aas_xml_file
 from aas.adapter import aasx
-from config import global_config as cfg
 import simpy
 import matplotlib.animation as animation
 
 PRINT_DEBUG_INFO = False
 #Graph stuff
-import saas.ass_factory
 from saas.ass_factory import AASFactory
-from saas.semantic_factory import SemanticFactory
 
 
 class dtFactory(object):

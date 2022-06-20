@@ -35,7 +35,7 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - ./docker/neo4j_kg/conf:/conf
+      - ./docker/neo4j_kg/conf:/var/lib/neo4j/conf/
       - ./docker/neo4j_kg/logs:/logs
       - ./docker/neo4j_kg/data:/data
     healthcheck:
@@ -45,6 +45,10 @@ services:
       retries: 10
     environment:
       - NEO4J_AUTH=none
+      # Neo4J plugins for metamodel, similarity analysis, RDF semantics, ...
+      - NEO4JLABS_PLUGINS=["apoc", "n10s", "graph-data-science", "streams"]
+      # Allow the separate endpoint "/rdf" for RDF mappings
+      - NEO4J_dbms_unmanaged__extension__classes=n10s.endpoint=/rdf
 
   zoo:
     image: zookeeper:3.4.9

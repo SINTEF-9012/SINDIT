@@ -4,21 +4,9 @@ SINDIT: fischertechnik learning factory
 author: Timo Peter <timo.peter@sintef.no>
 
 """
-import dtwin.dtmachine as dtMachine
-import dtwin.dtqueue as dtQueue
-import dtwin.dtsensor as dtSensor
-import dtwin.dttypes as dtTypes
-import dtwin.dtpart as dtPart
-import json
-import networkx as nx
-import datetime
-import dateutil.parser
-from dtwin.dtfactory import dtFactory
-import simpy
 import configparser
 import py2neo
 import environment.environment as env
-from enum import Enum, unique
 from config import global_config as cfg
 
 # Read Config
