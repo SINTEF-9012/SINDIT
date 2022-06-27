@@ -23,9 +23,9 @@ class MachineFlat(BaseNode):
     def validate_metamodel_conformance(self):
         """
         Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
-        :return:
+        Raises GraphNotConformantToMetamodelError if there are inconsistencies
         """
-        return super().validate_metamodel_conformance()
+        super().validate_metamodel_conformance()
 
 
 @dataclass
@@ -36,12 +36,18 @@ class MachineDeep(MachineFlat):
     """
     __primarylabel__ = LABEL
 
-    timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, "HAS_TIMESERIES")
+    _timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, "HAS_TIMESERIES")
+
+    @property
+    def timeseries(self) -> List[TimeseriesDeep]:
+        return [timeseries for timeseries in self._timeseries]
 
     def validate_metamodel_conformance(self):
         """
         Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
-        :return:
+        Raises GraphNotConformantToMetamodelError if there are inconsistencies
         """
-        return super().validate_metamodel_conformance() and \
-            all(timeseries.validate_metamodel_conformance() for timeseries in self.timeseries)
+        super().validate_metamodel_conformance()
+
+        for timeseries in self.timeseries:
+            timeseries.validate_metamodel_conformance()

@@ -8,8 +8,10 @@ from frontend.app import app
 from frontend import resources_manager
 from frontend.main_column.factory_graph.factory_graph_types import SelectedElementTypes
 from graph_domain.BaseNode import BaseNode
+from graph_domain.DatabaseConnection import DatabaseConnection
 from graph_domain.Machine import MachineDeep
 from graph_domain.Timeseries import TimeseriesDeep
+from graph_domain.Unit import Unit
 
 CY_STYLE_STATIC = resources_manager.load_json('cy-style.json')
 
@@ -74,8 +76,8 @@ def get_layout():
     )
 
 
-def __get_cytoscape_base_node(node: BaseNode,
-                              node_type: str = SelectedElementTypes.UNSPECIFIED_NODE_TYPE.value):
+def _create_cytoscape_node(node: BaseNode,
+                           node_type: str = SelectedElementTypes.UNSPECIFIED_NODE_TYPE.value):
     # Restore node positioning where available:
     pox_x = node.visualization_positioning_x if node.visualization_positioning_x is not None else 0
     pox_y = node.visualization_positioning_y if node.visualization_positioning_y is not None else 0
@@ -94,18 +96,12 @@ def __get_cytoscape_base_node(node: BaseNode,
 
 
 def __get_cytoscape_machine(machine: MachineDeep):
-    element_dict = __get_cytoscape_base_node(machine, SelectedElementTypes.MACHINE.value)
+    element_dict = _create_cytoscape_node(machine, SelectedElementTypes.MACHINE.value)
 
     return element_dict
 
 
-def __get_cytoscape_timeseries(timeseries: TimeseriesDeep):
-    element_dict = __get_cytoscape_base_node(timeseries, SelectedElementTypes.TIMESERIES_INPUT.value)
-
-    return element_dict
-
-
-def __get_cytoscape_base_edge(node_from: BaseNode,
+def _create_cytoscape_relationship(node_from: BaseNode,
                               node_to: BaseNode,
                               edge_type: str = SelectedElementTypes.UNSPECIFIED_EDGE_TYPE.value):
     return {
@@ -117,12 +113,6 @@ def __get_cytoscape_base_edge(node_from: BaseNode,
     }
 
 
-def __get_cytoscape_timeseries_machine_edge(timeseries: TimeseriesDeep, machine: MachineDeep):
-    element_dict = __get_cytoscape_base_edge(machine, timeseries, SelectedElementTypes.HAS_TIMESERIES.value)
-
-    return element_dict
-
-
 def get_cytoscape_elements(machines_deep: List[MachineDeep]):
     cytoscape_elements = []
 
@@ -132,8 +122,21 @@ def get_cytoscape_elements(machines_deep: List[MachineDeep]):
 
         for timeseries in machine.timeseries:
             # Timeseries:
-            cytoscape_elements.append(__get_cytoscape_timeseries(timeseries))
-            # Timeseries relationships:
-            cytoscape_elements.append(__get_cytoscape_timeseries_machine_edge(timeseries, machine))
+            cytoscape_elements.append(_create_cytoscape_node(timeseries, SelectedElementTypes.TIMESERIES_INPUT.value))
+            cytoscape_elements.append(_create_cytoscape_relationship(machine, 
+                                                                     timeseries,
+                                                                     SelectedElementTypes.HAS_TIMESERIES.value))
+
+            # Database connection:
+            cytoscape_elements.append(_create_cytoscape_node(timeseries.connection, SelectedElementTypes.DATABASE_CONNECTION.value))
+            cytoscape_elements.append(_create_cytoscape_relationship(timeseries, 
+                                                                     timeseries.connection,
+                                                                     SelectedElementTypes.ALL_TIME_ACCESS.value))
+
+            # Unit:
+            cytoscape_elements.append(_create_cytoscape_node(timeseries.unit, SelectedElementTypes.UNIT.value))
+            cytoscape_elements.append(_create_cytoscape_relationship(timeseries, 
+                                                                     timeseries.unit,
+                                                                     SelectedElementTypes.HAS_UNIT.value))
 
     return cytoscape_elements

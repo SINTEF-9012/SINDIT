@@ -5,6 +5,7 @@ from dataclasses_json import dataclass_json
 from py2neo.ogm import Property
 
 from graph_domain.BaseNode import BaseNode
+from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
 
 LABEL = 'TIMESERIES_UNIT'
 
@@ -24,20 +25,21 @@ class Unit(BaseNode):
     def validate_metamodel_conformance(self):
         """
         Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
-        :return:
+        Raises GraphNotConformantToMetamodelError if there are inconsistencies
         """
-        return super().validate_metamodel_conformance() and \
-            self in [unit.value for unit in AllowedUnitsEnum]
+        super().validate_metamodel_conformance()
 
+        # if not self in [unit.value for unit in AllowedUnitsEnum]:
+        #     raise GraphNotConformantToMetamodelError(self, "Unrecognized unit: Not in enum.")
 
-class AllowedUnitsEnum(Enum):
-    MILLIMETER = Unit(
-        id_short='mm',
-        iri='www.sintef.no/sindit/identifiers/units/mm',
-        description='Distance measurement in millimeters'
-    )
-    DEG_CELSIUS = Unit(
-        id_short='deg_celsius',
-        iri='www.sintef.no/sindit/identifiers/units/deg_celsius',
-        description='Temperature measurement in degrees celsius'
-    )
+# class AllowedUnitsEnum(Enum):
+#     MILLIMETER = Unit(
+#         id_short='mm',
+#         iri='www.sintef.no/sindit/identifiers/units/mm',
+#         description='Distance measurement in millimeters'
+#     )
+#     DEG_CELSIUS = Unit(
+#         id_short='deg_celsius',
+#         iri='www.sintef.no/sindit/identifiers/units/deg_celsius',
+#         description='Temperature measurement in degrees celsius'
+#     )

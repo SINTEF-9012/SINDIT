@@ -13,6 +13,9 @@ def validate_result_node_list(func):
     def validator_wrapped_getter(*args, **kwargs):
         result_list: List[BaseNode] = func(*args, *kwargs)
 
+        for node in result_list:
+            node.validate_metamodel_conformance()
+
         if not all(node.validate_metamodel_conformance() for node in result_list):
             raise GraphNotConformantToMetamodelError("Querying the KG did reveal inconsistencies with the metamodel")
 
