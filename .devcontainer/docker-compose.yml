@@ -1,0 +1,43 @@
+version: '2.4'
+
+networks:
+  # Same as the main docker composefor the devcontainer
+  sindit_network:
+    name: sindit_network
+
+services:
+  # Update this to the name of the service you want to work with in your docker-compose.yml file
+  sindit_devcontainer:
+    build: .
+    hostname: sindit-devcontainer
+    container_name: sindit_devcontainer
+    mem_limit: 2G
+    networks:
+      - sindit_network
+
+    # If you want add a non-root user to your Dockerfile, you can use the "remoteUser"
+    # property in devcontainer.json to cause VS Code its sub-processes (terminals, tasks, 
+    # debugging) to execute as the user. Uncomment the next line if you want the entire 
+    # container to run as this user instead. Note that, on Linux, you may need to 
+    # ensure the UID and GID of the container user you create matches your local user. 
+    # See https://aka.ms/vscode-remote/containers/non-root for details.
+    #
+    # user: vscode
+
+
+    volumes:
+      # Mount the folder of your project
+      - ..:/workspace:cached
+
+      # Use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
+      - /var/run/docker.sock:/var/run/docker.sock 
+
+    # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
+    # cap_add:
+    #   - SYS_PTRACE
+    # security_opt:
+    #   - seccomp:unconfined
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+ 

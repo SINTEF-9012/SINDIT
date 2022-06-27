@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 
 # if not set let's assume our one and only env file
 if os.getenv("ENVIRONMENT_FILE") is None:
-    os.environ["ENVIRONMENT_FILE"] = "local_deployment.env"
+    # os.environ["ENVIRONMENT_FILE"] = "local_deployment.env"
+    os.environ["ENVIRONMENT_FILE"] = "docker_deployment.env"
 
 dotenv_path = join(dirname(__file__), os.getenv("ENVIRONMENT_FILE"))
 load_dotenv(dotenv_path=dotenv_path, override=True)
