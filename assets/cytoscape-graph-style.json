@@ -1,0 +1,59 @@
+[
+    {
+        "selector": "node",
+        "style": {
+            "content": "data(label)",
+            "text-halign": "center",
+            "text-wrap": "wrap",
+            "text-max-width": 30,
+            "font-size": 14,
+            "font-weight": "bold",
+            "color": "#777",
+            "background-color": "#446e9b",
+            "background-fit": "none",
+            "background-width": "70%",
+            "background-height": "70%",
+            "height": 40,
+            "width": 40
+        }
+    },
+    {
+        "selector": "edge",
+        "style": {
+            "curve-style": "bezier",
+            "width": 2,
+            "arrow-scale": 2,
+            "line-color": "#777",
+            "target-arrow-shape": "triangle-backcurve",
+            "target-arrow-color": "#777",
+            "source-distance-from-node": 10,
+            "target-distance-from-node": 10
+        }
+    },
+    {
+        "selector": ".MACHINE",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/precision_manufacturing/wght500/48px.svg",
+            "height": 60,
+            "width": 60
+        }
+    },
+    {
+        "selector": ".TIMESERIES",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/ssid_chart/wght500/48px.svg"
+        }
+    },
+    {
+        "selector": ".DATABASE_CONNECTION",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/database/wght500/48px.svg"
+        }
+    },
+    {
+        "selector": ".TIMESERIES_UNIT",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/balance/wght500/48px.svg"
+        }
+    }
+]

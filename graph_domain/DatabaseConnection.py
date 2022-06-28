@@ -6,9 +6,10 @@ from py2neo.ogm import Property, RelatedTo
 
 from graph_domain.BaseNode import BaseNode
 from graph_domain.Unit import Unit
+from graph_domain.factory_graph_types import NodeTypes
 from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
 
-LABEL = 'DATABASE_CONNECTION'
+LABEL = NodeTypes.DATABASE_CONNECTION.value
 
 DATABASE_CONNECTION_TYPES = [
     "INFLUX_DB"

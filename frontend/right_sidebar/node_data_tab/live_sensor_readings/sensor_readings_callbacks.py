@@ -4,9 +4,9 @@ import pandas as pd
 from frontend import api_client
 from config import global_config as cfg
 from frontend.app import app
-from frontend.main_column.factory_graph import graph_selector_util
 from frontend.main_column.factory_graph.GraphSelectedElement import GraphSelectedElement
 from frontend.right_sidebar.node_data_tab.live_sensor_readings import sensor_readings_layout
+from graph_domain.factory_graph_types import NodeTypes
 
 sensor_ID = None
 
@@ -26,7 +26,7 @@ def update_live_sensors(n, selected_el_json):
     if selected_el_json is not None:
         selected_el: GraphSelectedElement = GraphSelectedElement.from_json(selected_el_json)
 
-        if selected_el.type == graph_selector_util.SelectedElementTypes.TIMESERIES_INPUT:
+        if selected_el.type == NodeTypes.TIMESERIES_INPUT.value:
             data = api_client.get_dataframe(f"/timeseries/current_measurements"
                                             f"?id_uri={selected_el.iri}"
                                             f"&duration={LIVE_SENSOR_DISPLAY_DURATION}")

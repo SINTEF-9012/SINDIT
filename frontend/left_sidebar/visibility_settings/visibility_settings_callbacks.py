@@ -2,49 +2,42 @@ from frontend.app import app
 from dash.dependencies import Input, Output
 
 from frontend import resources_manager
-from frontend.left_sidebar.visibility_settings.visibility_settings_enum import GraphVisibilityOptions
-
-CY_STYLE_STATIC = resources_manager.load_json('cy-style.json')
+from frontend.main_column.factory_graph.factory_graph_layout import (
+    CY_GRAPH_STYLE_STATIC,
+)
+from graph_domain.factory_graph_types import (
+    NODE_TYPE_STRINGS,
+    RELATIONSHIP_TYPES_FOR_NODE_TYPE,
+    NodeTypes,
+)
 
 print("Initializing visibility settings callbacks...")
 
-# @app.callback(Output('cytoscape-graph', 'stylesheet'),
-#               Input('visibility-switches-input', 'value'))
-# def update_output(value):
-#     """
-#     Toggles the visibility of element types in the main graph
-#     :param value:
-#     :return:
-#     """
-#
-#     opacity_edges = 1 if GraphVisibilityOptions.EDGES.value in value else 0
-#     opacity_parts = 1 if GraphVisibilityOptions.PARTS.value in value else 0
-#
-#     additional_styles = [
-#         {
-#             'selector': 'edge',
-#             'style': {
-#                 'opacity': opacity_edges
-#             }
-#         },
-#         {
-#             "selector": ".SINGLE_PART",
-#             'style': {
-#                 'opacity': opacity_parts
-#             }
-#         },
-#         {
-#             "selector": ".PROCESSED_PART",
-#             'style': {
-#                 'opacity': opacity_parts
-#             }
-#         },
-#         {
-#             "selector": ".part_edge",
-#             'style': {
-#                 'opacity': opacity_parts
-#             }
-#         }
-#     ]
-#
-#     return CY_STYLE_STATIC + additional_styles
+
+@app.callback(
+    Output("cytoscape-graph", "stylesheet"), Input("visibility-switches-input", "value")
+)
+def update_output(active_switches):
+    """
+    Toggles the visibility of element types in the main graph
+    :param value:
+    :return:
+    """
+    deactivated_switches = [
+        switch for switch in NODE_TYPE_STRINGS if switch not in active_switches
+    ]
+
+    invisibility_styles = []
+
+    for inactive_switch in deactivated_switches:
+        # Hide nodes from that type:
+        invisibility_styles.append(
+            {"selector": f".{inactive_switch}", "style": {"opacity": 0}}
+        )
+        # Hide connected relationships:
+        for relationship_type in RELATIONSHIP_TYPES_FOR_NODE_TYPE.get(inactive_switch):
+            invisibility_styles.append(
+                {"selector": f".{relationship_type}", "style": {"opacity": 0}}
+            )
+
+    return CY_GRAPH_STYLE_STATIC + invisibility_styles

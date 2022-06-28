@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from itertools import chain
 from dataclasses_json import dataclass_json
 
-from frontend.main_column.factory_graph.factory_graph_types import SelectedElementTypes
+from graph_domain.factory_graph_types import ELEMENT_TYPE_STRINGS, UNSPECIFIED_LABEL, NodeTypes, RelationshipTypes
 
 
 # Take care: the order of this annotations makes a difference. Does not work with @dataclass before @dataclass_json
@@ -17,7 +18,7 @@ class GraphSelectedElement(object):
     id_short: str = None
     iri: str = None
 
-    type: SelectedElementTypes = SelectedElementTypes.UNSPECIFIED
+    type: str = UNSPECIFIED_LABEL
     is_node: bool = None
 
     # Only for nodes:
@@ -34,11 +35,11 @@ class GraphSelectedElement(object):
         if tap_edge is None:
             return ""
 
-        if tap_edge["classes"] in [el_type.value for el_type in SelectedElementTypes]:
+        if tap_edge["classes"] in ELEMENT_TYPE_STRINGS:
             el_type = tap_edge["classes"]
         else:
-            print("Edge type not found! Fallback to unspecified.")
-            el_type = SelectedElementTypes.UNSPECIFIED_EDGE_TYPE.value
+            print("Edge type not found!")
+            el_type = UNSPECIFIED_LABEL
 
         return GraphSelectedElement(
             id_short='NA',
@@ -57,11 +58,11 @@ class GraphSelectedElement(object):
         if tap_node is None:
             return ""
 
-        if tap_node["classes"] in [el_type.value for el_type in SelectedElementTypes]:
+        if tap_node["classes"] in ELEMENT_TYPE_STRINGS:
             el_type = tap_node["classes"]
         else:
             print("Node type not found! Fallback to unspecified.")
-            el_type = SelectedElementTypes.UNSPECIFIED_NODE_TYPE.value
+            el_type = UNSPECIFIED_LABEL
 
         return cls(
             id_short=tap_node['data']['id'],

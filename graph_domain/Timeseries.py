@@ -7,9 +7,12 @@ from py2neo.ogm import Property, RelatedTo
 from graph_domain.BaseNode import BaseNode
 from graph_domain.DatabaseConnection import DatabaseConnection
 from graph_domain.Unit import Unit
+from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
 
-LABEL = 'TIMESERIES'
+LABEL = NodeTypes.TIMESERIES_INPUT.value
+UNIT_RELATIONSHIP_LABEL = RelationshipTypes.HAS_UNIT.value
+DB_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.DB_ACCESS.value
 
 
 @dataclass
@@ -40,11 +43,11 @@ class TimeseriesDeep(TimeseriesFlat):
 
     # The OGM framework does not allow constraining to only one item!
     # Can only be one unit (checked by metamodel validator)
-    _units: List[Unit] = RelatedTo(Unit, "HAS_UNIT")
+    _units: List[Unit] = RelatedTo(Unit, UNIT_RELATIONSHIP_LABEL)
 
     # The OGM framework does not allow constraining to only one item!
     # Can only be one unit (checked by metamodel validator)
-    _connections: List[DatabaseConnection] = RelatedTo(DatabaseConnection, "ALL_TIME_ACCESS")
+    _connections: List[DatabaseConnection] = RelatedTo(DatabaseConnection, DB_CONNECTION_RELATIONSHIP_LABEL)
 
     @property
     def unit(self) -> Unit:

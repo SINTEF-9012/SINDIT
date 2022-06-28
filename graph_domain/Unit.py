@@ -5,9 +5,10 @@ from dataclasses_json import dataclass_json
 from py2neo.ogm import Property
 
 from graph_domain.BaseNode import BaseNode
+from graph_domain.factory_graph_types import NodeTypes
 from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
 
-LABEL = 'TIMESERIES_UNIT'
+LABEL = NodeTypes.UNIT.value
 
 
 @dataclass

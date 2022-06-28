@@ -6,8 +6,10 @@ from py2neo.ogm import Model, Property, RelatedTo
 
 from graph_domain.BaseNode import BaseNode
 from graph_domain.Timeseries import TimeseriesDeep
+from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 
-LABEL = 'MACHINE'
+LABEL = NodeTypes.MACHINE.value
+TIMESERIES_RELATIONSHIP = RelationshipTypes.HAS_TIMESERIES.value
 
 @dataclass
 @dataclass_json
@@ -36,7 +38,7 @@ class MachineDeep(MachineFlat):
     """
     __primarylabel__ = LABEL
 
-    _timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, "HAS_TIMESERIES")
+    _timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, TIMESERIES_RELATIONSHIP)
 
     @property
     def timeseries(self) -> List[TimeseriesDeep]:
