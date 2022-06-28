@@ -1,3 +1,4 @@
+black  # formatter
 networkx==2.8.4
 simpy~=4.0.1
 numpy==1.22.4

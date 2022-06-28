@@ -18,7 +18,7 @@
 	"workspaceFolder": "/workspace",
 
 	// Install requirements (here instead of the dockerfile, to be able to use the workspace)
-	"postCreateCommand": "pip --disable-pip-version-check --no-cache-dir install -r ./requirements.txt",
+	"postCreateCommand": "pip --disable-pip-version-check --no-cache-dir install -r ./requirements.txt && printf '\n\n\n\n\nTo activate code analysis, execute:\n\n\t > Developer: Reload Window\n\n\n\n\n'",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -45,7 +45,11 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-azuretools.vscode-docker",
-				"k--kato.intellij-idea-keybindings"
+				"k--kato.intellij-idea-keybindings",
+				"njpwerner.autodocstring",
+				"visualstudioexptteam.vscodeintellicode",
+				"kevinrose.vsc-python-indent",
+				"donjayamanne.python-environment-manager"
 			]
 		}
 	},
