@@ -1,32 +1,41 @@
 import json
 
 from graph_domain.Machine import MachineFlat, MachineDeep
-from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
-from service.knowledge_graph.KnowledgeGraphPersistenceService import KnowledgeGraphPersistenceService
-from service.knowledge_graph.knowledge_graph_metamodel_validator import validate_result_node_list
+from service.exceptions.GraphNotConformantToMetamodelError import (
+    GraphNotConformantToMetamodelError,
+)
+from service.knowledge_graph.KnowledgeGraphPersistenceService import (
+    KnowledgeGraphPersistenceService,
+)
+from service.knowledge_graph.knowledge_graph_metamodel_validator import (
+    validate_result_nodes,
+)
 
 
 class MachinesDao(object):
     """
     Data Access Object for Machines
     """
+
     __instance = None
 
-    @staticmethod
-    def instance():
-        if MachinesDao.__instance is None:
-            MachinesDao()
-        return MachinesDao.__instance
+    @classmethod
+    def instance(cls):
+        if cls.__instance is None:
+            cls()
+        return cls.__instance
 
     def __init__(self):
-        if MachinesDao.__instance is not None:
+        if self.__instance is not None:
             raise Exception("Singleton instantiated multiple times!")
 
         MachinesDao.__instance = self
 
-        self.ps: KnowledgeGraphPersistenceService = KnowledgeGraphPersistenceService.instance()
+        self.ps: KnowledgeGraphPersistenceService = (
+            KnowledgeGraphPersistenceService.instance()
+        )
 
-    @validate_result_node_list
+    @validate_result_nodes
     def get_machines_flat(self):
         """
         Queries all machine nodes. Does not follow any relationships
@@ -36,10 +45,10 @@ class MachinesDao(object):
         """
         machines_flat_matches = self.ps.repo.match(model=MachineFlat)
         machines_flat = [m for m in machines_flat_matches]
-        
+
         return machines_flat
 
-    @validate_result_node_list
+    @validate_result_nodes
     def get_machines_deep(self):
         """
         Queries all machine nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
@@ -66,5 +75,5 @@ class MachinesDao(object):
         # Validate manually:
         for machine in machines_deep_matches:
             machine.validate_metamodel_conformance()
-       
+
         return json.dumps([m.to_json() for m in machines_deep_matches])

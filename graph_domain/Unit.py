@@ -6,7 +6,9 @@ from py2neo.ogm import Property
 
 from graph_domain.BaseNode import BaseNode
 from graph_domain.factory_graph_types import NodeTypes
-from service.exceptions.GraphNotConformantToMetamodelError import GraphNotConformantToMetamodelError
+from service.exceptions.GraphNotConformantToMetamodelError import (
+    GraphNotConformantToMetamodelError,
+)
 
 LABEL = NodeTypes.UNIT.value
 
@@ -18,6 +20,7 @@ class Unit(BaseNode):
     Defines the unit of a timeseries
     Flat node without relationships, only containing properties.
     """
+
     # Identifier for the node-type:
     __primarylabel__ = LABEL
 
@@ -32,6 +35,7 @@ class Unit(BaseNode):
 
         # if not self in [unit.value for unit in AllowedUnitsEnum]:
         #     raise GraphNotConformantToMetamodelError(self, "Unrecognized unit: Not in enum.")
+
 
 # class AllowedUnitsEnum(Enum):
 #     MILLIMETER = Unit(

@@ -3,17 +3,17 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 
 # if not set let's assume our one and only env file
-if os.getenv("ENVIRONMENT_FILE") is None:
-    # os.environ["ENVIRONMENT_FILE"] = "local_deployment.env"
-    os.environ["ENVIRONMENT_FILE"] = "docker_deployment.env"
+# if os.getenv("ENVIRONMENT_FILE") is None:
+#     # os.environ["ENVIRONMENT_FILE"] = "local_deployment.env"
+#     os.environ["ENVIRONMENT_FILE"] = "docker_deployment.env"
 
-dotenv_path = join(dirname(__file__), os.getenv("ENVIRONMENT_FILE"))
-load_dotenv(dotenv_path=dotenv_path, override=True)
+# dotenv_path = join(dirname(__file__), os.getenv("ENVIRONMENT_FILE"))
+# load_dotenv(dotenv_path=dotenv_path, override=True)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 FAST_API_URI = os.getenv("FAST_API_URI")
 DASHBOARD_URI = os.getenv("DASHBOARD_URI")
-NEO4J_FACTORY = os.getenv("NEO4J_FACTORY")
+NEO4J_FACTORY = os.getenv("NEO4J_DB_HOST")
 
 # Deprecated:
 # TODO: remove

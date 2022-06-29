@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 from dataclasses_json import dataclass_json
@@ -14,7 +15,13 @@ from service.exceptions.GraphNotConformantToMetamodelError import (
 
 LABEL = NodeTypes.DATABASE_CONNECTION.value
 
-REALTIME_CONNECTION_TYPES = ["OPC_UA", "MQTT"]
+
+class RealtimeConnectionTypes(Enum):
+    OPC_UA = "OPC_UA"
+    MQTT = "MQTT"
+
+
+REALTIME_CONNECTION_TYPES = [con_type.value for con_type in RealtimeConnectionTypes]
 
 
 @dataclass

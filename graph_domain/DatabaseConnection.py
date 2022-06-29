@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 from dataclasses_json import dataclass_json
@@ -14,7 +15,12 @@ from service.exceptions.GraphNotConformantToMetamodelError import (
 
 LABEL = NodeTypes.DATABASE_CONNECTION.value
 
-DATABASE_CONNECTION_TYPES = ["INFLUX_DB"]
+
+class DatabaseConnectionTypes(Enum):
+    INFLUX_DB = "INFLUX_DB"
+
+
+DATABASE_CONNECTION_TYPES = [con_type.value for con_type in DatabaseConnectionTypes]
 
 
 @dataclass

@@ -6,7 +6,12 @@ from service.sensor_inputs.mqtt.MqttSensorConnection import MqttSensorConnection
 from service.sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
 from service.sensor_inputs.opcua.OpcuaSensorConnection import OpcuaSensorConnection
 from service.sensor_inputs.opcua.OpcuaSensorInput import OpcuaSensorInput
-from service.timeseries_persistence.TimeseriesPersistenceService import TimeseriesPersistenceService
+from service.specialized_databases.DatabasePersistenceServiceContainer import (
+    DatabasePersistenceServiceContainer,
+)
+from service.specialized_databases.timeseries.influx_db.InfluxDbPersistenceService import (
+    InfluxDbPersistenceService,
+)
 
 OPCUA_INPUTS = [
     {
@@ -17,31 +22,31 @@ OPCUA_INPUTS = [
             # HBW:
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Actual_Position"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_horizontal'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_horizontal",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Horizontal_Axis"."di_Target_Position"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_horizontal'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_horizontal",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Actual_Position"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_vertical'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_actual_pos_vertical",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."Vertical_Axis"."di_Target_Position"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_vertical'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/hbw_target_pos_vertical",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Horizontal"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_horizontal'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_horizontal",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_PosBelt_Vertical"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_vertical'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/pos_belt_vertical",
             },
             {
                 "node_id": 'ns=3;s="gtyp_HBW"."di_Offset_Pos_Rack_Vertical"',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/offset_pos_rack_vertical'
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/offset_pos_rack_vertical",
             },
             # VGR:
             # {
@@ -52,7 +57,7 @@ OPCUA_INPUTS = [
             #     "node_id": 'ns=3;s="gtyp_VGR"."Horizontal_Axis"."di_Target_Position"',
             #     "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/vgr_target_pos_horizontal'
             # },
-        ]
+        ],
     },
 ]
 
@@ -62,16 +67,16 @@ MQTT_INPUTS = [
         "port": 1883,
         "inputs": [
             {
-                "topic": 'i/bme680',
-                "json_keyword": 't',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature'
+                "topic": "i/bme680",
+                "json_keyword": "t",
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature",
             },
             {
-                "topic": 'i/bme680',
-                "json_keyword": 'rt',
-                "id_uri": 'www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature_raw'
+                "topic": "i/bme680",
+                "json_keyword": "rt",
+                "id_uri": "www.sintef.no/aas_identifiers/learning_factory/sensors/factory_temperature_raw",
             },
-        ]
+        ],
     },
 ]
 
@@ -80,6 +85,7 @@ class ConnectionContainer:
     """
     Holds all current connections to live sensor input
     """
+
     __instance = None
 
     @staticmethod
@@ -102,24 +108,29 @@ class ConnectionContainer:
 
         # MQTT
         for connection in MQTT_INPUTS:
-            mqtt_inputs = [MqttSensorInput(id_uri=input_def["id_uri"],
-                                           topic=input_def["topic"],
-                                           json_keyword=input_def["json_keyword"])
-                           for input_def in connection["inputs"]]
+            mqtt_inputs = [
+                MqttSensorInput(
+                    id_uri=input_def["id_uri"],
+                    topic=input_def["topic"],
+                    json_keyword=input_def["json_keyword"],
+                )
+                for input_def in connection["inputs"]
+            ]
 
             self.mqtt_connections.append(
                 MqttSensorConnection(
-                    inputs=mqtt_inputs,
-                    host=connection["host"],
-                    port=connection["port"]
+                    inputs=mqtt_inputs, host=connection["host"], port=connection["port"]
                 )
             )
 
         # OPC UA
         for connection in OPCUA_INPUTS:
-            opcua_inputs = [OpcuaSensorInput(id_uri=input_def["id_uri"],
-                                             node_id=input_def["node_id"])
-                            for input_def in connection["inputs"]]
+            opcua_inputs = [
+                OpcuaSensorInput(
+                    id_uri=input_def["id_uri"], node_id=input_def["node_id"]
+                )
+                for input_def in connection["inputs"]
+            ]
 
             self.opcua_connections.append(
                 OpcuaSensorConnection(
@@ -127,7 +138,7 @@ class ConnectionContainer:
                     host=connection["host"],
                     port=connection["port"],
                     sampling_rate=connection["sampling_rate"],
-                    only_changes=False
+                    only_changes=False,
                 )
             )
 
@@ -145,12 +156,18 @@ class ConnectionContainer:
         The handlers will then write every incoming reading to the timeseries DB
         :return:
         """
-        handler = TimeseriesPersistenceService.instance().write_measurement
+        # handler = InfluxDbPersistenceService.instance().write_measurement
+
+        # TODO: individual for inputs...
+        ts_service: InfluxDbPersistenceService = DatabasePersistenceServiceContainer.instance().get_persistence_service(
+            iri="www.sintef.no/aas_identifiers/learning_factory/databases/learning_factory_influx_db"
+        )
+
+        handler = ts_service.write_measurement
 
         sensor_input: SensorInput
         for sensor_input in self.get_all_inputs():
-            sensor_input.register_handler(
-                handler_method=handler)
+            sensor_input.register_handler(handler_method=handler)
 
     def get_opcua_inputs(self):
         inputs = []

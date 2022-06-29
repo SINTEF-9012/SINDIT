@@ -11,7 +11,7 @@
             "program": "./presentation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            ""
+            "envFile": "${workspaceFolder}/environment_and_configuration/devcontainer_environment_frontend.env"
         },
         {
             "name": "Service",
@@ -19,7 +19,8 @@
             "request": "launch",
             "program": "./service.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "envFile": "${workspaceFolder}/environment_and_configuration/devcontainer_environment_backend.env"
         },
         {
             "name": "Python: Current File",

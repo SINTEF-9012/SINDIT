@@ -3,8 +3,14 @@ import json
 import pandas as pd
 
 import environment.environment as env
+from util.environment_and_configuration import get_environment_variable
 
-API_URI = env.FAST_API_URI
+API_URI = (
+    get_environment_variable("FAST_API_HOST")
+    + ":"
+    + get_environment_variable("FAST_API_PORT")
+)
+
 
 def get(relative_path: str):
     """
@@ -20,6 +26,7 @@ def get(relative_path: str):
 
     return resp_dict
 
+
 def get_dataframe(relative_path: str):
     """
     Get request to the specified api endpoint. Deserializes to dataframe
@@ -28,7 +35,9 @@ def get_dataframe(relative_path: str):
     """
     return pd.DataFrame.from_dict(get(relative_path))
 
+
 # TODO: **kwargs to for get...
+
 
 def patch(relative_path: str, **kwargs):
     requests.patch(API_URI + relative_path, params=kwargs)
