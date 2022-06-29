@@ -11,7 +11,7 @@
             "program": "./presentation.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            
+            ""
         },
         {
             "name": "Service",

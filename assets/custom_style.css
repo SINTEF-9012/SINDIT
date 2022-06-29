@@ -1,4 +1,3 @@
-
 .custom-table {
     border: thin lightgrey solid;
     overflow-x: scroll;
@@ -14,10 +13,6 @@
     padding-top: 20px;
 }
 
-.factory-graph {
-
-}
-
 .inline-alert {
     height: 100%;
     display: inline-block;
@@ -31,3 +26,9 @@
     vertical-align: middle;
     padding: 0;
 }
+
+/* .navbar {
+    border: none;
+    background-color: #446e9b;
+    background-image: none;
+} */

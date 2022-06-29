@@ -2,30 +2,25 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/python-3
 {
 	"name": "SINDIT Devcontainer (Fullstack, Python-based)",
-	
 	// Docker-compose used to utilize the docker network etc. with the
 	// usual syntax
 	"dockerComposeFile": [
 		"docker-compose.yml"
 	],
-
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
 	"service": "sindit_devcontainer",
-
 	// The optional 'workspaceFolder' property is the path VS Code should open by default when
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/workspace",
-
 	// Install requirements (here instead of the dockerfile, to be able to use the workspace)
 	"postCreateCommand": "pip --disable-pip-version-check --no-cache-dir install -r ./requirements.txt && printf '\n\n\n\n\nTo activate code analysis, execute:\n\n\t > Developer: Reload Window\n\n\n\n\n'",
-
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
-			"settings": { 
+			"settings": {
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": true,
@@ -39,7 +34,6 @@
 				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
 				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
 			},
-			
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-python.python",
@@ -49,17 +43,15 @@
 				"njpwerner.autodocstring",
 				"visualstudioexptteam.vscodeintellicode",
 				"kevinrose.vsc-python-indent",
-				"donjayamanne.python-environment-manager"
+				"donjayamanne.python-environment-manager",
+				"jakeboone02.cypher-query-language"
 			]
 		}
 	},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode",
 	"features": {

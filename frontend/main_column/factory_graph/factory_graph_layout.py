@@ -1,3 +1,4 @@
+from random import randint
 from typing import List
 
 from dash import html, dcc
@@ -29,7 +30,47 @@ def get_layout():
             dcc.Store(id="selected-graph-element-timestamp"),
             dbc.Card(
                 [
-                    dbc.CardHeader("Factory graph"),
+                    dbc.CardHeader(
+                        id="graph-header-container",
+                        children=[
+                            dbc.Row(
+                                children=[
+                                    dbc.Col(
+                                        html.Div("Factory graph"),
+                                        align="center",
+                                    ),
+                                    dbc.Col(
+                                        dbc.Button(
+                                            html.Div(
+                                                [
+                                                    "Reload graph",
+                                                    html.Img(
+                                                        src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/refresh/wght500/48px.svg",
+                                                        height=20,
+                                                        width=20,
+                                                        style={
+                                                            # Color applied to svg as filter. Converter: (https://isotropic.co/tool/hex-color-to-css-filter/)
+                                                            "filter": "invert(40%) sepia(60%) saturate(0%) hue-rotate(175deg) brightness(103%) contrast(89%)",
+                                                            "margin-left": "5px",
+                                                        },
+                                                    ),
+                                                ]
+                                            ),
+                                            id="graph-reload-button",
+                                            n_clicks=0,
+                                            size="sm",
+                                            outline=True,
+                                        ),
+                                        style={"height": "100%", "max-width": "155px"},
+                                        align="center",
+                                    ),
+                                ],
+                                style={"height": "30px"},
+                                align="stretch",
+                                justify="between",
+                            )
+                        ],
+                    ),
                     dbc.CardBody(
                         html.Div(
                             id="kg-container",
@@ -82,15 +123,15 @@ def get_layout():
 
 def _create_cytoscape_node(node: BaseNode, node_type: str = UNSPECIFIED_LABEL):
     # Restore node positioning where available:
-    pox_x = (
+    pos_x = (
         node.visualization_positioning_x
         if node.visualization_positioning_x is not None
-        else 0
+        else randint(-300, 300)
     )
-    pox_y = (
+    pos_y = (
         node.visualization_positioning_y
         if node.visualization_positioning_y is not None
-        else 0
+        else randint(-300, 300)
     )
 
     return {
@@ -100,9 +141,13 @@ def _create_cytoscape_node(node: BaseNode, node_type: str = UNSPECIFIED_LABEL):
             "type": node_type,
             "iri": node.iri,
             "description": node.description,
+            "persisted_pos": {
+                "x": node.visualization_positioning_x,
+                "y": node.visualization_positioning_y,
+            },
         },
         "classes": [node_type],
-        "position": {"x": pox_x, "y": pox_y},
+        "position": {"x": pos_x, "y": pos_y},
     }
 
 
@@ -141,12 +186,28 @@ def get_cytoscape_elements(machines_deep: List[MachineDeep]):
             # Database connection:
             cytoscape_elements.append(
                 _create_cytoscape_node(
-                    timeseries.connection, NodeTypes.DATABASE_CONNECTION.value
+                    timeseries.db_connection, NodeTypes.DATABASE_CONNECTION.value
                 )
             )
             cytoscape_elements.append(
                 _create_cytoscape_relationship(
-                    timeseries, timeseries.connection, RelationshipTypes.DB_ACCESS.value
+                    timeseries,
+                    timeseries.db_connection,
+                    RelationshipTypes.DB_ACCESS.value,
+                )
+            )
+
+            # Runtime connection:
+            cytoscape_elements.append(
+                _create_cytoscape_node(
+                    timeseries.runtime_connection, NodeTypes.RUNTIME_CONNECTION.value
+                )
+            )
+            cytoscape_elements.append(
+                _create_cytoscape_relationship(
+                    timeseries,
+                    timeseries.runtime_connection,
+                    RelationshipTypes.RUNTIME_ACCESS.value,
                 )
             )
 

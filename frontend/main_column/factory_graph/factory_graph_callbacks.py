@@ -14,7 +14,7 @@ print("Initializing factory graph callbacks...")
 
 
 @app.callback(
-    Output("cytoscape-graph", "elements"), Input("interval-component", "n_intervals")
+    Output("cytoscape-graph", "elements"), Input("graph-reload-button", "n_clicks")
 )
 def update_factory_graph(n):
     """
@@ -137,10 +137,10 @@ def toggle_layout_saver_visibility(selected_el_json, elements):
             selected_el_json
         )
         if selected_el.is_node:
-            # Get the currently loaded position for comparison
+            # Get the last persisted position for comparison
             stored_el_pos = next(
                 (
-                    element["position"]
+                    element["data"].get("persisted_pos")
                     for element in elements
                     if element["data"].get("iri") == selected_el.iri
                 ),

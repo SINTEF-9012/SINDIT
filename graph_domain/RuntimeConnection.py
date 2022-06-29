@@ -14,14 +14,14 @@ from service.exceptions.GraphNotConformantToMetamodelError import (
 
 LABEL = NodeTypes.DATABASE_CONNECTION.value
 
-DATABASE_CONNECTION_TYPES = ["INFLUX_DB"]
+REALTIME_CONNECTION_TYPES = ["OPC_UA", "MQTT"]
 
 
 @dataclass
 @dataclass_json
-class DatabaseConnection(BaseNode):
+class RuntimeConnection(BaseNode):
     """
-    Flat database connection node without relationships, only containing properties
+    Flat runtime connection node without relationships, only containing properties
     """
 
     # Identifier for the node-type:
@@ -39,12 +39,10 @@ class DatabaseConnection(BaseNode):
         default=None
     )  # may be None, if no authentication is required
 
-    # Type of database
+    # Type of connection
     type: str = Property()
-    # For DBMS that allow multiple databases
-    database: str | None = Property()  # may be none
-    # Group / bucket in which the connections lay
-    group: str | None = Property()  # may be none
+
+    # Info: the actual host, port and if required passwords are not provided by the context-graph but via environmental variables instead
 
     def validate_metamodel_conformance(self):
         """
@@ -62,7 +60,7 @@ class DatabaseConnection(BaseNode):
         if self.port_environment_variable is None:
             raise GraphNotConformantToMetamodelError(self, f"Missing port.")
 
-        if not self.type in DATABASE_CONNECTION_TYPES:
+        if not self.type in REALTIME_CONNECTION_TYPES:
             raise GraphNotConformantToMetamodelError(
                 self, f"Unrecognized connection type."
             )
