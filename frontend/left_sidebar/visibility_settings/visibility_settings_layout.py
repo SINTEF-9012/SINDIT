@@ -22,6 +22,10 @@ def get_layout():
                         "label": "Show database connections",
                         "value": NodeTypes.DATABASE_CONNECTION.value,
                     },
+                    {
+                        "label": "Show runtime connections",
+                        "value": NodeTypes.RUNTIME_CONNECTION.value,
+                    },
                     {"label": "Show units", "value": NodeTypes.UNIT.value},
                 ],
                 value=[NodeTypes.MACHINE.value, NodeTypes.TIMESERIES_INPUT.value],

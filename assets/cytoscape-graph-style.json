@@ -51,7 +51,13 @@
         }
     },
     {
-        "selector": ".TIMESERIES_UNIT",
+        "selector": ".RUNTIME_CONNECTION",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/lan/wght500/48px.svg"
+        }
+    },
+    {
+        "selector": ".UNIT",
         "style": {
             "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/balance/wght500/48px.svg"
         }

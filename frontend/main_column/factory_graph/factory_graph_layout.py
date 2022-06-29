@@ -221,4 +221,15 @@ def get_cytoscape_elements(machines_deep: List[MachineDeep]):
                 )
             )
 
-    return cytoscape_elements
+    # Temporary dict to remove duplicates (e.g. if same timeseries is referenced from multiple assets)
+    return list(
+        {
+            cyt_elem.get("data").get("id")
+            if cyt_elem.get("data").get("id") is not None
+            else (
+                cyt_elem.get("data").get("source"),
+                cyt_elem.get("data").get("target"),
+            ): cyt_elem
+            for cyt_elem in cytoscape_elements
+        }.values()
+    )
