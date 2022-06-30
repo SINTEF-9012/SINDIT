@@ -2,9 +2,10 @@ from datetime import datetime
 from influxdb_client.client.write_api import SYNCHRONOUS
 from influxdb_client import InfluxDBClient, Point
 import pandas as pd
+from urllib3.exceptions import ReadTimeoutError
 
 from config import global_config as cfg
-from graph_domain.DatabaseConnection import DatabaseConnection
+from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
 from service.exceptions.IdNotFoundException import IdNotFoundException
 from service.specialized_databases.timeseries.TimeseriesPersistenceService import (
     TimeseriesPersistenceService,
@@ -16,15 +17,6 @@ READING_FIELD_NAME = "reading"
 class InfluxDbPersistenceService(TimeseriesPersistenceService):
     """ """
 
-    @classmethod
-    def instance(cls):
-        # if cls.__instance is None:
-        #     cls()
-        # return cls.__instance
-        pass
-
-    # TODO: remove
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -32,17 +24,10 @@ class InfluxDbPersistenceService(TimeseriesPersistenceService):
 
         self._client: InfluxDBClient = InfluxDBClient(
             url=self.host + ":" + self.port,
-            # url="http://sindit-influx-db:8086",
             token=self.key,
             org=self.database,
             verify_ssl=self.key is not None,
         )
-
-        # # Directly use the config file through the influx API
-        # self.__client: InfluxDBClient = InfluxDBClient.from_config_file(
-        #     config_file=cfg.PATH_TO_CONFIG
-        # )
-        # TODO: remove
 
         # Synchronous mode to allow live data processing from the database
         # Consider batch mode if having performance issues
@@ -66,7 +51,11 @@ class InfluxDbPersistenceService(TimeseriesPersistenceService):
         )
         if reading_time is not None:
             record.time(reading_time)
-        self._write_api.write(bucket=self.bucket, record=record)
+        try:
+            self._write_api.write(bucket=self.bucket, record=record)
+        except ReadTimeoutError as err:
+            pass
+            # continue with new readings (drop this one)
 
     # override
     def read_period_to_dataframe(

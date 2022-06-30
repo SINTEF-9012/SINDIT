@@ -5,18 +5,20 @@ from dataclasses_json import dataclass_json
 from py2neo.ogm import Model, Property, RelatedTo
 
 from graph_domain.BaseNode import BaseNode
-from graph_domain.Timeseries import TimeseriesDeep
+from graph_domain.TimeseriesNode import TimeseriesNodeDeep
 from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 
 LABEL = NodeTypes.MACHINE.value
 TIMESERIES_RELATIONSHIP = RelationshipTypes.HAS_TIMESERIES.value
 
+
 @dataclass
 @dataclass_json
-class MachineFlat(BaseNode):
+class AssetNodeFlat(BaseNode):
     """
     Flat machine node without relationships, only containing properties
     """
+
     # Identifier for the node-type:
     __primarylabel__ = LABEL
 
@@ -32,16 +34,19 @@ class MachineFlat(BaseNode):
 
 @dataclass
 @dataclass_json
-class MachineDeep(MachineFlat):
+class AssetNodeDeep(AssetNodeFlat):
     """
     Deep machine node with relationships
     """
+
     __primarylabel__ = LABEL
 
-    _timeseries: List[TimeseriesDeep] = RelatedTo(TimeseriesDeep, TIMESERIES_RELATIONSHIP)
+    _timeseries: List[TimeseriesNodeDeep] = RelatedTo(
+        TimeseriesNodeDeep, TIMESERIES_RELATIONSHIP
+    )
 
     @property
-    def timeseries(self) -> List[TimeseriesDeep]:
+    def timeseries(self) -> List[TimeseriesNodeDeep]:
         return [timeseries for timeseries in self._timeseries]
 
     def validate_metamodel_conformance(self):

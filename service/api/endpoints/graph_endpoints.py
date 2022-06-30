@@ -1,6 +1,6 @@
 from service.api.api import app
 from service.knowledge_graph.dao.BaseNodesDao import BaseNodeDao
-from service.knowledge_graph.dao.MachinesDao import MachinesDao
+from service.knowledge_graph.dao.AssetNodesDao import MachinesDao
 
 MACHINES_DAO: MachinesDao = MachinesDao.instance()
 BASE_NODE_DAO: BaseNodeDao = BaseNodeDao.instance()

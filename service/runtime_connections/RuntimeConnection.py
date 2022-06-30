@@ -4,20 +4,25 @@ from datetime import datetime
 import pandas as pd
 from config import global_config as cfg
 from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
+from graph_domain.RuntimeConnectionNode import RuntimeConnectionNode
 from service.exceptions.IdNotFoundException import IdNotFoundException
-from util.environment_and_configuration import get_environment_variable
+from service.runtime_connections.TimeseriesInput import TimeseriesInput
+from util.environment_and_configuration import (
+    get_environment_variable,
+    get_environment_variable_int,
+)
 
 
-class SpecializedDatabasePersistenceService(abc.ABC):
+class RuntimeConnection(abc.ABC):
     """
-    Persistence service for additional data like files or timeseires
+    Base class for timeseries connections (OPCUA, MQTT, ...)
+    One or several sensor inputs can be available via one connection over different
+    topics.
     """
 
     def __init__(
         self,
         iri,
-        database,
-        group,
         host_environment_variable,
         port_environment_variable,
         user_environment_variable,
@@ -26,13 +31,11 @@ class SpecializedDatabasePersistenceService(abc.ABC):
         super().__init__()
 
         self.iri = iri
-        self.database = database
-        self.group = group
 
         self.host = get_environment_variable(
             key=host_environment_variable, optional=False
         )
-        self.port = get_environment_variable(
+        self.port = get_environment_variable_int(
             key=port_environment_variable, optional=False
         )
 
@@ -52,14 +55,21 @@ class SpecializedDatabasePersistenceService(abc.ABC):
             else None
         )
 
+        self.timeseries_inputs = []
+
     @classmethod
-    def from_db_connection_node(cls, node: DatabaseConnectionNode):
+    def from_runtime_connection_node(cls, node: RuntimeConnectionNode):
         return cls(
             iri=node.iri,
-            database=node.database,
-            group=node.group,
             host_environment_variable=node.host_environment_variable,
             port_environment_variable=node.port_environment_variable,
             user_environment_variable=node.user_environment_variable,
             key_environment_variable=node.key_environment_variable,
         )
+
+    def add_input(self, input: TimeseriesInput):
+        self.timeseries_inputs.append(input)
+
+    @abc.abstractmethod
+    def start_connection(self):
+        pass

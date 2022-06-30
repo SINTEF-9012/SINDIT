@@ -32,7 +32,7 @@ def get_current_timeseries(iri: str, duration: float):
     :return:
     """
     try:
-        # Get timeseries-database service:
+        # Get related timeseries-database service:
         ts_con_node = DB_CON_NODE_DAO.get_database_connection_for_node(iri)
 
         ts_service = DB_SERVICE_CONTAINER.get_persistence_service(ts_con_node.iri)

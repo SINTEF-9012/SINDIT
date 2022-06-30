@@ -1,29 +1,22 @@
 from typing import List
 
 import paho.mqtt.client as mqtt
+from service.runtime_connections.RuntimeConnection import RuntimeConnection
 
-from service.sensor_inputs.SensorConnection import SensorConnection
-from service.sensor_inputs.SensorInput import SensorInput
-from service.sensor_inputs.mqtt.MqttSensorInput import MqttSensorInput
+from service.runtime_connections.TimeseriesInput import TimeseriesInput
+from service.runtime_connections.mqtt.MqttTimeseriesInput import MqttTimeseriesInput
 
 
-class MqttSensorConnection(SensorConnection):
+class MqttRuntimeConnection(RuntimeConnection):
     """
-    Connection to one MQTT broker. One or several sensor inputs can be available via one connection over different
+    Connection to one MQTT broker. One or several timeseries inputs can be available via one connection over different
     topics.
     """
 
-    def __init__(self, inputs: List[SensorInput], host, port=1883):
-        """
-        Creates a new MQTT connection
-        :param inputs: single inputs (topics and JSON keywords) available over this connection
-        :param host:
-        :param port:
-        """
-        super().__init__(inputs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
         self.mqtt_client = mqtt.Client()
-        self.host = host
-        self.port = port
 
     # Override:
     def start_connection(self):
@@ -48,21 +41,27 @@ class MqttSensorConnection(SensorConnection):
         :param reason_code:
         :return:
         """
-        print("MQTT connected. "
-              f"Host: {self.host}, port: {self.port}. Subscribing to topics...")
+        print(
+            "MQTT connected. "
+            f"Host: {self.host}, port: {self.port}. Subscribing to topics..."
+        )
 
-        sensor_input: MqttSensorInput
-        for sensor_input in self.sensor_inputs:
-            self.mqtt_client.subscribe(sensor_input.topic, 0)
+        timeseries_input: MqttTimeseriesInput
+        for timeseries_input in self.timeseries_inputs:
+            self.mqtt_client.subscribe(timeseries_input.connection_topic, 0)
 
     def __on_connect_fail(self, client, userdata):
-        print(f"MQTT connection could not be established: "
-              f"Host: {self.host}, port: {self.port}")
+        print(
+            f"MQTT connection could not be established: "
+            f"Host: {self.host}, port: {self.port}"
+        )
 
     def __on_disconnect(self, client, userdata, reason_code):
         if reason_code != 0:
-            print(f"Unexpected MQTT disconnection. "
-                  f"Host: {self.host}, port: {self.port}. Will auto-reconnect")
+            print(
+                f"Unexpected MQTT disconnection. "
+                f"Host: {self.host}, port: {self.port}. Will auto-reconnect"
+            )
 
     def __on_message(self, client, userdata, msg):
         """
@@ -73,8 +72,7 @@ class MqttSensorConnection(SensorConnection):
         :return:
         """
         # print(msg.topic + " " + str(msg.payload))
-        sensor_input: MqttSensorInput
-        for sensor_input in self.sensor_inputs:
-            if msg.topic == sensor_input.topic:
-                sensor_input.handle_raw_reading(msg.payload)
-
+        timeseries_input: MqttTimeseriesInput
+        for timeseries_input in self.timeseries_inputs:
+            if msg.topic == timeseries_input.connection_topic:
+                timeseries_input.handle_raw_reading(msg.payload)

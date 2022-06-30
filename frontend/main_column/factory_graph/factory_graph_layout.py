@@ -8,10 +8,10 @@ import dash_cytoscape as cyto
 from frontend.app import app
 from frontend import resources_manager
 from graph_domain.BaseNode import BaseNode
-from graph_domain.DatabaseConnection import DatabaseConnection
-from graph_domain.Machine import MachineDeep
-from graph_domain.Timeseries import TimeseriesDeep
-from graph_domain.Unit import Unit
+from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
+from graph_domain.AssetNode import AssetNodeDeep
+from graph_domain.TimeseriesNode import TimeseriesNodeDeep
+from graph_domain.UnitNode import UnitNode
 from graph_domain.factory_graph_types import (
     UNSPECIFIED_LABEL,
     NodeTypes,
@@ -163,7 +163,7 @@ def _create_cytoscape_relationship(
     }
 
 
-def get_cytoscape_elements(machines_deep: List[MachineDeep]):
+def get_cytoscape_elements(machines_deep: List[AssetNodeDeep]):
     cytoscape_elements = []
 
     for machine in machines_deep:

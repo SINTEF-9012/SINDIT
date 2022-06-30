@@ -15,7 +15,7 @@ LABEL = NodeTypes.UNIT.value
 
 @dataclass
 @dataclass_json
-class Unit(BaseNode):
+class UnitNode(BaseNode):
     """
     Defines the unit of a timeseries
     Flat node without relationships, only containing properties.

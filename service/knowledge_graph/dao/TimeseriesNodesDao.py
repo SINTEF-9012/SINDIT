@@ -1,6 +1,7 @@
 import json
 
-from graph_domain.Machine import MachineFlat, MachineDeep
+from graph_domain.AssetNode import AssetNodeFlat, AssetNodeDeep
+from graph_domain.TimeseriesNode import TimeseriesNodeDeep, TimeseriesNodeFlat
 from service.exceptions.GraphNotConformantToMetamodelError import (
     GraphNotConformantToMetamodelError,
 )
@@ -12,9 +13,9 @@ from service.knowledge_graph.knowledge_graph_metamodel_validator import (
 )
 
 
-class MachinesDao(object):
+class TimeseriesDao(object):
     """
-    Data Access Object for Machines
+    Data Access Object for Timeseries nodes
     """
 
     __instance = None
@@ -29,51 +30,56 @@ class MachinesDao(object):
         if self.__instance is not None:
             raise Exception("Singleton instantiated multiple times!")
 
-        MachinesDao.__instance = self
+        TimeseriesDao.__instance = self
 
         self.ps: KnowledgeGraphPersistenceService = (
             KnowledgeGraphPersistenceService.instance()
         )
 
     @validate_result_nodes
-    def get_machines_flat(self):
+    def get_timeseries_flat(self):
         """
-        Queries all machine nodes. Does not follow any relationships
+        Queries all timeseries nodes. Does not follow any relationships
         :param self:
         :return:
         :raises GraphNotConformantToMetamodelError: If Graph not conformant
         """
-        machines_flat_matches = self.ps.repo.match(model=MachineFlat)
-        machines_flat = [m for m in machines_flat_matches]
+        timeseries_flat_matches = self.ps.repo.match(model=TimeseriesNodeFlat)
+        timeseries_flat = [m for m in timeseries_flat_matches]
 
-        return machines_flat
+        return timeseries_flat
 
     @validate_result_nodes
-    def get_machines_deep(self):
+    def get_timeseries_deep(self):
         """
-        Queries all machine nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
+        Queries all timeseries nodes. Follows relationships to build nested objects for related nodes (e.g. connections)
         :param self:
         :return:
         """
-        machines_deep_matches = self.ps.repo.match(model=MachineDeep)
+        timeseries_deep_matches = self.ps.repo.match(model=TimeseriesNodeDeep)
 
         # Get rid of the 'Match' and 'RelatedObject' types in favor of normal lists automatically
         # by using the auto-generated json serializer
-        return [MachineDeep.from_json(m.to_json()) for m in machines_deep_matches]
+        return [
+            TimeseriesNodeDeep.from_json(m.to_json()) for m in timeseries_deep_matches
+        ]
 
     # validator used manually because result type is json instead of node-list
-    def get_machines_deep_json(self):
+    def get_timeseries_deep_json(self):
         """
-        Queries all machine nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
+        Queries all timeseries nodes. Follows relationships to build nested objects for related nodes (e.g. sensors)
         Directly returns the serialized json instead of nested objects. This is faster than using the nested-object
         getter and serializing afterwards, as it does not require an intermediate step.
         :param self:
         :return:
         """
-        machines_deep_matches = self.ps.repo.match(model=MachineDeep)
+        timeseries_deep_matches = self.ps.repo.match(model=TimeseriesNodeDeep)
 
         # Validate manually:
-        for machine in machines_deep_matches:
-            machine.validate_metamodel_conformance()
+        for timeseries in timeseries_deep_matches:
+            timeseries.validate_metamodel_conformance()
 
-        return json.dumps([m.to_json() for m in machines_deep_matches])
+        return json.dumps([m.to_json() for m in timeseries_deep_matches])
+
+
+# TODO: make generic DAO and enrich that...

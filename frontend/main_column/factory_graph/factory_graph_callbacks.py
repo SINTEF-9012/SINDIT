@@ -7,7 +7,7 @@ from frontend import api_client
 from frontend.app import app
 from frontend.main_column.factory_graph import factory_graph_layout
 from frontend.main_column.factory_graph.GraphSelectedElement import GraphSelectedElement
-from graph_domain.Machine import MachineDeep
+from graph_domain.AssetNode import AssetNodeDeep
 
 
 print("Initializing factory graph callbacks...")
@@ -23,7 +23,7 @@ def update_factory_graph(n):
     :return:
     """
     machines_deep_json = api_client.get("/graph/machines_deep")
-    machines_deep = [MachineDeep.from_json(m) for m in machines_deep_json]
+    machines_deep = [AssetNodeDeep.from_json(m) for m in machines_deep_json]
     cygraph_elements = factory_graph_layout.get_cytoscape_elements(
         machines_deep=machines_deep
     )

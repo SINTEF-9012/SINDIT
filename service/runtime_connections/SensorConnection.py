@@ -2,7 +2,7 @@ import abc
 
 from typing import List
 
-from service.sensor_inputs.SensorInput import SensorInput
+from service.runtime_connections.TimeseriesInput import TimeseriesInput
 
 
 class SensorConnection(abc.ABC):
@@ -12,7 +12,7 @@ class SensorConnection(abc.ABC):
     topics.
     """
 
-    def __init__(self, inputs: List[SensorInput]):
+    def __init__(self, inputs: List[TimeseriesInput]):
         """
         Creates a new MQTT connection
         :param inputs: single inputs available over this connection

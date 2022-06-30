@@ -1,5 +1,8 @@
 from typing import Dict, List
-from graph_domain.DatabaseConnection import DatabaseConnection, DatabaseConnectionTypes
+from graph_domain.DatabaseConnectionNode import (
+    DatabaseConnectionNode,
+    DatabaseConnectionTypes,
+)
 
 from service.specialized_databases.SpecializedDatabasePersistenceService import (
     SpecializedDatabasePersistenceService,
@@ -42,8 +45,8 @@ class DatabasePersistenceServiceContainer:
     ):
         self.services[iri] = service
 
-    def initialize_connections(self, connection_nodes: List[DatabaseConnection]):
-        con_node: DatabaseConnection
+    def initialize_connections(self, connection_nodes: List[DatabaseConnectionNode]):
+        con_node: DatabaseConnectionNode
         for con_node in connection_nodes:
 
             service_class: SpecializedDatabasePersistenceService = (

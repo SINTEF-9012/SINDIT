@@ -7,7 +7,10 @@ from service.knowledge_graph.KnowledgeGraphPersistenceService import (
     KnowledgeGraphPersistenceService,
 )
 from service.knowledge_graph.dao.DatabaseConnectionsDao import DatabaseConnectionsDao
-from service.sensor_inputs.ConnectionContainer import ConnectionContainer
+from service.knowledge_graph.dao.TimeseriesNodesDao import TimeseriesDao
+from service.runtime_connections.RuntimeConnectionContainer import (
+    RuntimeConnectionContainer,
+)
 from service.specialized_databases.DatabasePersistenceServiceContainer import (
     DatabasePersistenceServiceContainer,
 )
@@ -42,14 +45,12 @@ Separated from api.py to avoid circular dependencies with endpoint files importi
 # Setup sensor connections and timeseries persistence
 # #############################################################################
 def init_database_connections():
-    print("Initializing Knowledge Graph...")
+    print("Initializing database connections...")
 
     kg_service: KnowledgeGraphPersistenceService = (
         KnowledgeGraphPersistenceService.instance()
     )
     db_con_nodes_dao: DatabaseConnectionsDao = DatabaseConnectionsDao.instance()
-
-    print("Initializing database connections...")
 
     db_con_container: DatabasePersistenceServiceContainer = (
         DatabasePersistenceServiceContainer.instance()
@@ -59,20 +60,30 @@ def init_database_connections():
 
     db_con_container.initialize_connections(db_con_nodes)
 
+    print("Done!")
+
 
 def init_sensors():
-    print("Initializing sensor inputs...")
+    print("Initializing timeseries inputs...")
 
-    # Connections
-    con_container: ConnectionContainer = ConnectionContainer.instance()
-    con_container.initialize_connections()
-    con_container.start_connections()
+    kg_service: KnowledgeGraphPersistenceService = (
+        KnowledgeGraphPersistenceService.instance()
+    )
+    timeseries_nodes_dao: TimeseriesDao = TimeseriesDao.instance()
 
-    # Timeseries DB
-    InfluxDbPersistenceService.instance()
-    con_container.register_persistence_handlers()
+    runtime_con_container: RuntimeConnectionContainer = (
+        RuntimeConnectionContainer.instance()
+    )
 
-    print("Sensor inputs initialized")
+    timeseries_deep_nodes = timeseries_nodes_dao.get_timeseries_deep()
+
+    runtime_con_container.initialize_connections_inputs_and_handlers(
+        timeseries_deep_nodes
+    )
+
+    runtime_con_container.start_connections()
+
+    print("Done!")
 
 
 # #############################################################################

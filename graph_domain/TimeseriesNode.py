@@ -5,9 +5,9 @@ from dataclasses_json import dataclass_json
 from py2neo.ogm import Property, RelatedTo
 
 from graph_domain.BaseNode import BaseNode
-from graph_domain.DatabaseConnection import DatabaseConnection
-from graph_domain.RuntimeConnection import RuntimeConnection
-from graph_domain.Unit import Unit
+from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
+from graph_domain.RuntimeConnectionNode import RuntimeConnectionNode
+from graph_domain.UnitNode import UnitNode
 from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 from service.exceptions.GraphNotConformantToMetamodelError import (
     GraphNotConformantToMetamodelError,
@@ -21,7 +21,7 @@ RUNTIME_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.RUNTIME_ACCESS.value
 
 @dataclass
 @dataclass_json
-class TimeseriesFlat(BaseNode):
+class TimeseriesNodeFlat(BaseNode):
     """
     Flat timeseries node without relationships, only containing properties
     """
@@ -30,6 +30,10 @@ class TimeseriesFlat(BaseNode):
     __primarylabel__ = LABEL
 
     # Additional properties:
+    connection_topic: str = Property()
+    connection_keyword: str | None = (
+        Property()
+    )  # additional keyword as id inside the topic (optional)
 
     def validate_metamodel_conformance(self):
         """
@@ -38,10 +42,13 @@ class TimeseriesFlat(BaseNode):
         """
         super().validate_metamodel_conformance()
 
+        if self.connection_topic is None:
+            raise GraphNotConformantToMetamodelError(self, f"Missing connection topic")
+
 
 @dataclass
 @dataclass_json
-class TimeseriesDeep(TimeseriesFlat):
+class TimeseriesNodeDeep(TimeseriesNodeFlat):
     """
     Deep timeseries node with relationships
     """
@@ -50,30 +57,30 @@ class TimeseriesDeep(TimeseriesFlat):
 
     # The OGM framework does not allow constraining to only one item!
     # Can only be one unit (checked by metamodel validator)
-    _units: List[Unit] = RelatedTo(Unit, UNIT_RELATIONSHIP_LABEL)
+    _units: List[UnitNode] = RelatedTo(UnitNode, UNIT_RELATIONSHIP_LABEL)
 
     # The OGM framework does not allow constraining to only one item!
     # Can only be one unit (checked by metamodel validator)
-    _db_connections: List[DatabaseConnection] = RelatedTo(
-        DatabaseConnection, DB_CONNECTION_RELATIONSHIP_LABEL
+    _db_connections: List[DatabaseConnectionNode] = RelatedTo(
+        DatabaseConnectionNode, DB_CONNECTION_RELATIONSHIP_LABEL
     )
 
     # The OGM framework does not allow constraining to only one item!
     # Can only be one unit (checked by metamodel validator)
-    _runtime_connections: List[RuntimeConnection] = RelatedTo(
-        RuntimeConnection, RUNTIME_CONNECTION_RELATIONSHIP_LABEL
+    _runtime_connections: List[RuntimeConnectionNode] = RelatedTo(
+        RuntimeConnectionNode, RUNTIME_CONNECTION_RELATIONSHIP_LABEL
     )
 
     @property
-    def unit(self) -> Unit:
+    def unit(self) -> UnitNode:
         return [unit for unit in self._units][0]
 
     @property
-    def db_connection(self) -> DatabaseConnection:
+    def db_connection(self) -> DatabaseConnectionNode:
         return [connection for connection in self._db_connections][0]
 
     @property
-    def runtime_connection(self) -> DatabaseConnection:
+    def runtime_connection(self) -> RuntimeConnectionNode:
         return [connection for connection in self._runtime_connections][0]
 
     def validate_metamodel_conformance(self):

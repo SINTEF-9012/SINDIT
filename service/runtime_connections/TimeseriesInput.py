@@ -1,15 +1,27 @@
 import abc
 from datetime import datetime
+from typing import Tuple
+
+from graph_domain.TimeseriesNode import TimeseriesNodeFlat
 
 
-class SensorInput(abc.ABC):
-
-    def __init__(self, id_uri: str):
-        self._last_reading: (datetime, float) = None
+class TimeseriesInput(abc.ABC):
+    def __init__(self, iri: str, connection_topic: str, connection_keyword: str):
+        self._last_reading: Tuple[datetime, float] = None
         self._handlers = []
-        self.id_uri = id_uri
+        self.iri = iri
+        self.connection_topic = connection_topic
+        self.connection_keyword = connection_keyword
 
-    def get_most_current(self) -> (datetime, float):
+    @classmethod
+    def from_timeseries_node(cls, node: TimeseriesNodeFlat):
+        return cls(
+            iri=node.iri,
+            connection_topic=node.connection_topic,
+            connection_keyword=node.connection_keyword,
+        )
+
+    def get_most_current(self) -> Tuple[datetime, float]:
         """
         :return: The most current reading with its timestamp
         """
@@ -32,6 +44,5 @@ class SensorInput(abc.ABC):
         :return:
         """
         for handler in self._handlers:
-            handler(self.id_uri, reading_value, reading_time)
+            handler(self.iri, reading_value, reading_time)
         self._last_reading = reading_time, reading_value
-        # print(f"Sensor {self.id_uri} updated: {self.get_most_current()}")

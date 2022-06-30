@@ -1,8 +1,8 @@
 import json
 from typing import List
-from graph_domain.DatabaseConnection import DatabaseConnection
+from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
 
-from graph_domain.Machine import MachineFlat, MachineDeep
+from graph_domain.AssetNode import AssetNodeFlat, AssetNodeDeep
 from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 from service.exceptions.GraphNotConformantToMetamodelError import (
     GraphNotConformantToMetamodelError,
@@ -39,20 +39,20 @@ class DatabaseConnectionsDao(object):
         )
 
     @validate_result_nodes
-    def get_database_connections(self) -> List[DatabaseConnection]:
+    def get_database_connections(self) -> List[DatabaseConnectionNode]:
         """
         Queries all database connection nodes. Does not follow any relationships
         :param self:
         :return:
         :raises GraphNotConformantToMetamodelError: If Graph not conformant
         """
-        db_con_matches = self.ps.repo.match(model=DatabaseConnection)
+        db_con_matches = self.ps.repo.match(model=DatabaseConnectionNode)
         db_cons = [m for m in db_con_matches]
 
         return db_cons
 
     @validate_result_nodes
-    def get_database_connection_for_node(self, iri: str) -> DatabaseConnection:
+    def get_database_connection_for_node(self, iri: str) -> DatabaseConnectionNode:
         """
         Gets the specific db connection for the node with the given iri, if available
         :param self:
@@ -67,6 +67,6 @@ class DatabaseConnectionsDao(object):
             f'MATCH p=(t:{NodeTypes.TIMESERIES_INPUT.value})-[r:{RelationshipTypes.DB_ACCESS.value}]->(d:{NodeTypes.DATABASE_CONNECTION.value}) where (t.iri= "{iri}") RETURN d'
         )
 
-        model = DatabaseConnection.wrap(node)
+        model = DatabaseConnectionNode.wrap(node)
 
         return model
