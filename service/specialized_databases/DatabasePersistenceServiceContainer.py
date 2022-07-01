@@ -49,6 +49,10 @@ class DatabasePersistenceServiceContainer:
         con_node: DatabaseConnectionNode
         for con_node in connection_nodes:
 
+            # TODO: implement S3 and remove this!
+            if con_node.type == "S3":
+                continue
+
             service_class: SpecializedDatabasePersistenceService = (
                 DB_CONNECTION_MAPPING.get(con_node.type)
             )

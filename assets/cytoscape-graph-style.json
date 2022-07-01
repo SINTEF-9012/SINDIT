@@ -31,7 +31,7 @@
         }
     },
     {
-        "selector": ".MACHINE",
+        "selector": ".ASSET",
         "style": {
             "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/precision_manufacturing/wght500/48px.svg",
             "height": 60,

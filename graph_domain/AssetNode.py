@@ -8,7 +8,7 @@ from graph_domain.BaseNode import BaseNode
 from graph_domain.TimeseriesNode import TimeseriesNodeDeep
 from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 
-LABEL = NodeTypes.MACHINE.value
+LABEL = NodeTypes.ASSET.value
 TIMESERIES_RELATIONSHIP = RelationshipTypes.HAS_TIMESERIES.value
 
 

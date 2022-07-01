@@ -20,6 +20,20 @@ class BaseNode(Model):
     iri: str = Property()
     description: str = Property()  # may be None
 
+    _explizit_caption: str | None = Property("caption")  # explizit caption. Optional
+
+    @property
+    def caption(self) -> str:
+        """Caption of the Node. If not explizitly given, use the id_short instead
+
+        Returns:
+            str: Caption or id_short
+        """
+        if self._explizit_caption is not None:
+            return self._explizit_caption
+        else:
+            return self.id_short
+
     # Additional properties for visualization (may initially be empty)
     visualization_positioning_x: float | None = Property(default=None)
     visualization_positioning_y: float | None = Property(default=None)

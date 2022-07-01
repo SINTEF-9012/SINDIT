@@ -13,7 +13,7 @@ def get_layout():
         [
             dbc.Checklist(
                 options=[
-                    {"label": "Show machines", "value": NodeTypes.MACHINE.value},
+                    {"label": "Show machines", "value": NodeTypes.ASSET.value},
                     {
                         "label": "Show timeseries inputs",
                         "value": NodeTypes.TIMESERIES_INPUT.value,
@@ -28,7 +28,7 @@ def get_layout():
                     },
                     {"label": "Show units", "value": NodeTypes.UNIT.value},
                 ],
-                value=[NodeTypes.MACHINE.value, NodeTypes.TIMESERIES_INPUT.value],
+                value=[NodeTypes.ASSET.value, NodeTypes.TIMESERIES_INPUT.value],
                 id="visibility-switches-input",
                 switch=True,
             )

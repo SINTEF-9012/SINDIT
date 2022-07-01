@@ -18,6 +18,7 @@ LABEL = NodeTypes.DATABASE_CONNECTION.value
 
 class DatabaseConnectionTypes(Enum):
     INFLUX_DB = "INFLUX_DB"
+    S3 = "S3"
 
 
 DATABASE_CONNECTION_TYPES = [con_type.value for con_type in DatabaseConnectionTypes]
