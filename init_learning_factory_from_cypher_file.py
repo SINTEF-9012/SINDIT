@@ -5,6 +5,7 @@ author: Timo Peter <timo.peter@sintef.no>
 
 """
 import configparser
+import sys
 import py2neo
 import environment.environment as env
 from config import global_config as cfg
@@ -19,6 +20,16 @@ NEO4J_USER = config["factory-neo4j"]["user"]
 NEO4J_PASS = config["factory-neo4j"]["pass"]
 
 if __name__ == "__main__":
+
+    user_input = input(
+        "Do you really want to initialize the toy factory Knowledge Graph Digital Twin instance? Current data will be lost! (y/n)"
+    )
+    if user_input != "y":
+        sys.exit()
+
+    user_input = input("Are you sure? (y/n)")
+    if user_input != "y":
+        sys.exit()
 
     g = py2neo.Graph(NEO4J_URI)
 
