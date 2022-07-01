@@ -10,7 +10,7 @@ import py2neo
 import environment.environment as env
 from config import global_config as cfg
 
-LEARNING_FACTORY_CYPHER_FILE = "learning_factory.cypher"
+LEARNING_FACTORY_CYPHER_FILE = "learning_factory_instance/learning_factory.cypher"
 
 # Read Config
 config = configparser.ConfigParser()

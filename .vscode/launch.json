@@ -23,7 +23,7 @@
             "envFile": "${workspaceFolder}/environment_and_configuration/devcontainer_environment_backend.env"
         },
         {
-            "name": "Learning factory initialization",
+            "name": "Learning factory instance: initialization",
             "type": "python",
             "request": "launch",
             "program": "./init_learning_factory_from_cypher_file.py",
