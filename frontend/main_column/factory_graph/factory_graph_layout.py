@@ -137,7 +137,7 @@ def _create_cytoscape_node(node: BaseNode, node_type: str = UNSPECIFIED_LABEL):
     return {
         "data": {
             "id": node.id_short,
-            "label": node.id_short,
+            "label": node.caption,
             "type": node_type,
             "iri": node.iri,
             "description": node.description,
@@ -169,7 +169,7 @@ def get_cytoscape_elements(machines_deep: List[AssetNodeDeep]):
     for machine in machines_deep:
         # Machines:
         cytoscape_elements.append(
-            _create_cytoscape_node(machine, NodeTypes.MACHINE.value)
+            _create_cytoscape_node(machine, NodeTypes.ASSET.value)
         )
 
         for timeseries in machine.timeseries:
@@ -212,14 +212,15 @@ def get_cytoscape_elements(machines_deep: List[AssetNodeDeep]):
             )
 
             # Unit:
-            cytoscape_elements.append(
-                _create_cytoscape_node(timeseries.unit, NodeTypes.UNIT.value)
-            )
-            cytoscape_elements.append(
-                _create_cytoscape_relationship(
-                    timeseries, timeseries.unit, RelationshipTypes.HAS_UNIT.value
+            if timeseries.unit is not None:
+                cytoscape_elements.append(
+                    _create_cytoscape_node(timeseries.unit, NodeTypes.UNIT.value)
                 )
-            )
+                cytoscape_elements.append(
+                    _create_cytoscape_relationship(
+                        timeseries, timeseries.unit, RelationshipTypes.HAS_UNIT.value
+                    )
+                )
 
     # Temporary dict to remove duplicates (e.g. if same timeseries is referenced from multiple assets)
     return list(

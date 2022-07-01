@@ -72,8 +72,11 @@ class TimeseriesNodeDeep(TimeseriesNodeFlat):
     )
 
     @property
-    def unit(self) -> UnitNode:
-        return [unit for unit in self._units][0]
+    def unit(self) -> UnitNode | None:
+        if len(self._units) > 0:
+            return [unit for unit in self._units][0]
+        else:
+            return None
 
     @property
     def db_connection(self) -> DatabaseConnectionNode:
@@ -90,12 +93,14 @@ class TimeseriesNodeDeep(TimeseriesNodeFlat):
         """
         super().validate_metamodel_conformance()
 
-        if not len(self._units) == 1:
+        if len(self._units) > 1:
             raise GraphNotConformantToMetamodelError(
-                self, f"Invalid number of referenced units: {len(self._units)}"
+                self,
+                f"More than one unit referenced to timeseries. Number of referenced units: {len(self._units)}",
             )
 
-        self.unit.validate_metamodel_conformance()
+        if self.unit is not None:
+            self.unit.validate_metamodel_conformance()
 
         if not len(self._db_connections) == 1:
             raise GraphNotConformantToMetamodelError(
