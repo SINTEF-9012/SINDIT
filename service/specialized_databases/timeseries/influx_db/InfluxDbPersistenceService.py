@@ -35,7 +35,9 @@ class InfluxDbPersistenceService(TimeseriesPersistenceService):
         self._query_api = self._client.query_api()
 
     # override
-    def write_measurement(self, id_uri: str, value, reading_time: datetime = None):
+    def write_measurement(
+        self, id_uri: str, value: float | bool | str, reading_time: datetime = None
+    ):
         """
         Writes the given value to the standard bucket into the measurement according to the id_uri into a field
         called 'reading'.

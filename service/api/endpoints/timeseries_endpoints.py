@@ -29,7 +29,7 @@ def get_current_timeseries(iri: str, duration: float):
     :raises IdNotFoundException: If no data is available for that id at the current time
     :param id_uri:
     :param duration: timespan to query in seconds
-    :return:
+    :return: Pandas Dataframe serialized to JSON featuring the columns "time" and "value"
     """
     try:
         # Get related timeseries-database service:

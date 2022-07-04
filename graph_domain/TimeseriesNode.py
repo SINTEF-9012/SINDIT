@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
 from dataclasses_json import dataclass_json
@@ -19,6 +20,16 @@ DB_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.DB_ACCESS.value
 RUNTIME_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.RUNTIME_ACCESS.value
 
 
+class TimeseriesValueTypes(Enum):
+    DECIMAL = "DECIMAL"
+    INT = "INTEGER"
+    STRING = "STRING"
+    BOOL = "BOOLEAN"
+
+
+TIMESERIES_VALUE_TYPES = [con_type.value for con_type in TimeseriesValueTypes]
+
+
 @dataclass
 @dataclass_json
 class TimeseriesNodeFlat(BaseNode):
@@ -35,12 +46,24 @@ class TimeseriesNodeFlat(BaseNode):
         Property()
     )  # additional keyword as id inside the topic (optional)
 
+    # Type of the value stored per time
+    value_type: str = Property(default=TimeseriesValueTypes.DECIMAL.value)
+
     def validate_metamodel_conformance(self):
         """
         Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
         Raises GraphNotConformantToMetamodelError if there are inconsistencies
         """
         super().validate_metamodel_conformance()
+
+        if self.value_type is None:
+            raise GraphNotConformantToMetamodelError(self, f"Missing timeseries type.")
+
+        if not self.value_type in TIMESERIES_VALUE_TYPES:
+            raise GraphNotConformantToMetamodelError(
+                self,
+                f"Unrecognized type of timeseries: {self.value_type}. Known types: {TIMESERIES_VALUE_TYPES}.",
+            )
 
         if self.connection_topic is None:
             raise GraphNotConformantToMetamodelError(self, f"Missing connection topic")

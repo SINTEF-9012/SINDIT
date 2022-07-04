@@ -6,7 +6,6 @@ from graph_domain.RuntimeConnectionNode import (
 from graph_domain.TimeseriesNode import TimeseriesNodeDeep, TimeseriesNodeFlat
 from service.runtime_connections.RuntimeConnection import RuntimeConnection
 
-from service.runtime_connections.SensorConnection import SensorConnection
 from service.runtime_connections.TimeseriesInput import TimeseriesInput
 from service.runtime_connections.mqtt.MqttRuntimeConnection import (
     MqttRuntimeConnection,

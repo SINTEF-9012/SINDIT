@@ -1,17 +1,21 @@
 import abc
+from ctypes.wintypes import BOOL
 from datetime import datetime
 from typing import Tuple
 
-from graph_domain.TimeseriesNode import TimeseriesNodeFlat
+from graph_domain.TimeseriesNode import TimeseriesNodeFlat, TimeseriesValueTypes
 
 
 class TimeseriesInput(abc.ABC):
-    def __init__(self, iri: str, connection_topic: str, connection_keyword: str):
-        self._last_reading: Tuple[datetime, float] = None
+    def __init__(
+        self, iri: str, connection_topic: str, connection_keyword: str, value_type: str
+    ):
+        self._last_reading: Tuple[datetime, float | int | bool | str] = None
         self._handlers = []
         self.iri = iri
         self.connection_topic = connection_topic
         self.connection_keyword = connection_keyword
+        self.value_type = value_type
 
     @classmethod
     def from_timeseries_node(cls, node: TimeseriesNodeFlat):
@@ -19,9 +23,10 @@ class TimeseriesInput(abc.ABC):
             iri=node.iri,
             connection_topic=node.connection_topic,
             connection_keyword=node.connection_keyword,
+            value_type=node.value_type,
         )
 
-    def get_most_current(self) -> Tuple[datetime, float]:
+    def get_most_current(self) -> Tuple[datetime, int | float | bool | str]:
         """
         :return: The most current reading with its timestamp
         """
@@ -43,6 +48,27 @@ class TimeseriesInput(abc.ABC):
         :param reading_value:
         :return:
         """
+        if self.value_type == TimeseriesValueTypes.STRING.value:
+            reading_value = str(reading_value)
+        elif self.value_type == TimeseriesValueTypes.DECIMAL.value:
+            reading_value = float(reading_value)
+        elif self.value_type == TimeseriesValueTypes.INT.value:
+            reading_value = int(reading_value)
+        elif self.value_type == TimeseriesValueTypes.BOOL.value:
+            if isinstance(reading_value, bool):
+                pass
+            elif isinstance(reading_value, float):
+                reading_value = bool(reading_value)
+            elif isinstance(reading_value, str):
+                reading_value = (
+                    reading_value == "True"
+                    or reading_value == "true"
+                    or reading_value == "t"
+                )
+
+        if isinstance(reading_value, str):
+            pass
+
         for handler in self._handlers:
             handler(self.iri, reading_value, reading_time)
         self._last_reading = reading_time, reading_value

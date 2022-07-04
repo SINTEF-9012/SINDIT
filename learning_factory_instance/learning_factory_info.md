@@ -116,12 +116,7 @@ VGR Trigger
 
 Does not seem to actually exist
 
-##### f/i/state/vgr -> target
-Targeted station e.g. "mpo"
-
-Could be integrated when supporting string timeseries?
-
-##### f/i/state/*\vgr -> target
+##### f/i/state/"*\vgr" -> target
 Other stations then vgr do not seem to have this property
 
 ##### f/i/state/* -> active
