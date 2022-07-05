@@ -4,7 +4,6 @@ from influxdb_client import InfluxDBClient, Point
 import pandas as pd
 from urllib3.exceptions import ReadTimeoutError
 
-from config import global_config as cfg
 from graph_domain.DatabaseConnectionNode import DatabaseConnectionNode
 from service.exceptions.IdNotFoundException import IdNotFoundException
 from service.specialized_databases.timeseries.TimeseriesPersistenceService import (
@@ -72,11 +71,11 @@ class InfluxDbPersistenceService(TimeseriesPersistenceService):
         :raise IdNotFoundException: if the id_uri is not found
         """
         query = (
-            f'from(bucket: "{self.bucket}")\n'
-            f"|> range(start: {begin_time.astimezone().isoformat()}, stop: {end_time.astimezone().isoformat()})\n"
-            f'|> filter(fn: (r) => r["_measurement"] == "{id_uri}")'
-            f'|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")\n'
-            f'|> keep(columns: ["_time", "{READING_FIELD_NAME}"])'
+            f'from(bucket: "{self.bucket}") \n'
+            f"|> range(start: {begin_time.astimezone().isoformat()}, stop: {end_time.astimezone().isoformat()}) \n"
+            f'|> filter(fn: (r) => r["_measurement"] == "{id_uri}") \n'
+            f'|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") \n'
+            f'|> keep(columns: ["_time", "{READING_FIELD_NAME}"]) \n'
         )
 
         try:

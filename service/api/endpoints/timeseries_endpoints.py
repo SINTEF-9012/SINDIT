@@ -11,6 +11,9 @@ from service.knowledge_graph.dao.DatabaseConnectionsDao import DatabaseConnectio
 from service.specialized_databases.DatabasePersistenceServiceContainer import (
     DatabasePersistenceServiceContainer,
 )
+from service.specialized_databases.timeseries.TimeseriesPersistenceService import (
+    TimeseriesPersistenceService,
+)
 from service.specialized_databases.timeseries.influx_db.InfluxDbPersistenceService import (
     InfluxDbPersistenceService,
 )
@@ -33,9 +36,13 @@ def get_current_timeseries(iri: str, duration: float):
     """
     try:
         # Get related timeseries-database service:
-        ts_con_node = DB_CON_NODE_DAO.get_database_connection_for_node(iri)
+        ts_con_node: DatabaseConnectionsDao = (
+            DB_CON_NODE_DAO.get_database_connection_for_node(iri)
+        )
 
-        ts_service = DB_SERVICE_CONTAINER.get_persistence_service(ts_con_node.iri)
+        ts_service: TimeseriesPersistenceService = (
+            DB_SERVICE_CONTAINER.get_persistence_service(ts_con_node.iri)
+        )
 
         # Read the actual measurements:
         readings_df = ts_service.read_period_to_dataframe(

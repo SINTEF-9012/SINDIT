@@ -21,9 +21,6 @@ from service.specialized_databases.timeseries.influx_db.InfluxDbPersistenceServi
 # Import endpoint files (indirectly used through annotation)
 
 # noinspection PyUnresolvedReferences
-from service.api.endpoints import old_endpoints
-
-# noinspection PyUnresolvedReferences
 from service.api.endpoints import timeseries_endpoints
 
 # noinspection PyUnresolvedReferences

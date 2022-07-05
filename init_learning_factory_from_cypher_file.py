@@ -4,20 +4,20 @@ SINDIT: fischertechnik learning factory
 author: Timo Peter <timo.peter@sintef.no>
 
 """
-import configparser
 import sys
 import py2neo
-import environment.environment as env
-from config import global_config as cfg
+from util.environment_and_configuration import get_environment_variable
 
 LEARNING_FACTORY_CYPHER_FILE = "learning_factory_instance/learning_factory.cypher"
 
 # Read Config
-config = configparser.ConfigParser()
-config.read(cfg.PATH_TO_CONFIG)
-NEO4J_URI = env.NEO4J_FACTORY
-NEO4J_USER = config["factory-neo4j"]["user"]
-NEO4J_PASS = config["factory-neo4j"]["pass"]
+NEO4J_HOST = get_environment_variable(key="NEO4J_DB_HOST", optional=False)
+NEO4J_PORT = get_environment_variable(key="NEO4J_DB_PORT", optional=False)
+NEO4J_URI = NEO4J_HOST + ":" + NEO4J_PORT
+NEO4J_USER = get_environment_variable(
+    key="NEO4J_DB_USER", optional=True, default="neo4j"
+)
+NEO4J_PASS = get_environment_variable(key="NEO4J_DB_PW", optional=True, default="neo4j")
 
 if __name__ == "__main__":
 

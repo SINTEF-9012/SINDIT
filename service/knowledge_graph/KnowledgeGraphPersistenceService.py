@@ -1,9 +1,8 @@
 import py2neo
 import py2neo.ogm as ogm
 
-from config import global_config as cfg
 
-import environment.environment as env
+from util.environment_and_configuration import get_environment_variable
 
 
 class KnowledgeGraphPersistenceService(object):
@@ -24,11 +23,11 @@ class KnowledgeGraphPersistenceService(object):
         KnowledgeGraphPersistenceService.__instance = self
 
         self.graph = py2neo.Graph(
-            env.NEO4J_FACTORY,
-            name=cfg.get_str(group=cfg.ConfigGroups.GRAPH, key="database_name"),
+            get_environment_variable(key="NEO4J_DB_HOST", optional=False),
+            name=get_environment_variable(key="NEO4J_DB_NAME", optional=False),
         )
 
         self.repo = ogm.Repository(
-            env.NEO4J_FACTORY,
-            name=cfg.get_str(group=cfg.ConfigGroups.GRAPH, key="database_name"),
+            get_environment_variable(key="NEO4J_DB_HOST", optional=False),
+            name=get_environment_variable(key="NEO4J_DB_NAME", optional=False),
         )

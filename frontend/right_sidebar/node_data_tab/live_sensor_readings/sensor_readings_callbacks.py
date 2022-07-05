@@ -2,19 +2,20 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 
 from frontend import api_client
-from config import global_config as cfg
 from frontend.app import app
 from frontend.main_column.factory_graph.GraphSelectedElement import GraphSelectedElement
 from frontend.right_sidebar.node_data_tab.live_sensor_readings import (
     sensor_readings_layout,
 )
 from graph_domain.factory_graph_types import NodeTypes
+from util.environment_and_configuration import ConfigGroups, get_configuration_float
 
 sensor_ID = None
 
-LIVE_SENSOR_DISPLAY_DURATION = cfg.get_float(
-    group=cfg.ConfigGroups.FRONTEND, key="current_timeseries_duration"
+LIVE_SENSOR_DISPLAY_DURATION = get_configuration_float(
+    group=ConfigGroups.FRONTEND, key="current_timeseries_duration"
 )
+
 
 print("Initializing sensor callbacks...")
 

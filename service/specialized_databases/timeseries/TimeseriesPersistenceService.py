@@ -2,8 +2,6 @@ import abc
 from datetime import datetime
 import pandas as pd
 
-from config import global_config as cfg
-from service.exceptions.IdNotFoundException import IdNotFoundException
 from service.specialized_databases.SpecializedDatabasePersistenceService import (
     SpecializedDatabasePersistenceService,
 )
