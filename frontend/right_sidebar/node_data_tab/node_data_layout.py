@@ -1,6 +1,8 @@
 from dash import html
 
-from frontend.right_sidebar.node_data_tab.live_sensor_readings import sensor_readings_layout
+from frontend.right_sidebar.node_data_tab.live_sensor_readings import (
+    timeseries_graph_layout,
+)
 from graph_domain.factory_graph_types import NodeTypes
 
 
@@ -13,13 +15,9 @@ def get_layout(selected_el):
 
     if selected_el is None:
         # No node selected
-        return html.Div(
-            'Select a node to visualize its data'
-        )
+        return html.Div("Select a node to visualize its data")
     elif selected_el.type == NodeTypes.TIMESERIES_INPUT.value:
-        return sensor_readings_layout.get_layout()
+        return timeseries_graph_layout.get_layout()
     else:
         # No data for this type of node
-        return html.Div(
-            'No data can be visualized for this type of node.'
-        )
+        return html.Div("No data can be visualized for this type of node.")

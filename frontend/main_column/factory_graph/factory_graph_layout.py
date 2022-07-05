@@ -25,9 +25,9 @@ def get_layout():
     return html.Div(
         [
             # Storage for accessing the selected element
-            dcc.Store(id="selected-graph-element-store"),
+            dcc.Store(id="selected-graph-element-store", storage_type="session"),
             # Timestamp for the selected element storage
-            dcc.Store(id="selected-graph-element-timestamp"),
+            dcc.Store(id="selected-graph-element-timestamp", storage_type="session"),
             dbc.Card(
                 [
                     dbc.CardHeader(

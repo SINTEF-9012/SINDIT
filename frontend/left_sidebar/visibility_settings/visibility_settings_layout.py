@@ -31,6 +31,8 @@ def get_layout():
                 value=[NodeTypes.ASSET.value, NodeTypes.TIMESERIES_INPUT.value],
                 id="visibility-switches-input",
                 switch=True,
+                persistence=True,
+                persistence_type="session",
             )
         ]
     )

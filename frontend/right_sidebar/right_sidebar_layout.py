@@ -14,13 +14,18 @@ def get_layout():
         children=[
             # Selected node / edge:
             graph_selector_info_layout.get_layout(),
-
             # Tabs:
-            dcc.Tabs(id='tabs-infos', value='tab-node-information', children=[
-                dcc.Tab(label='Node information', value='tab-node-information'),
-                dcc.Tab(label='Node data', value='tab-node-data')
-            ]),
-            html.Div(id='tabs-content')
+            dcc.Tabs(
+                id="tabs-infos",
+                value="tab-node-information",
+                children=[
+                    dcc.Tab(label="Node information", value="tab-node-information"),
+                    dcc.Tab(label="Node data", value="tab-node-data"),
+                ],
+                persistence=True,
+                persistence_type="session",
+            ),
+            html.Div(id="tabs-content"),
         ],
-        width=3
+        width=3,
     )
