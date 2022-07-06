@@ -1,6 +1,6 @@
 from dash import html
 
-from frontend.right_sidebar.node_data_tab.live_sensor_readings import (
+from frontend.right_sidebar.node_data_tab.timeseries_graph import (
     timeseries_graph_layout,
 )
 from graph_domain.factory_graph_types import NodeTypes

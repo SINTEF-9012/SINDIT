@@ -9,6 +9,9 @@ def get_layout():
         children=[
             html.Td("Current timeseries data, if connected:"),
             dcc.Graph(id="timeseries-graph"),
+            html.Div(id="timeseries-graph-update-interval-passthrough", hidden=True),
+            html.Div(id="timeseries-graph-result-count-info", children=""),
+            html.Div(id="timeseries-graph-aggregate-info", children=""),
         ]
     )
     return graph

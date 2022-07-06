@@ -22,7 +22,7 @@ from frontend.right_sidebar import right_sidebar_callbacks
 from frontend.right_sidebar.graph_selector_info import graph_selector_info_callbacks
 
 # noinspection PyUnresolvedReferences
-from frontend.right_sidebar.node_data_tab.live_sensor_readings import (
+from frontend.right_sidebar.node_data_tab.timeseries_graph import (
     timeseries_graph_callbacks,
 )
 
