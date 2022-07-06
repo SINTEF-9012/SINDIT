@@ -8,7 +8,7 @@ def get_layout():
     graph = html.Div(
         children=[
             html.Td("Current timeseries data, if connected:"),
-            dcc.Graph(id="live-update-timeseries"),
+            dcc.Graph(id="timeseries-graph"),
         ]
     )
     return graph

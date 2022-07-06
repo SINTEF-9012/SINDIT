@@ -31,7 +31,7 @@ def get_timeseries_range(iri: str, duration: float):
     Queries the current measurements for the given duration up to the current time.
     :raises IdNotFoundException: If no data is available for that id at the current time
     :param id_uri:
-    :param duration: timespan to query in milliseconds
+    :param duration: timespan to query in seconds
     :return: Pandas Dataframe serialized to JSON featuring the columns "time" and "value"
     """
     try:
@@ -47,7 +47,7 @@ def get_timeseries_range(iri: str, duration: float):
         # Read the actual measurements:
         readings_df = ts_service.read_period_to_dataframe(
             id_uri=iri,
-            begin_time=datetime.now() - timedelta(milliseconds=duration),
+            begin_time=datetime.now() - timedelta(seconds=duration),
             end_time=datetime.now(),
         )
 
@@ -63,7 +63,7 @@ def get_timeseries_range(iri: str, date_time_str: str, duration: float):
     :raises IdNotFoundException: If no data is available for that id at the current time
     :param id_uri:
     :param date_time: date and time to be observed in iso format
-    :param duration: timespan to query in milliseconds
+    :param duration: timespan to query in seconds
     :return: Pandas Dataframe serialized to JSON featuring the columns "time" and "value"
     """
     date_time = datetime.fromisoformat(date_time_str)
@@ -81,7 +81,7 @@ def get_timeseries_range(iri: str, date_time_str: str, duration: float):
         # Read the actual measurements:
         readings_df = ts_service.read_period_to_dataframe(
             id_uri=iri,
-            begin_time=date_time - timedelta(milliseconds=duration),
+            begin_time=date_time - timedelta(seconds=duration),
             end_time=date_time,
         )
 

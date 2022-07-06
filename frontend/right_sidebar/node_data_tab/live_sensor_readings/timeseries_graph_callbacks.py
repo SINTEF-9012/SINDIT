@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from dash.dependencies import Input, Output, State
 import pandas as pd
 from dateutil import tz
@@ -27,15 +27,27 @@ print("Initializing sensor callbacks...")
 
 
 @app.callback(
-    Output("live-update-timeseries", "figure"),
+    Output("timeseries-graph", "figure"),
     Input("interval-component", "n_intervals"),
     State("selected-graph-element-store", "data"),
     Input("realtime-switch-input", "value"),
     Input("datetime-selector-date", "value"),
     Input("datetime-selector-time", "value"),
+    Input("datetime-selector-range-days", "value"),
+    Input("datetime-selector-range-hours", "value"),
+    Input("datetime-selector-range-min", "value"),
+    Input("datetime-selector-range-sec", "value"),
 )
 def update_timeseries_graph(
-    n, selected_el_json, realtime_toggle, selected_date_str, selected_time_str
+    n,
+    selected_el_json,
+    realtime_toggle,
+    selected_date_str,
+    selected_time_str,
+    duration_days,
+    duration_hours,
+    duration_mins,
+    duration_secs,
 ):
 
     fig = timeseries_graph_layout.get_figure()
@@ -53,12 +65,19 @@ def update_timeseries_graph(
         print("Trying to visualize timeseries from non-timeseries element...")
         return fig
 
+    duration: timedelta = timedelta(
+        days=duration_days,
+        hours=duration_hours,
+        minutes=duration_mins,
+        seconds=duration_secs,
+    )
+
     # API call for the dataframe
     if realtime_toggle:
         data = api_client.get_dataframe(
             relative_path="/timeseries/current_range",
             iri=selected_el.iri,
-            duration=LIVE_SENSOR_DISPLAY_DURATION,
+            duration=duration.total_seconds(),
         )
     else:
         selected_time = datetime.fromisoformat(selected_time_str).time()
@@ -80,7 +99,7 @@ def update_timeseries_graph(
         data = api_client.get_dataframe(
             relative_path="/timeseries/range",
             iri=selected_el.iri,
-            duration=LIVE_SENSOR_DISPLAY_DURATION,
+            duration=duration.total_seconds(),
             date_time_str=date_time.isoformat(),
         )
 
