@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     - name: Install VPN
+    - name: Install VPN
         run: |
           sudo apt-get update
-          sudo apt-get --assume-yes --no-install-recommends install openvpn
+          sudo apt-get --assume-yes --no-install-recommends install openvpn 
+    #  - name: Install VPN
+    #     run: |
+    #       sudo apt-get update
+    #       sudo apt-get --assume-yes --no-install-recommends install openvpn
   
     - name: Setup VPN connection
         run: |
