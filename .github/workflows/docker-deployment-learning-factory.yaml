@@ -12,52 +12,52 @@ jobs:
 
     steps:
     - name: Install VPN
-        run: |
-          sudo apt-get update
-          sudo apt-get --assume-yes --no-install-recommends install openvpn 
+      run: |
+        sudo apt-get update
+        sudo apt-get --assume-yes --no-install-recommends install openvpn 
     #  - name: Install VPN
     #     run: |
     #       sudo apt-get update
     #       sudo apt-get --assume-yes --no-install-recommends install openvpn
   
     - name: Setup VPN connection
-        run: |
-              echo "${{ secrets.MAXCLOUD_DEPLOYMENT_CA_CRT }}" > ca.crt
-              echo "${{ secrets.MAXCLOUD_DEPLOYMENT_USER_CRT }}" > user.crt
-              echo "${{ secrets.MAXCLOUD_DEPLOYMENT_USER_KEY }}" > user.key
-              echo "${{ secrets.MAXCLOUD_DEPLOYMENT_SECRET_USERNAME_PASSWORD }}" > secret.txt
-              echo "${{ secrets.MAXCLOUD_DEPLOYMENT_TLS_KEY }}" > tls.key  
+      run: |
+            echo "${{ secrets.MAXCLOUD_DEPLOYMENT_CA_CRT }}" > ca.crt
+            echo "${{ secrets.MAXCLOUD_DEPLOYMENT_USER_CRT }}" > user.crt
+            echo "${{ secrets.MAXCLOUD_DEPLOYMENT_USER_KEY }}" > user.key
+            echo "${{ secrets.MAXCLOUD_DEPLOYMENT_SECRET_USERNAME_PASSWORD }}" > secret.txt
+            echo "${{ secrets.MAXCLOUD_DEPLOYMENT_TLS_KEY }}" > tls.key  
     
     - name: Start VPN connection
-        run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
+      run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
     - name: Wait for VPN connection
-          timeout-minutes: 1
-          run: until ping -c1 your-server-address; do sleep 2; done
-          # OR
-          run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
+      timeout-minutes: 1
+      run: until ping -c1 your-server-address; do sleep 2; done
+      # OR
+      run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
 
     - name: Docker compose deployment
-        run: |
+      run: |
 
-          ssh sintef@192.168.1.6 "
+        ssh sintef@192.168.1.6 "
 
-            ls
-            echo test
-            # Pull the current release
-            # cd ~/learning-factory-digital-twin/SINDIT;
-            # git remote add origin https://github.com/SINTEF-9012/SINDIT.git;
-            # git checkout learning-factory-deployment;
-            # git config pull.rebase false;
-            # git pull origin learning-factory-deployment;
-            # git remote remove origin;
+          ls
+          echo test
+          # Pull the current release
+          # cd ~/learning-factory-digital-twin/SINDIT;
+          # git remote add origin https://github.com/SINTEF-9012/SINDIT.git;
+          # git checkout learning-factory-deployment;
+          # git config pull.rebase false;
+          # git pull origin learning-factory-deployment;
+          # git remote remove origin;
 
-            # Rebuild the local image(s)
-            # docker-compose build
+          # Rebuild the local image(s)
+          # docker-compose build
 
-            # (Re-)start the containers
-            # docker-compose up -d
-          "
+          # (Re-)start the containers
+          # docker-compose up -d
+        "
 
       - name: Stop VPN connection
         if: always()
