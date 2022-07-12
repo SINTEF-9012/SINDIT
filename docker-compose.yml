@@ -43,7 +43,7 @@ services:
       - 7687:7687
     volumes:
       - ./docker/neo4j_kg/conf:/var/lib/neo4j/conf/
-      - ./docker/neo4j_kg/logs:/logs
+      # - ./docker/neo4j_kg/logs:/logs
       - ./docker/neo4j_kg/data:/data
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
