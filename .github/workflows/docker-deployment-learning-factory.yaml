@@ -9,10 +9,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: maxcloud_deployment_environment
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Install VPN
       run: |
         sudo apt-get update
@@ -32,8 +33,6 @@ jobs:
     
     - name: Start VPN connection
       run: |
-            ls
-            ls ".github/vpn"
             sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
     - name: Wait for VPN connection
