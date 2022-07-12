@@ -1,6 +1,7 @@
 name: Build and deploy docker-compose containers
 
-push:
+on:
+  push:
     branches: [ maxcloud_deployment ]
   pull_request:
     branches: [ maxcloud_deployment ]
