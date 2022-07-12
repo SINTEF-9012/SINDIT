@@ -64,8 +64,8 @@ jobs:
         sudo killall openvpn     
 
     - name: Upload VPN logs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: VPN logs
-          path: vpn.log
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: VPN logs
+        path: vpn.log
