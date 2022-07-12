@@ -29,7 +29,10 @@ jobs:
             echo "${{ secrets.MAXCLOUD_DEPLOYMENT_TLS_KEY }}" > tls.key  
     
     - name: Start VPN connection
-      run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
+      run: |
+            ls
+            ls ".github/vpn"
+            sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
     - name: Wait for VPN connection
       run: sleep 30
@@ -59,3 +62,10 @@ jobs:
       run: |
         sudo chmod 777 vpn.log
         sudo killall openvpn     
+
+    - name: Upload VPN logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: VPN logs
+          path: vpn.log
