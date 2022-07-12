@@ -3,8 +3,6 @@ name: Build and deploy docker-compose containers
 on:
   push:
     branches: [ maxcloud_deployment ]
-  # pull_request:
-  #   branches: [ maxcloud_deployment ]
 
 jobs:
   deploy:
@@ -17,11 +15,7 @@ jobs:
     - name: Install VPN
       run: |
         sudo apt-get update
-        sudo apt-get --assume-yes --no-install-recommends install openvpn 
-    #  - name: Install VPN
-    #     run: |
-    #       sudo apt-get update
-    #       sudo apt-get --assume-yes --no-install-recommends install openvpn
+        sudo apt-get --assume-yes --no-install-recommends install openvpn
   
     - name: Setup VPN connection
       run: |
@@ -41,21 +35,19 @@ jobs:
     - name: Build containers
       run: |
         ssh sintef@192.168.1.6 "
-          ls
-          echo test
           # Pull the current release
-          # cd ~/learning-factory-digital-twin/SINDIT;
-          # git remote add origin https://github.com/SINTEF-9012/SINDIT.git;
-          # git checkout learning-factory-deployment;
-          # git config pull.rebase false;
-          # git pull origin learning-factory-deployment;
-          # git remote remove origin;
+          cd ~/learning-factory-digital-twin/SINDIT;
+          git remote add origin https://github.com/SINTEF-9012/SINDIT.git;
+          git checkout learning-factory-deployment;
+          git config pull.rebase false;
+          git pull origin learning-factory-deployment;
+          git remote remove origin;
 
           # Rebuild the local image(s)
-          # docker-compose build
+          docker-compose build
 
           # (Re-)start the containers
-          # docker-compose up -d
+          docker-compose up -d
         "
     
     - name: Stop VPN connection
