@@ -1,0 +1,20 @@
+client
+dev tun
+proto tcp
+remote 78.91.103.68 443 tcp-client
+verify-x509-name "minicloud-openvpn-pfsense-servercertificate" name
+route remote_host 255.255.255.255 net_gateway
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+auth-user-pass secret.txt
+cipher AES-256-CBC
+auth SHA256
+comp-lzo no
+route-delay 4
+verb 3
+reneg-sec 0
+ca ca.crt
+cert user.crt
+key user.key
