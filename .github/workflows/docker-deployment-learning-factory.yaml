@@ -19,7 +19,33 @@ jobs:
     #     run: |
     #       sudo apt-get update
     #       sudo apt-get --assume-yes --no-install-recommends install openvpn
-  
+
+    - name: Build containers
+      run: |
+        ssh sintef@192.168.1.6 "
+          ls
+          echo test
+          # Pull the current release
+          # cd ~/learning-factory-digital-twin/SINDIT;
+          # git remote add origin https://github.com/SINTEF-9012/SINDIT.git;
+          # git checkout learning-factory-deployment;
+          # git config pull.rebase false;
+          # git pull origin learning-factory-deployment;
+          # git remote remove origin;
+
+          # Rebuild the local image(s)
+          # docker-compose build
+
+          # (Re-)start the containers
+          # docker-compose up -d
+        "
+      - name: Stop VPN connection
+        if: always()
+        run: |
+          sudo chmod 777 vpn.log
+          sudo killall openvpn     
+
+
     - name: Setup VPN connection
       run: |
             echo "${{ secrets.MAXCLOUD_DEPLOYMENT_CA_CRT }}" > ca.crt
