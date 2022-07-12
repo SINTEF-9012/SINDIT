@@ -68,6 +68,27 @@ def get_environment_variable_int(
     return int(get_environment_variable(key, optional, default))
 
 
+def get_environment_variable_bool(
+    key: str, optional: bool = False, default=None
+) -> bool | None:
+    """Loads an environment variable
+
+    Args:
+        key (str): key of the variable
+        optional (bool, optional): whether an exception shall be raised if not availlable. Defaults to False.
+        default (_type_, optional): Defaul value if optional is True. Defaults to None.
+
+    Returns:
+        bool | None: the value or None
+
+    Raises:
+        EnvironmentalVariableNotFoundError: if not optional but key not found
+    """
+    env_var = get_environment_variable(key, optional, default)
+
+    return env_var == "True" or env_var == "true" or env_var == "t" or env_var == "TRUE"
+
+
 def get_configuration(group: ConfigGroups, key: str):
     return config[group.value][key]
 

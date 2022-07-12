@@ -148,14 +148,16 @@ services:
   #   environment:
   #     - NEO4J_AUTH=none
 
-  sindit:
+  sindit_dt_backend:
     build: .
-    hostname: sindit
-    mem_limit: 2G
-    environment:
-      ENVIRONMENT_FILE: "docker_deployment.env"
+    hostname: sindit-dt-backend
+    container_name: sindit_dt_backend
+    mem_limit: 1G
+    env_file:
+      - "environment_and_configuration/deployment_environment_backend.env"
+    # environment:
+    #   ENVIRONMENT_FILE: "environment_and_configuration/devcontainer_environment_backend.env"
     ports:
-      - 8050:8050
       - 8000:8000
     networks:
       - sindit_network
@@ -164,5 +166,36 @@ services:
         condition: service_healthy
       sindit_neo4j_kg:
         condition: service_healthy
-      
-    
+    healthcheck:
+      test: curl localhost:8000/graph/machines_deep
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    entrypoint: python service.py
+
+  sindit_dt_frontend:
+    build: .
+    hostname: sindit-dt-frontend
+    container_name: sindit_dt_frontend
+    mem_limit: 1G
+    env_file:
+      - "environment_and_configuration/deployment_environment_frontend.env"
+    # environment:
+    #   ENVIRONMENT_FILE: "environment_and_configuration/devcontainer_environment_frontend.env"
+    ports:
+      - 8050:8050
+    networks:
+      - sindit_network
+    depends_on:
+      sindit_influx_db:
+        condition: service_healthy
+      sindit_neo4j_kg:
+        condition: service_healthy
+      sindit_dt_backend:
+        condition: service_healthy
+    healthcheck:
+      test: curl localhost:8050
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    entrypoint: python presentation.py

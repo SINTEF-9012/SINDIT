@@ -1,5 +1,11 @@
 # SINDIT - SINTEF Digital Twin
 
+## Production deployment and execution
+
+
+
+## Development
+
 ## Description
 This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
 

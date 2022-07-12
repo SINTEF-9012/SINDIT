@@ -25,6 +25,11 @@ from frontend.right_sidebar.graph_selector_info import graph_selector_info_callb
 from frontend.right_sidebar.node_data_tab.timeseries_graph import (
     timeseries_graph_callbacks,
 )
+from util.environment_and_configuration import (
+    get_environment_variable,
+    get_environment_variable_bool,
+    get_environment_variable_int,
+)
 
 
 """
@@ -39,4 +44,9 @@ if __name__ == "__main__":
     # Initialize layout
     app.layout = page_layout.get_layout()
 
-    app.run_server(host="0.0.0.0", debug=False, port=8050, use_reloader=False)
+    app.run(
+        host=get_environment_variable("FRONTEND_HOST"),
+        debug=False,
+        port=get_environment_variable_int("FRONTEND_PORT"),
+        use_reloader=False,
+    )
