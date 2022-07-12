@@ -32,9 +32,8 @@ jobs:
       run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
     - name: Wait for VPN connection
-      timeout-minutes: 1
-      run: |
-        until ping -c1 192.168.1.6; do sleep 2; done
+      run: sleep 30
+      
     - name: Docker compose deployment
       run: |
         ssh sintef@192.168.1.6 "
