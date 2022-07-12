@@ -2,6 +2,7 @@
 
 ## Description
 This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
+Link to the paper: [link](https://ieeexplore.ieee.org/document/9779654)
 
 [Watch the presentation here](https://www.youtube.com/watch?v=ExHNP6527d8&list=PLmMTZhDUcVmuFcJG9tbxR6AAWcOl2Jej3&index=29&t=2s)
 
