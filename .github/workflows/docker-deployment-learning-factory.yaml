@@ -28,16 +28,16 @@ jobs:
             echo "${{ secrets.MAXCLOUD_DEPLOYMENT_SECRET_USERNAME_PASSWORD }}" > secret.txt
             echo "${{ secrets.MAXCLOUD_DEPLOYMENT_TLS_KEY }}" > tls.key  
     
-    - name: Wait for VPN connection
-      run: sleep 30
-
     - name: Start VPN connection
       run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
     - name: Wait for VPN connection
       run: sleep 30
 
-    - name: Docker compose deployment
+    - name: Start VPN connection
+      run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
+
+    - name: Build containers
       run: |
         ssh sintef@192.168.1.6 "
           ls
