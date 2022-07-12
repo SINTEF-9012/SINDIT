@@ -35,7 +35,8 @@ jobs:
       timeout-minutes: 1
       run: until ping -c1 your-server-address; do sleep 2; done
       # OR
-      run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
+      # run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
+
     - name: Docker compose deployment
       run: |
         ssh sintef@192.168.1.6 "
