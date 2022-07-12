@@ -41,7 +41,10 @@ def get_timeseries_current_range(iri: str, duration: float):
 
 @app.get("/timeseries/range")
 def get_timeseries_range(
-    iri: str, date_time_str: str, duration: float, aggregation_window_ms: int | None
+    iri: str,
+    date_time_str: str,
+    duration: float,
+    aggregation_window_ms: int | None = None,
 ):
     """
     Queries the measurements for the given duration up to the given date and time.

@@ -147,8 +147,10 @@ def update_timeseries_graph(
             aggregation_window_s = timedelta(seconds=1).total_seconds()
         else:
             aggregation_window_s = timedelta(milliseconds=100).total_seconds()
+
+        aggregation_window_ms = int(aggregation_window_s * 1000)
     else:
-        aggregation_window_s = None
+        aggregation_window_ms = None
 
     # API call for the readings
     data = api_client.get_dataframe(
@@ -156,7 +158,7 @@ def update_timeseries_graph(
         iri=selected_el.iri,
         duration=duration.total_seconds(),
         date_time_str=date_time.isoformat(),
-        aggregation_window_ms=int(aggregation_window_s * 1000),
+        aggregation_window_ms=aggregation_window_ms,
     )
 
     fig.add_trace(
@@ -176,8 +178,8 @@ def update_timeseries_graph(
     # Aggregate info
     result_count_str = f"Total count of entries for given time-frame: {readings_count}."
     aggregate_info_str = (
-        f"Aggregated to one (the first) reading per {timedelta(seconds=aggregation_window_s)}."
-        if aggregation_window_s is not None
+        f"Only displaying the first reading each per {timedelta(milliseconds=aggregation_window_ms)} (d:min:sec)."
+        if aggregation_window_ms is not None
         else ""
     )
 

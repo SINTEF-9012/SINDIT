@@ -131,9 +131,9 @@ class InfluxDbPersistenceService(TimeseriesPersistenceService):
         )
 
         try:
-            df = self._query_api.query_data_frame(query=query)
+            df: pd.DataFrame = self._query_api.query_data_frame(query=query)
 
-            return int(df["_value"][0])
+            return int(df["_value"][0]) if not df.empty else 0
 
         except KeyError:
             # id_uri not found
