@@ -39,9 +39,7 @@ jobs:
 
     - name: Docker compose deployment
       run: |
-
         ssh sintef@192.168.1.6 "
-
           ls
           echo test
           # Pull the current release
@@ -58,7 +56,6 @@ jobs:
           # (Re-)start the containers
           # docker-compose up -d
         "
-
       - name: Stop VPN connection
         if: always()
         run: |
