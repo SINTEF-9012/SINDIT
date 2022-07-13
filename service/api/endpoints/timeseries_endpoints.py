@@ -62,6 +62,10 @@ def get_timeseries_range(
             DB_CON_NODE_DAO.get_database_connection_for_node(iri)
         )
 
+        if ts_con_node is None:
+            print("Timeseries requested, but database connection node does not exist")
+            return pd.DataFrame(columns=["time", "value"])
+
         ts_service: TimeseriesPersistenceService = (
             DB_SERVICE_CONTAINER.get_persistence_service(ts_con_node.iri)
         )

@@ -1,0 +1,37 @@
+version: '2.4'
+
+networks:
+  # Required for the devcontainer
+  sindit_network:
+    name: sindit_network
+
+services:
+  sindit_influx_db:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_influx_db
+
+    hostname: sindit-influx-db-devcontainer
+    container_name: sindit_influx_db_devcontainer
+    mem_limit: 1G
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./docker_mounted_storage_devcontainer/sindit_influx_db/data:/var/lib/influxdb2
+      - ./docker_mounted_storage_devcontainer/sindit_influx_db/config:/etc/influxdb2
+
+  sindit_neo4j_kg:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_neo4j_kg
+
+    hostname: sindit-neo4j-kg-devcontainer
+    container_name: sindit_neo4j_kg_devcontainer
+    mem_limit: 2G
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/conf:/var/lib/neo4j/conf/
+      - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/logs:/logs
+      - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/data:/data
