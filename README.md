@@ -1,9 +1,5 @@
 # SINDIT - SINTEF Digital Twin
 
-
-
-
-
 ## Development setup
 For this project, a devcontainer-setup for Visual Studio Code is implemented. It can be used together with SSH remote development if needed.
 
@@ -16,14 +12,21 @@ For this project, a devcontainer-setup for Visual Studio Code is implemented. It
 2. Open the folder on the development-client (local or with the VS Code remote development extension via SSH)
 3. Reopen the folder as container with the remote containers extension
 4. Reload the window after the container is fully loaded (as suggested by the initialization script, to apply the installed modules for auto-corrections)
+5. Start the development databases manually with `docker-compose -f docker-compose.dev.yml up -d`
 
-After this, the development databases are already started automatically. Use the run and debug functionalities of the IDE to execute the separate services. The run configuration is already set up in this repository.
+After this, use the run and debug functionalities of the IDE to execute the separate services. The run configuration is already set up in this repository.
+
+If the DT-instance was not previously initialized, run the initialization script. E.g. via the run configuration `Learning factory instance: initialization`.
 
 ##### Code formatting:
 The python formatting "black" is utilized and enforced by the IDE configuration. Auto-formatting is performed at every file-saving.
 
 ## Deployment
 This project is deployed via docker-compose. Run `docker-compose up -d` to start the digital twin with all required services.
+
+If the DT-instance was not previously initialized, run `docker-compose exec sindit_dt_backend python init_learning_factory_from_cypher_file.py`. After this, for the DT-services to connect to the newly created timeseries connections, restart the services with `docker-compose 
+
+
 
 ## Description
 This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
