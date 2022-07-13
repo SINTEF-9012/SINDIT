@@ -5,21 +5,13 @@ networks:
   sindit_network:
     name: sindit_network
 
-volumes:
-  sindit_influx_db_storage:
-  sindit_influx_db_config:
-  sindit_neo4j_kg_config:
-  sindit_neo4j_kg_logs:
-  sindit_neo4j_kg_data:
-
-
 services:
   sindit_influx_db:
     image: influxdb:2.2
     hostname: sindit-influx-db
     container_name: sindit_influx_db
     restart: unless-stopped
-    mem_limit: 1G
+    mem_limit: 4G
     ports:
       - '8087:8086'
     environment:
@@ -32,8 +24,8 @@ services:
     networks:
       - sindit_network
     volumes:
-      - sindit_influx_db_storage:/var/lib/influxdb2
-      - sindit_influx_db_config:/etc/influxdb2
+      - ./docker_mounted_storage/sindit_influx_db/data:/var/lib/influxdb2
+      - ./docker_mounted_storage/sindit_influx_db/config:/etc/influxdb2
     healthcheck:
       test: "influx ping"
       interval: 5s
@@ -41,18 +33,18 @@ services:
       retries: 5
 
   sindit_neo4j_kg:
-    image: neo4j:4.4-community
+    image: neo4j:4.4.3-community
     hostname: sindit-neo4j-kg
     container_name: sindit_neo4j_kg
-    mem_limit: 2G
+    mem_limit: 6G
     restart: unless-stopped
     ports:
       - 7474:7474
       - 7687:7687
     volumes:
-      - sindit_neo4j_kg_config:/var/lib/neo4j/conf/
-      - sindit_neo4j_kg_logs:/logs
-      - sindit_neo4j_kg_data:/data
+      - ./docker_mounted_storage/sindit_neo4j_kg/conf:/var/lib/neo4j/conf/
+      - ./docker_mounted_storage/sindit_neo4j_kg/logs:/logs
+      - ./docker_mounted_storage/sindit_neo4j_kg/data:/data
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
       interval: 10s
@@ -67,104 +59,13 @@ services:
       # Allow the separate endpoint "/rdf" for RDF mappings
       - NEO4J_dbms_unmanaged__extension__classes=n10s.endpoint=/rdf
 
-  # zoo:
-  #   image: zookeeper:3.4.9
-  #   restart: unless-stopped
-  #   mem_limit: 1G
-  #   hostname: zoo
-  #   ports:
-  #     - 2181:2181
-  #   environment:
-  #     ZOO_MY_ID: 1
-  #     ZOO_PORT: 2181
-  #     ZOO_SERVERS: server.1=zoo:2888:3888
-  #   volumes:
-  #     - ./docker/zk-single-kafka-single/zoo1/data:/data
-  #     - ./docker/zk-single-kafka-single/zoo1/datalog:/datalog
-
-  # kafka:
-  #   image: confluentinc/cp-kafka:5.5.1
-  #   hostname: kafka
-  #   mem_limit: 1G
-  #   restart: unless-stopped
-  #   ports:
-  #     - 9092:9092
-  #     - 19092:19092
-  #   environment:
-  #     KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
-  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-  #     KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-  #     KAFKA_ZOOKEEPER_CONNECT: "zoo:2181"
-  #     KAFKA_BROKER_ID: 1
-  #     KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-  #   volumes:
-  #     - ./docker/zk-single-kafka-single/kafka1/data:/var/lib/kafka/data
-  #   depends_on:
-  #     - zoo
-  #   networks:
-  #     - sindit_network
-  #   healthcheck:
-  #     test: kafka-topics --zookeeper zoo:2181 --list
-  #     interval: 5s
-  #     timeout: 10s
-  #     retries: 5
-
-  # neo4jfactory:
-  #   image: neo4j:3.5
-  #   hostname: neo4jfactory
-  #   mem_limit: 1G
-  #   restart: unless-stopped
-  #   ports:
-  #     - 7476:7474
-  #     - 7689:7687
-  #   volumes:
-  #     - ./docker/neo4jfactory/conf:/conf
-  #     - ./docker/neo4jfactory/logs:/logs
-  #     - ./docker/neo4jfactory/data:/data
-  #   healthcheck:
-  #     test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
-  #     interval: 10s
-  #     timeout: 2s
-  #     retries: 10
-  #   networks:
-  #     - sindit_network
-  #   environment:
-  #     - NEO4J_AUTH=none
-
-  # neo4jparts:
-  #   image: neo4j:3.5
-  #   hostname: neo4jparts
-  #   mem_limit: 1G
-  #   restart: unless-stopped
-  #   ports:
-  #     - 7475:7474
-  #     - 7688:7687
-  #   volumes:
-  #     - ./docker/neo4j_parts/conf:/conf
-  #     - ./docker/neo4j_parts/logs:/logs
-  #     - ./docker/neo4j_parts/data:/data
-  #   healthcheck:
-  #     test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
-  #     interval: 10s
-  #     timeout: 2s
-  #     retries: 10
-  #   networks:
-  #     - sindit_network
-  #   environment:
-  #     - NEO4J_AUTH=none
-
   sindit_dt_backend:
     build: .
     hostname: sindit-dt-backend
     container_name: sindit_dt_backend
-    mem_limit: 1G
+    mem_limit: 6G
     env_file:
       - "environment_and_configuration/deployment_environment_backend.env"
-    # environment:
-    #   ENVIRONMENT_FILE: "environment_and_configuration/devcontainer_environment_backend.env"
     ports:
       - 8000:8000
     networks:
@@ -185,11 +86,9 @@ services:
     build: .
     hostname: sindit-dt-frontend
     container_name: sindit_dt_frontend
-    mem_limit: 1G
+    mem_limit: 4G
     env_file:
       - "environment_and_configuration/deployment_environment_frontend.env"
-    # environment:
-    #   ENVIRONMENT_FILE: "environment_and_configuration/devcontainer_environment_frontend.env"
     ports:
       - 8050:8050
     networks:

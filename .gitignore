@@ -5,3 +5,4 @@ docker/
 *.aasx
 *.xml
 *.aas
+docker_mounted_storage/
