@@ -1,10 +1,29 @@
 # SINDIT - SINTEF Digital Twin
 
-## Production deployment and execution
 
 
 
-## Development
+
+## Development setup
+For this project, a devcontainer-setup for Visual Studio Code is implemented. It can be used together with SSH remote development if needed.
+
+##### Requirements:
+- Recent Linux operating system, e.g. Debian 11 (Some used DBMS-versions (Neo4J) are incompatible with, for example older CentOS systems)
+- Docker and docker-compose installed
+
+##### Development setup:
+1. Check out this repository on the execution device (remote or local)
+2. Open the folder on the development-client (local or with the VS Code remote development extension via SSH)
+3. Reopen the folder as container with the remote containers extension
+4. Reload the window after the container is fully loaded (as suggested by the initialization script, to apply the installed modules for auto-corrections)
+
+After this, the development databases are already started automatically. Use the run and debug functionalities of the IDE to execute the separate services. The run configuration is already set up in this repository.
+
+##### Code formatting:
+The python formatting "black" is utilized and enforced by the IDE configuration. Auto-formatting is performed at every file-saving.
+
+## Deployment
+This project is deployed via docker-compose. Run `docker-compose up -d` to start the digital twin with all required services.
 
 ## Description
 This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
