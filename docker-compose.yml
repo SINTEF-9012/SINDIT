@@ -5,6 +5,14 @@ networks:
   sindit_network:
     name: sindit_network
 
+volumes:
+  sindit_influx_db_storage:
+  sindit_influx_db_config:
+  sindit_neo4j_kg_config:
+  sindit_neo4j_kg_logs:
+  sindit_neo4j_kg_data:
+
+
 services:
   sindit_influx_db:
     image: influxdb:2.2
@@ -24,8 +32,8 @@ services:
     networks:
       - sindit_network
     volumes:
-      - ./docker/influx_db_timeseries_storage:/var/lib/influxdb2
-      - ./docker/influx_db_timeseries_config:/etc/influxdb2
+      - sindit_influx_db_storage:/var/lib/influxdb2
+      - sindit_influx_db_config:/etc/influxdb2
     healthcheck:
       test: "influx ping"
       interval: 5s
@@ -42,9 +50,9 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - ./docker/neo4j_kg/conf:/var/lib/neo4j/conf/
-      # - ./docker/neo4j_kg/logs:/logs
-      - ./docker/neo4j_kg/data:/data
+      - sindit_neo4j_kg_config:/var/lib/neo4j/conf/
+      - sindit_neo4j_kg_logs:/logs
+      - sindit_neo4j_kg_data:/data
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
       interval: 10s
