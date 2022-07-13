@@ -68,14 +68,14 @@ services:
       retries: 5
 
   sindit_neo4j_kg_devcontainer:
-    image: neo4j:4.4.3-community
+    image: neo4j:4.4-community
     hostname: sindit-neo4j-kg-devcontainer
     container_name: sindit_neo4j_kg_devcontainer
     mem_limit: 2G
     restart: unless-stopped
     ports:
-      - 7474:7474
-      - 7687:7687
+      - 7475:7474
+      - 7688:7687
     volumes:
       - ./docker_mounted_storage/sindit_neo4j_kg/conf:/var/lib/neo4j/conf/
       - ./docker_mounted_storage/sindit_neo4j_kg/logs:/logs

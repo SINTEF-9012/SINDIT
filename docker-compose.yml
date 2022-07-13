@@ -33,7 +33,7 @@ services:
       retries: 5
 
   sindit_neo4j_kg:
-    image: neo4j:4.4.3-community
+    image: neo4j:4.4-community
     hostname: sindit-neo4j-kg
     container_name: sindit_neo4j_kg
     mem_limit: 6G
