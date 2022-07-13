@@ -12,8 +12,7 @@ services:
     container_name: sindit_influx_db
     restart: unless-stopped
     mem_limit: 4G
-    ports:
-      - '8087:8086'
+
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=sindit_influxdb
@@ -38,9 +37,7 @@ services:
     container_name: sindit_neo4j_kg
     mem_limit: 6G
     restart: unless-stopped
-    ports:
-      - 7475:7474
-      - 7688:7687
+
     volumes:
       - ./docker_mounted_storage/sindit_neo4j_kg/conf:/var/lib/neo4j/conf/
       - ./docker_mounted_storage/sindit_neo4j_kg/logs:/logs
