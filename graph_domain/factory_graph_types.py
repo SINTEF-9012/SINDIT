@@ -13,7 +13,9 @@ class NodeTypes(Enum):
 
 class RelationshipTypes(Enum):
     HAS_TIMESERIES = "HAS_TIMESERIES"
-    DB_ACCESS = "DB_ACCESS"
+    HAS_SUPPLEMENTARY_FILE = "HAS_SUPPLEMENTARY_FILE"
+    TIMESERIES_DB_ACCESS = "TIMESERIES_DB_ACCESS"
+    FILE_DB_ACCESS = "FILE_DB_ACCESS"
     RUNTIME_ACCESS = "RUNTIME_ACCESS"
     HAS_UNIT = "HAS_UNIT"
 
@@ -25,13 +27,24 @@ ELEMENT_TYPE_STRINGS = list(chain(NODE_TYPE_STRINGS, RELATIONSHIP_TYPE_STRINGS))
 UNSPECIFIED_LABEL = "UNSPECIFIED"
 
 RELATIONSHIP_TYPES_FOR_NODE_TYPE = {
-    NodeTypes.ASSET.value: [RelationshipTypes.HAS_TIMESERIES.value],
+    NodeTypes.ASSET.value: [
+        RelationshipTypes.HAS_TIMESERIES.value,
+        RelationshipTypes.HAS_SUPPLEMENTARY_FILE.value,
+    ],
     NodeTypes.TIMESERIES_INPUT.value: [
         RelationshipTypes.HAS_TIMESERIES.value,
         RelationshipTypes.HAS_UNIT.value,
         RelationshipTypes.RUNTIME_ACCESS.value,
+        RelationshipTypes.TIMESERIES_DB_ACCESS.value,
     ],
-    NodeTypes.DATABASE_CONNECTION.value: [RelationshipTypes.DB_ACCESS.value],
+    NodeTypes.SUPPLEMENTARY_FILE.value: [
+        RelationshipTypes.HAS_SUPPLEMENTARY_FILE.value,
+        RelationshipTypes.FILE_DB_ACCESS.value,
+    ],
+    NodeTypes.DATABASE_CONNECTION.value: [
+        RelationshipTypes.TIMESERIES_DB_ACCESS.value,
+        RelationshipTypes.FILE_DB_ACCESS.value,
+    ],
     NodeTypes.UNIT.value: [RelationshipTypes.HAS_UNIT.value],
     NodeTypes.RUNTIME_CONNECTION.value: [RelationshipTypes.RUNTIME_ACCESS.value],
 }

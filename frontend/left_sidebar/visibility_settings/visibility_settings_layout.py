@@ -19,6 +19,10 @@ def get_layout():
                         "value": NodeTypes.TIMESERIES_INPUT.value,
                     },
                     {
+                        "label": "Show supplementary files",
+                        "value": NodeTypes.SUPPLEMENTARY_FILE.value,
+                    },
+                    {
                         "label": "Show database connections",
                         "value": NodeTypes.DATABASE_CONNECTION.value,
                     },
@@ -28,7 +32,11 @@ def get_layout():
                     },
                     {"label": "Show units", "value": NodeTypes.UNIT.value},
                 ],
-                value=[NodeTypes.ASSET.value, NodeTypes.TIMESERIES_INPUT.value],
+                value=[
+                    NodeTypes.ASSET.value,
+                    NodeTypes.TIMESERIES_INPUT.value,
+                    NodeTypes.SUPPLEMENTARY_FILE.value,
+                ],
                 id="visibility-switches-input",
                 switch=True,
                 persistence=True,

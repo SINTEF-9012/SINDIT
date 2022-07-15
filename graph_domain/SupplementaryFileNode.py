@@ -15,7 +15,7 @@ from service.exceptions.GraphNotConformantToMetamodelError import (
 )
 
 LABEL = NodeTypes.SUPPLEMENTARY_FILE.value
-DB_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.DB_ACCESS.value
+DB_CONNECTION_RELATIONSHIP_LABEL = RelationshipTypes.FILE_DB_ACCESS.value
 
 
 class SupplementaryFileTypes(Enum):

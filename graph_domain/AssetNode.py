@@ -5,11 +5,13 @@ from dataclasses_json import dataclass_json
 from py2neo.ogm import Model, Property, RelatedTo
 
 from graph_domain.BaseNode import BaseNode
+from graph_domain.SupplementaryFileNode import SupplementaryFileNodeDeep
 from graph_domain.TimeseriesNode import TimeseriesNodeDeep
 from graph_domain.factory_graph_types import NodeTypes, RelationshipTypes
 
 LABEL = NodeTypes.ASSET.value
 TIMESERIES_RELATIONSHIP = RelationshipTypes.HAS_TIMESERIES.value
+SUPPLEMENTARY_FILE_RELATIONSHIP = RelationshipTypes.HAS_SUPPLEMENTARY_FILE.value
 
 
 @dataclass
@@ -49,6 +51,14 @@ class AssetNodeDeep(AssetNodeFlat):
     def timeseries(self) -> List[TimeseriesNodeDeep]:
         return [timeseries for timeseries in self._timeseries]
 
+    _supplementary_files: List[SupplementaryFileNodeDeep] = RelatedTo(
+        SupplementaryFileNodeDeep, SUPPLEMENTARY_FILE_RELATIONSHIP
+    )
+
+    @property
+    def supplementary_files(self) -> List[SupplementaryFileNodeDeep]:
+        return [suppl_file for suppl_file in self._supplementary_files]
+
     def validate_metamodel_conformance(self):
         """
         Used to validate if the current node (self) and its child elements is conformant to the defined metamodel.
@@ -58,3 +68,6 @@ class AssetNodeDeep(AssetNodeFlat):
 
         for timeseries in self.timeseries:
             timeseries.validate_metamodel_conformance()
+
+        for suppl_file in self.supplementary_files:
+            suppl_file.validate_metamodel_conformance()

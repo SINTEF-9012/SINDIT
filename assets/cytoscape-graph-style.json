@@ -61,5 +61,11 @@
         "style": {
             "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/balance/wght500/48px.svg"
         }
+    },
+    {
+        "selector": ".SUPPLEMENTARY_FILE",
+        "style": {
+            "background-image": "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/description/wght500/48px.svg"
+        }
     }
 ]

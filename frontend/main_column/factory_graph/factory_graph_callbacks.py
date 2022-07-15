@@ -25,7 +25,7 @@ def update_factory_graph(n):
     machines_deep_json = api_client.get("/graph/machines_deep")
     machines_deep = [AssetNodeDeep.from_json(m) for m in machines_deep_json]
     cygraph_elements = factory_graph_layout.get_cytoscape_elements(
-        machines_deep=machines_deep
+        assets_deep=machines_deep
     )
 
     return cygraph_elements
