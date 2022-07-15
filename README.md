@@ -21,10 +21,12 @@ If the DT-instance was not previously initialized, run the initialization script
 ##### Code formatting:
 The python formatting "black" is utilized and enforced by the IDE configuration. Auto-formatting is performed at every file-saving.
 
-## Deployment
+## Deployment and execution
 This project is deployed via docker-compose. Run `docker-compose up -d` to start the digital twin with all required services.
 
-If the DT-instance was not previously initialized, run `docker-compose exec sindit_dt_backend python init_learning_factory_from_cypher_file.py`. After this, for the DT-services to connect to the newly created timeseries connections, restart the services with `docker-compose 
+If the DT-instance was not previously initialized, run `docker-compose exec sindit_dt_backend python init_learning_factory_from_cypher_file.py`. After this, for the DT-services to connect to the newly created timeseries connections, restart the services with `docker-compose restart sindit_dt_backend sindit_dt_frontend`.
+
+For the learning factory example, remember to access the VPN in order to get an actual connection!
 
 
 
