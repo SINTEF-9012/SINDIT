@@ -29,3 +29,4 @@ dataclasses_json
 pytz~=2022.1
 dash_mantine_components
 dash_daq
+boto3  # Amazon S3 client compatible also with Minio S3

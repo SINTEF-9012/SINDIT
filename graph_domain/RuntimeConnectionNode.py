@@ -13,7 +13,7 @@ from graph_domain.BaseNode import BaseNode
 from graph_domain.factory_graph_types import NodeTypes
 from graph_domain.UnitNode import UnitNode
 
-LABEL = NodeTypes.DATABASE_CONNECTION.value
+LABEL = NodeTypes.RUNTIME_CONNECTION.value
 
 
 class RuntimeConnectionTypes(Enum):
