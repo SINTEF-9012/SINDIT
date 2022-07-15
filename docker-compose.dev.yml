@@ -35,3 +35,17 @@ services:
       - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/conf:/var/lib/neo4j/conf/
       - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/logs:/logs
       - ./docker_mounted_storage_devcontainer/sindit_neo4j_kg/data:/data
+
+  sindit_minio_s3:
+    extends:
+      file: docker-compose.databases.yml
+      service: sindit_minio_s3
+
+    hostname: sindit-minio-s3-devcontainer
+    container_name: sindit_minio_s3_devcontainer
+    mem_limit: 1G
+    ports:
+      - "9000:9000"
+      - "9099:9099"
+    volumes:
+      - ./docker_mounted_storage_devcontainer/sindit_minio_s3_data:/data

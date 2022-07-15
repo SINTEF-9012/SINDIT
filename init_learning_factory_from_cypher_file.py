@@ -19,18 +19,8 @@ NEO4J_USER = get_environment_variable(
 )
 NEO4J_PASS = get_environment_variable(key="NEO4J_DB_PW", optional=True, default="neo4j")
 
-if __name__ == "__main__":
 
-    user_input = input(
-        "Do you really want to initialize the toy factory Knowledge Graph Digital Twin instance? Current data will be lost! (y/n)"
-    )
-    if user_input != "y":
-        sys.exit()
-
-    user_input = input("Are you sure? (y/n)")
-    if user_input != "y":
-        sys.exit()
-
+def setup_knowledge_graph():
     g = py2neo.Graph(NEO4J_URI)
 
     tx = g.begin()
@@ -61,3 +51,23 @@ if __name__ == "__main__":
     )
 
     g.commit(tx)
+
+
+def import_binary_data():
+    pass
+
+
+if __name__ == "__main__":
+
+    user_input = input(
+        "Do you really want to initialize the toy factory Knowledge Graph Digital Twin instance? Current data will be lost! (y/n)"
+    )
+    if user_input != "y":
+        sys.exit()
+
+    user_input = input("Are you sure? (y/n)")
+    if user_input != "y":
+        sys.exit()
+
+    setup_knowledge_graph()
+    import_binary_data()
