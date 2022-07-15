@@ -44,7 +44,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-    entrypoint: python service.py
+    entrypoint: python dt_backend.py
 
   sindit_dt_frontend:
     build: .
@@ -69,4 +69,4 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-    entrypoint: python presentation.py
+    entrypoint: python dt_frontend.py

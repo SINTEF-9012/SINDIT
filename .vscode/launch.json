@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Presentation",
+            "name": "DT Frontend",
             "type": "python",
             "request": "launch",
-            "program": "./presentation.py",
+            "program": "./dt_frontend.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "envFile": "${workspaceFolder}/environment_and_configuration/devcontainer_environment_frontend.env"
         },
         {
-            "name": "Service",
+            "name": "DT Backend",
             "type": "python",
             "request": "launch",
-            "program": "./service.py",
+            "program": "./dt_backend.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "envFile": "${workspaceFolder}/environment_and_configuration/devcontainer_environment_backend.env"
