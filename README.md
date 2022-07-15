@@ -1,5 +1,26 @@
 # SINDIT - SINTEF Digital Twin
 
+## Description
+
+### This work
+
+### Original SINDIT project
+
+This work builds upon the architecture proposal presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
+
+[Watch the presentation here](https://www.youtube.com/watch?v=ExHNP6527d8&list=PLmMTZhDUcVmuFcJG9tbxR6AAWcOl2Jej3&index=29&t=2s)
+
+*Cite the work:*
+
+```
+@inproceedings{waszak2022ICSA,
+  title={Let the Asset Decide: Digital Twins with Knowledge Graphs},
+  author={Waszak, Maryna and Lam, An Ngoc and Hoffmann, Volker and Elvesæter, Brian and Mogos, Maria Flavia and Roman, Dumitru},
+  booktitle={IEEE 19th International Conference on Software Architecture Companion (ICSA-C)},
+  year={2022}
+}
+```
+
 ## Development setup
 For this project, a devcontainer-setup for Visual Studio Code is implemented. It can be used together with SSH remote development if needed.
 
@@ -24,102 +45,50 @@ The python formatting "black" is utilized and enforced by the IDE configuration.
 ## Deployment and execution
 This project is deployed via docker-compose. Run `docker-compose up -d` to start the digital twin with all required services.
 
-If the DT-instance was not previously initialized, run `docker-compose exec sindit_dt_backend python init_learning_factory_from_cypher_file.py`. After this, for the DT-services to connect to the newly created timeseries connections, restart the services with `docker-compose restart sindit_dt_backend sindit_dt_frontend` (simply restarting all containers does lead to the dependencies for database access not being resolved).
+If the DT-instance was not previously initialized, run the initialization scripts as described below (DT learning factory initialization script).
 
 For the learning factory example, remember to access the VPN / make a port mappig via Teleport tsh in order to get an actual connection!
 
+ 
 
+For updating the DT after pushing to the deployment branch, run manually on the workstation: `docker-compose down && git pull && sudo chmod 777 -R docker_mounted_storage && docker-compose build && docker-compose up -d`.
 
-## Description
-This work has bee presented at the [ICSA22 conference](https://icsa-conferences.org/2022/conference-tracks/new-and-emerging-ideas/)
+## Exposed interfaces:
 
-[Watch the presentation here](https://www.youtube.com/watch?v=ExHNP6527d8&list=PLmMTZhDUcVmuFcJG9tbxR6AAWcOl2Jej3&index=29&t=2s)
+The main user interface (dashboard) of the digital twin can be reached at [http://localhost:8050/](http://localhost:8050/). 
+ 
+The REST API is availlable at [http://localhost:8000/](http://localhost:8000/). 
+ 
+Webinterfaces of the used DBMS are available at  [http://localhost:7475/](http://localhost:7475/) (Neo4J) and  [http://localhost:8087/](http://localhost:8087/) (InfluxDB).
 
-*Cite the work:*
+## Services:
 
-```
-@inproceedings{waszak2022ICSA,
-  title={Let the Asset Decide: Digital Twins with Knowledge Graphs},
-  author={Waszak, Maryna and Lam, An Ngoc and Hoffmann, Volker and Elvesæter, Brian and Mogos, Maria Flavia and Roman, Dumitru},
-  booktitle={IEEE 19th International Conference on Software Architecture Companion (ICSA-C)},
-  year={2022}
-}
-```
+In addition to the DBMS systems, the DT includes following services and scripts:
 
+### DT-Backend service:
 
-![description](assets/description_sindit.PNG)
+Sets up the realtime connections (OPC UA, MQTT) to persist timeseries data. Provides a REST API to access the assets of the factory including e.g. timeseries data (current and historic).
 
-### Chocolate Production Process
+### DT-Frontend service:
 
-Here, we have several steps before the chocolate bars can be moulded and finally wrapped. The process starts with conching ground sugar with melted cocoa butter. Through tempering of the chocolate it obtains the sheen and crisp properties that we all know from chocolate bars.
+Provides a dashboard and visualization of the DT via a web interface at [http://localhost:8050/](http://localhost:8050/). Utilizes the REST API
 
-<img src="assets/fac_pics.jpg" alt="Picture1" style="zoom:20%; background-color: white" />
+### Similarity-Pipeline:
 
+coming soon
 
+## DT learning factory initialization script:
 
-### Modelling the Chocolate Factory
+Initializes the DT for the fischertechnik learning factory. Execute inside the DT-Backend container after starting all services via: 
 
-This is a simplified digital model of the chocolate factory. M1-M5 are machines with sensors S1-S5. Between the machines the ingredients are stored in queues Q1-Q9. At the last queue Q9 the packaged chocolate bars are modelled as pink squares P1-P3.
+`docker-compose exec sindit_dt_backend python init_learning_factory_from_cypher_file.py`
 
-<img src="assets/fac_schema.jpg" alt="Picture2" style="zoom:20%; background-color: white" />
-
-## **Requirements**
-
-### System:
-
-1. Docker compose
-
-If you are using windows see [here](https://docs.microsoft.com/en-gb/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package)
-
-### Local deployment of example factory:
-
-2. Build the Docker containers
-
-   ```sh
-   docker compose build
-   ```
-
-3. Start up the Docker containers
-
-    ```sh
-	docker compose up
-	```
-
-4. The example dash board of a chocolate factory can be reached at [http://localhost:8050/](http://localhost:8050/)
-
-
-![dash](assets/fac_dashboard.JPG)
-
-To start the simulation enter the simulation duration and press 'Simulate'. With 'Reset' the original state of the factory graph can be restored.
-
-### Local development
-
-1. **Data layer: Databases** 
-
-   Start the databases and required services via docker-compose:
-
-       ```sh
-       docker-compose up influx_db zoo kafka neo4jfactory neo4jparts
-      ```
-
-2. Load the factory graph into the Neo4j database:
-
-   ```sh
-    python ./chocolate_factory.py
-   ```
-
-3. **Application layer** including the sensor connectors and REST API
-
-   Directly start service.py within your IDE / debugger
-   
-4. **Presentation layer: Plotly Dash**
-
-   Directly start presentation.py within your IDE / debugger
+After this, for the DT-services to connect to the newly created timeseries connections, restart the services with `docker-compose restart sindit_dt_backend sindit_dt_frontend` (simply restarting all containers does lead to the dependencies for database access not being resolved).
 
 ## References
 
-1. [simpy](https://pypi.org/project/simpy/)
+coming soon
 
 ## Blame & Contact
 
-- Maryna Waszak [<maryna.waszak@sintef.no>](mailto:maryna.waszak@sintef.no)
+- Timo Peter [<timo.peter@sintef.no>](mailto:timo.peter@sintef.no)
