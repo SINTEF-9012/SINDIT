@@ -57,5 +57,14 @@ def get_dataframe(relative_path: str, **kwargs):
     return df
 
 
+def get_raw(relative_path: str, **kwargs):
+    """
+    Get request to the specified api endpoint
+    :param relative_path:
+    :return: the raw response
+    """
+    return requests.get(API_URI + relative_path, params=kwargs).content
+
+
 def patch(relative_path: str, **kwargs):
     requests.patch(API_URI + relative_path, params=kwargs)

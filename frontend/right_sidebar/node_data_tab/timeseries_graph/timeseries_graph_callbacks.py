@@ -24,7 +24,7 @@ TIMESERIES_MAX_DISPLAYED_ENTRIES = get_configuration_float(
 )
 
 
-print("Initializing sensor callbacks...")
+print("Initializing timeseries callbacks...")
 
 
 @app.callback(
