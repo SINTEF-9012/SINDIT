@@ -22,12 +22,26 @@ print("Initializing file visualization callbacks...")
 
 
 @app.callback(
+    Output("suppl_file_download-notifier", "children"),
+    Output("suppl_file_download-notifier", "is_open"),
+    Input("suppl_file_download_button", "n_clicks"),
+    prevent_initial_call=True,
+)
+def download_file_notifier(n_clicks):
+
+    return (
+        f"Download triggered. This can take a while...",
+        True,
+    )
+
+
+@app.callback(
     Output("suppl_file_download", "data"),
     Input("suppl_file_download_button", "n_clicks"),
     State("selected-graph-element-store", "data"),
     prevent_initial_call=True,
 )
-def func(n_clicks, selected_el_json):
+def download_file(n_clicks, selected_el_json):
 
     # Cancel if nothing selected
     if selected_el_json is None:
@@ -54,3 +68,30 @@ def func(n_clicks, selected_el_json):
     )
 
     return dcc.send_bytes(src=suppl_file_data, filename=suppl_file_details.file_name)
+
+
+# @app.callback(
+#     Output("graph-positioning-saved-notifier", "children"),
+#     Output("graph-positioning-saved-notifier", "is_open"),
+#     Input("graph-positioning-save-button", "n_clicks"),
+#     State("selected-graph-element-store", "data"),
+#     prevent_initial_call=True,
+# )
+# def update_node_position(n_clicks, selected_el_json):
+#     """
+#     Called when the user selects to store the altered position of a node
+#     :param n_clicks:
+#     :param selected_el_json:
+#     :return:
+#     """
+#     selected_el: GraphSelectedElement = GraphSelectedElement.from_json(selected_el_json)
+
+#     api_client.patch(
+#         "/node_position",
+#         iri=selected_el.iri,
+#         pos_x=selected_el.position_x,
+#         pos_y=selected_el.position_y,
+#     )
+
+#     # Notify the user with an auto-dismissing alert:
+#     return f"Node position saved successfully:\n{datetime.now().isoformat()}", True

@@ -13,7 +13,7 @@ class FilesPersistenceService(SpecializedDatabasePersistenceService):
     """
 
     @abc.abstractmethod
-    def read_file(
+    def stream_file(
         self,
         iri: str,
     ):
@@ -22,5 +22,17 @@ class FilesPersistenceService(SpecializedDatabasePersistenceService):
         :param iri:
         :return:
         :raise IdNotFoundException: if the iri is not found
+        """
+        pass
+
+    @abc.abstractmethod
+    def get_temp_file_url(self, iri: str):
+        """Creates a temporary URL to directly access the file from S3 without proxying with FastAPI
+
+        Args:
+            iri (str): _description_
+
+        Returns:
+            _type_: _description_
         """
         pass

@@ -43,7 +43,7 @@ class S3PersistenceService(FilesPersistenceService):
         self.bucket = self.resource.Bucket(self.bucket_name)
 
     # override
-    def read_file(
+    def stream_file(
         self,
         iri: str,
     ):
@@ -57,3 +57,18 @@ class S3PersistenceService(FilesPersistenceService):
         response = object.get()
         file_stream = response["Body"]
         return file_stream
+
+    # override
+    def get_temp_file_url(self, iri: str):
+        """Creates a temporary URL to directly access the file from S3 without proxying with FastAPI
+
+        Args:
+            iri (str): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        return self.client.generate_presigned_url(
+            "get_object", Params={"Bucket": self.bucket_name, "Key": iri}, ExpiresIn=60
+        )

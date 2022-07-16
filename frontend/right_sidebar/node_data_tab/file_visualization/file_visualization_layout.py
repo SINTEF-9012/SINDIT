@@ -15,6 +15,12 @@ def get_layout():
                     dcc.Download(id="suppl_file_download"),
                 ]
             ),
+            dbc.Alert(
+                id="suppl_file_download-notifier",
+                class_name="inline-alert",
+                is_open=False,
+                duration=5000,
+            ),
         ]
     )
     return graph
