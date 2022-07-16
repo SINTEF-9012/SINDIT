@@ -64,7 +64,7 @@ class DatabaseConnectionsDao(object):
         # db_cons = [m for m in db_con_matches]
 
         node = self.ps.graph.evaluate(
-            f'MATCH p=(t:{NodeTypes.TIMESERIES_INPUT.value})-[r:{RelationshipTypes.TIMESERIES_DB_ACCESS.value}]->(d:{NodeTypes.DATABASE_CONNECTION.value}) where (t.iri= "{iri}") RETURN d'
+            f'MATCH p=(t)-[r:{RelationshipTypes.TIMESERIES_DB_ACCESS.value}|{RelationshipTypes.FILE_DB_ACCESS.value}]->(d:{NodeTypes.DATABASE_CONNECTION.value}) where (t.iri= "{iri}") RETURN d'
         )
 
         model = DatabaseConnectionNode.wrap(node)

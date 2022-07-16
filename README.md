@@ -55,9 +55,13 @@ For updating the DT after pushing to the deployment branch, run manually on the 
 
 ## Exposed interfaces:
 
+**Dashboard**
+
 The main user interface (dashboard) of the digital twin can be reached at [http://localhost:8050/](http://localhost:8050/). 
- 
+
+**REST API**
 The REST API is availlable at [http://localhost:8000/](http://localhost:8000/). 
+Swagger documentation is availlable at [http://localhost:8000/docs](http://localhost:8000/docs). 
  
 Webinterfaces of the used DBMS are available at  [http://localhost:7475/](http://localhost:7475/) (Neo4J) and  [http://localhost:8087/](http://localhost:8087/) (InfluxDB).
 

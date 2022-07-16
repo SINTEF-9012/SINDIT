@@ -7,12 +7,16 @@ from graph_domain.DatabaseConnectionNode import (
 from service.specialized_databases.SpecializedDatabasePersistenceService import (
     SpecializedDatabasePersistenceService,
 )
+from service.specialized_databases.files.s3.S3PersistenceService import (
+    S3PersistenceService,
+)
 from service.specialized_databases.timeseries.influx_db.InfluxDbPersistenceService import (
     InfluxDbPersistenceService,
 )
 
 DB_CONNECTION_MAPPING = {
-    DatabaseConnectionTypes.INFLUX_DB.value: InfluxDbPersistenceService
+    DatabaseConnectionTypes.INFLUX_DB.value: InfluxDbPersistenceService,
+    DatabaseConnectionTypes.S3.value: S3PersistenceService,
 }
 
 
@@ -48,10 +52,6 @@ class DatabasePersistenceServiceContainer:
     def initialize_connections(self, connection_nodes: List[DatabaseConnectionNode]):
         con_node: DatabaseConnectionNode
         for con_node in connection_nodes:
-
-            # TODO: implement S3 and remove this!
-            if con_node.type == "S3":
-                continue
 
             service_class: SpecializedDatabasePersistenceService = (
                 DB_CONNECTION_MAPPING.get(con_node.type)

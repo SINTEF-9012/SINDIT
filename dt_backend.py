@@ -24,6 +24,9 @@ from service.specialized_databases.timeseries.influx_db.InfluxDbPersistenceServi
 from service.api.endpoints import timeseries_endpoints
 
 # noinspection PyUnresolvedReferences
+from service.api.endpoints import file_endpoints
+
+# noinspection PyUnresolvedReferences
 from service.api.endpoints import graph_endpoints
 from util.environment_and_configuration import (
     get_environment_variable,
