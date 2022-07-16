@@ -15,6 +15,8 @@ class BaseNode(Model):
     Base node type defining properties every node has
     """
 
+    __primarykey__ = "iri"  # For querying by iri
+
     # Core properties:
     id_short: str = Property()
     iri: str = Property()

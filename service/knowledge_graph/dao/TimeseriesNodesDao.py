@@ -80,6 +80,3 @@ class TimeseriesDao(object):
             timeseries.validate_metamodel_conformance()
 
         return json.dumps([m.to_json() for m in timeseries_deep_matches])
-
-
-# TODO: make generic DAO and enrich that...

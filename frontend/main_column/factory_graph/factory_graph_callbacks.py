@@ -22,7 +22,7 @@ def update_factory_graph(n):
     :param n:
     :return:
     """
-    machines_deep_json = api_client.get("/graph/machines_deep")
+    machines_deep_json = api_client.get("/assets")
     machines_deep = [AssetNodeDeep.from_json(m) for m in machines_deep_json]
     cygraph_elements = factory_graph_layout.get_cytoscape_elements(
         assets_deep=machines_deep
@@ -107,7 +107,7 @@ def update_node_position(n_clicks, selected_el_json):
     selected_el: GraphSelectedElement = GraphSelectedElement.from_json(selected_el_json)
 
     api_client.patch(
-        "/graph/node_position",
+        "/node_position",
         iri=selected_el.iri,
         pos_x=selected_el.position_x,
         pos_y=selected_el.position_y,

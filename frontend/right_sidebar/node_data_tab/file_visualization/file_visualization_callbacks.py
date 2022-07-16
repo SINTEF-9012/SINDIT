@@ -3,14 +3,14 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 from dateutil import tz
 from dash.exceptions import PreventUpdate
-import dash_core_components as dcc
-
+from dash import dcc
 from frontend import api_client
 from frontend.app import app
 from frontend.main_column.factory_graph.GraphSelectedElement import GraphSelectedElement
 from frontend.right_sidebar.node_data_tab.timeseries_graph import (
     timeseries_graph_layout,
 )
+from graph_domain.SupplementaryFileNode import SupplementaryFileNodeFlat
 from graph_domain.factory_graph_types import NodeTypes
 from util.environment_and_configuration import (
     ConfigGroups,
@@ -40,9 +40,17 @@ def func(n_clicks, selected_el_json):
         print("Trying to download file for non-file element...")
         raise PreventUpdate()
 
-    suppl_file = api_client.get_raw(
-        relative_path="/supplementary_file",
+    suppl_file_data = api_client.get_raw(
+        relative_path="/supplementary_file/data",
         iri=selected_el.iri,
     )
 
-    return dcc.send_bytes(suppl_file, "file.jpg")
+    suppl_file_details_dict = api_client.get(
+        relative_path="/supplementary_file/details",
+        iri=selected_el.iri,
+    )
+    suppl_file_details: SupplementaryFileNodeFlat = SupplementaryFileNodeFlat.from_dict(
+        suppl_file_details_dict
+    )
+
+    return dcc.send_bytes(src=suppl_file_data, filename=suppl_file_details.file_name)

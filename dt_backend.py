@@ -27,6 +27,9 @@ from service.api.endpoints import timeseries_endpoints
 from service.api.endpoints import file_endpoints
 
 # noinspection PyUnresolvedReferences
+from service.api.endpoints import asset_endpoints
+
+# noinspection PyUnresolvedReferences
 from service.api.endpoints import graph_endpoints
 from util.environment_and_configuration import (
     get_environment_variable,
